@@ -1,6 +1,3 @@
-/*
- * このソースコードは blanco Frameworkにより自動生成されました。
- */
 package blanco.db.task.valueobject;
 
 /**
@@ -738,5 +735,94 @@ public class BlancoDbProcessInput {
         buf.append(",cache=" + fCache);
         buf.append("]");
         return buf.toString();
+    }
+
+    /**
+     * このバリューオブジェクトを指定のターゲットに複写します。
+     *
+     * <P>使用上の注意</P>
+     * <UL>
+     * <LI>オブジェクトのシャロー範囲のみ複写処理対象となります。
+     * <LI>オブジェクトが循環参照している場合には、このメソッドは使わないでください。
+     * </UL>
+     *
+     * @param target target value object.
+     */
+    public void copyTo(final BlancoDbProcessInput target) {
+        if (target == null) {
+            throw new IllegalArgumentException("Bug: BlancoDbProcessInput#copyTo(target): argument 'target' is null");
+        }
+
+        // No needs to copy parent class.
+
+        // Name: fVerbose
+        // Type: boolean
+        target.fVerbose = this.fVerbose;
+        // Name: fJdbcdriver
+        // Type: java.lang.String
+        target.fJdbcdriver = this.fJdbcdriver;
+        // Name: fJdbcurl
+        // Type: java.lang.String
+        target.fJdbcurl = this.fJdbcurl;
+        // Name: fJdbcuser
+        // Type: java.lang.String
+        target.fJdbcuser = this.fJdbcuser;
+        // Name: fJdbcpassword
+        // Type: java.lang.String
+        target.fJdbcpassword = this.fJdbcpassword;
+        // Name: fJdbcdriverfile
+        // Type: java.lang.String
+        target.fJdbcdriverfile = this.fJdbcdriverfile;
+        // Name: fMetadir
+        // Type: java.lang.String
+        target.fMetadir = this.fMetadir;
+        // Name: fTmpdir
+        // Type: java.lang.String
+        target.fTmpdir = this.fTmpdir;
+        // Name: fTargetdir
+        // Type: java.lang.String
+        target.fTargetdir = this.fTargetdir;
+        // Name: fBasepackage
+        // Type: java.lang.String
+        target.fBasepackage = this.fBasepackage;
+        // Name: fRuntimepackage
+        // Type: java.lang.String
+        target.fRuntimepackage = this.fRuntimepackage;
+        // Name: fSchema
+        // Type: java.lang.String
+        target.fSchema = this.fSchema;
+        // Name: fTable
+        // Type: java.lang.String
+        target.fTable = this.fTable;
+        // Name: fSql
+        // Type: java.lang.String
+        target.fSql = this.fSql;
+        // Name: fFailonerror
+        // Type: java.lang.String
+        target.fFailonerror = this.fFailonerror;
+        // Name: fLog
+        // Type: java.lang.String
+        target.fLog = this.fLog;
+        // Name: fLogmode
+        // Type: java.lang.String
+        target.fLogmode = this.fLogmode;
+        // Name: fLogsql
+        // Type: java.lang.String
+        target.fLogsql = this.fLogsql;
+        // Name: fStatementtimeout
+        // Type: java.lang.String
+        target.fStatementtimeout = this.fStatementtimeout;
+        // Name: fExecutesql
+        // Type: java.lang.String
+        target.fExecutesql = this.fExecutesql;
+        // Name: fEncoding
+        // Type: java.lang.String
+        target.fEncoding = this.fEncoding;
+        // Name: fConvertStringToMsWindows31jUnicode
+        // Type: java.lang.String
+        target.fConvertStringToMsWindows31jUnicode = this.fConvertStringToMsWindows31jUnicode;
+        // Name: fCache
+        // Type: java.lang.String
+        target.fCache = this.fCache;
     }
 }

@@ -1,40 +1,30 @@
-/*
- * このクラスは 'AbstractBlancoDbConstants' の具象クラスとして blanco Framework によって自動生成されました。
- */
 package blanco.db;
 
-import blanco.fw.BlancoGeneratedBy;
-
 /**
- * blancoDb ????????N???X?B
+ * blancoDbの定数クラスです。
  */
-@BlancoGeneratedBy(name = "Blanco2g")
-public class BlancoDbConstants extends AbstractBlancoDbConstants {
+public class BlancoDbConstants {
     /**
-     * Version Number.
-     *
-     * [@BlancoConstantsVersion]
+     * 項目番号:1<br>
+     * プロダクト名。英字で指定します。
      */
-    public static final String VERSION = "2.2.4-I201403121738";
+    public static final String PRODUCT_NAME = "blancoDb";
 
     /**
-     * Getter for version constants.
-     *
-     * [@BlancoConstantsVersion]
-     *
-     * @return Version string.
+     * 項目番号:2<br>
+     * プロダクト名の小文字版。英字で指定します。
      */
-    public static String getVersion() {
-        return VERSION;
-    }
+    public static final String PRODUCT_NAME_LOWER = "blancodb";
 
     /**
-     * ?v???_?N?g???B?p???\?????????B
-     * [@BlancoGetterSetter]
-     *
-     * @return 取得したい値。
+     * 項目番号:3<br>
+     * バージョン番号。
      */
-    public static String getProductName() {
-        return PRODUCT_NAME;
-    }
+    public static final String VERSION = "2.3.0.";
+
+    /**
+     * 項目番号:4<br>
+     * 処理の過程で利用されるサブディレクトリ。
+     */
+    public static final String TARGET_SUBDIRECTORY = "/db";
 }
