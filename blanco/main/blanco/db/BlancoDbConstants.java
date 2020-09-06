@@ -27,4 +27,29 @@ public class BlancoDbConstants {
      * 処理の過程で利用されるサブディレクトリ。
      */
     public static final String TARGET_SUBDIRECTORY = "/db";
+
+    /**
+     * targetdirに設定される文字列
+     */
+    public static final String TARGET_STYLE_BLANCO = "blanco";
+
+    /**
+     * targetdirに設定される文字列
+     */
+    public static final String TARGET_STYLE_MAVEN = "maven";
+
+    /**
+     * targetdirに設定される文字列
+     */
+    public static final String TARGET_STYLE_FREE = "free";
+
+    /**
+     * 生成したソースコードを保管するディレクトリのsuffix
+     */
+    public static final String TARGET_DIR_SUFFIX_BLANCO = "main";
+
+    /**
+     * 生成したソースコードを保管するディレクトリのsuffix
+     */
+    public static final String TARGET_DIR_SUFFIX_MAVEN = "main/java";
 }

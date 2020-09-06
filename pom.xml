@@ -52,6 +52,13 @@
 	</repositories>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>blanco.anttask</groupId>
@@ -275,8 +282,7 @@
 							<target>
 								<taskdef name="blancovalueobject" classname="blanco.valueobject.task.BlancoValueObjectTask" classpathref="maven.runtime.classpath">
 								</taskdef>
-								<blancovalueobject metadir="meta/program" encoding="${project.build.sourceEncoding}" sheetType="php"/>
-<!--								<blancovalueobject metadir="meta/objects" encoding="${project.build.sourceEncoding}" sheetType="php" targetdir="sample" targetStyle="maven" verbose="true" />-->
+								<blancovalueobject metadir="meta/program" encoding="${project.build.sourceEncoding}" />
 							</target>
 						</configuration>
 						<goals>

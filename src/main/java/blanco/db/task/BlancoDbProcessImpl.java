@@ -43,6 +43,10 @@ public class BlancoDbProcessImpl implements BlancoDbProcess {
             blancoTmpDbSqlDirectory.mkdirs();
 
             final BlancoDbSetting dbSetting = new BlancoDbSetting();
+            dbSetting.setTargetStyle(input.getTargetStyle());
+            dbSetting.setLineSeparator(input.getLineSeparator());
+            dbSetting.setVerbose(input.getVerbose());
+
             dbSetting.setTargetDir(input.getTargetdir());
             dbSetting.setBasePackage(input.getBasepackage());
             dbSetting.setRuntimePackage(input.getRuntimepackage());
@@ -59,8 +63,12 @@ public class BlancoDbProcessImpl implements BlancoDbProcess {
             if ("true".equals(input.getConvertStringToMsWindows31jUnicode())) {
                 dbSetting.setConvertStringToMsWindows31jUnicode(true);
             }
-            
-            // 処理中に SQL 定義書の例外が発生した場合に処理中断するかどうか。 
+
+            if ("true".equals(input.getUseruntime())) {
+                dbSetting.setUseRuntime(true);
+            }
+
+            // 処理中に SQL 定義書の例外が発生した場合に処理中断するかどうか。
             dbSetting.setFailonerror("true".equals(input.getFailonerror()));
 
             if (input.getLog().equals("true")) {

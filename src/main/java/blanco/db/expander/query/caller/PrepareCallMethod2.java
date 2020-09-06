@@ -1,7 +1,7 @@
 /*
  * blancoDb
  * Copyright (C) 2004-2006 Yasuo Nakanishi
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -26,7 +26,7 @@ import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
  * 個別のメソッドを展開するためのクラス。
- * 
+ *
  * @author tosiki iga
  */
 public class PrepareCallMethod2 extends BlancoDbAbstractMethod {
@@ -86,7 +86,7 @@ public class PrepareCallMethod2 extends BlancoDbAbstractMethod {
         listLine.add("fStatement = fConnection.prepareCall(query);");
 
         final BlancoDbQueryParserUtil query = new BlancoDbQueryParserUtil(
-                fSqlInfo.getQuery());
+                fSqlInfo);
 
         for (int indexParameter = 0; indexParameter < fSqlInfo
                 .getOutParameterList().size(); indexParameter++) {

@@ -107,6 +107,12 @@ public class BlancoDbBatchProcess {
                 input.setConvertStringToMsWindows31jUnicode(arg.substring(36));
             } else if (arg.startsWith("-cache=")) {
                 input.setCache(arg.substring(7));
+            } else if (arg.startsWith("-useruntime=")) {
+                input.setUseruntime(arg.substring(12));
+            } else if (arg.startsWith("-targetStyle=")) {
+                input.setTargetStyle(arg.substring(13));
+            } else if (arg.startsWith("-lineSeparator=")) {
+                input.setLineSeparator(arg.substring(15));
             } else if (arg.equals("-?") || arg.equals("-help")) {
                 usage();
                 System.exit(END_SUCCESS);
@@ -220,7 +226,7 @@ public class BlancoDbBatchProcess {
      */
     public static final void usage() {
         System.out.println("BlancoDbBatchProcess: Usage:");
-        System.out.println("  java blanco.db.task.BlancoDbBatchProcess -verbose=値1 -jdbcdriver=値2 -jdbcurl=値3 -jdbcuser=値4 -jdbcpassword=値5 -jdbcdriverfile=値6 -metadir=値7 -tmpdir=値8 -targetdir=値9 -basepackage=値10 -runtimepackage=値11 -schema=値12 -table=値13 -sql=値14 -failonerror=値15 -log=値16 -logmode=値17 -logsql=値18 -statementtimeout=値19 -executesql=値20 -encoding=値21 -convertStringToMsWindows31jUnicode=値22 -cache=値23");
+        System.out.println("  java blanco.db.task.BlancoDbBatchProcess -verbose=値1 -jdbcdriver=値2 -jdbcurl=値3 -jdbcuser=値4 -jdbcpassword=値5 -jdbcdriverfile=値6 -metadir=値7 -tmpdir=値8 -targetdir=値9 -basepackage=値10 -runtimepackage=値11 -schema=値12 -table=値13 -sql=値14 -failonerror=値15 -log=値16 -logmode=値17 -logsql=値18 -statementtimeout=値19 -executesql=値20 -encoding=値21 -convertStringToMsWindows31jUnicode=値22 -cache=値23 -useruntime=値24 -targetStyle=値25 -lineSeparator=値26");
         System.out.println("    -verbose");
         System.out.println("      説明[verboseモードで動作させるかどうか。]");
         System.out.println("      型[真偽]");
@@ -308,6 +314,18 @@ public class BlancoDbBatchProcess {
         System.out.println("      説明[定義書メタファイルから中間XMLファイルへの変換をキャッシュで済ますかどうかのフラグ。]");
         System.out.println("      型[文字列]");
         System.out.println("      デフォルト値[false]");
+        System.out.println("    -useruntime");
+        System.out.println("      説明[ランタイムを使用してインタフェイスやアノテーションを設定します。]");
+        System.out.println("      型[文字列]");
+        System.out.println("      デフォルト値[false]");
+        System.out.println("    -targetStyle");
+        System.out.println("      説明[出力先フォルダの書式を指定します。<br>\nblanco: [targetdir]/main<br>\nmaven: [targetdir]/main/java<br>\nfree: [targetdir](targetdirが無指定の場合はblanco/main)]");
+        System.out.println("      型[文字列]");
+        System.out.println("      デフォルト値[blanco]");
+        System.out.println("    -lineSeparator");
+        System.out.println("      説明[行末記号をしていします。LF=0x0a, CR=0x0d, CFLF=0x0d0x0a とします。LFがデフォルトです。]");
+        System.out.println("      型[文字列]");
+        System.out.println("      デフォルト値[LF]");
         System.out.println("    -? , -help");
         System.out.println("      説明[使い方を表示します。]");
     }

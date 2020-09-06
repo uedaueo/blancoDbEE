@@ -1,7 +1,7 @@
 /*
  * blancoDb
  * Copyright (C) 2004-2006 Yasuo Nakanishi
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -12,9 +12,7 @@ package blanco.db.util;
 import java.util.List;
 
 import blanco.cg.BlancoCgObjectFactory;
-import blanco.cg.valueobject.BlancoCgClass;
-import blanco.cg.valueobject.BlancoCgMethod;
-import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.cg.valueobject.*;
 import blanco.db.common.stringgroup.BlancoDbDriverNameStringGroup;
 import blanco.db.common.stringgroup.BlancoDbLoggingModeStringGroup;
 import blanco.db.common.util.BlancoDbUtil;
@@ -23,9 +21,9 @@ import blanco.db.expander.query.BlancoPerfomanceCommonUtil;
 
 /**
  * blancoDbが共通的に利用するユーティリティクラス。
- * 
+ *
  * このクラスが生成するクラスはblancoDbが生成したソースコードで利用されます
- * 
+ *
  * @since 2006.03.02
  * @author IGA Tosiki
  */
@@ -197,6 +195,164 @@ public class BlancoDbUtilClassJava {
             listLine.add("return null;");
             listLine.add("}");
             listLine.add("return new Date(argTimestamp.getTime());");
+        }
+
+        {
+            /*
+             * 入力パラメータから動的条件句を自動生成します。
+             */
+            final BlancoCgMethod cgMethod = fCgFactory.createMethod(
+                    "createDynamicClause", "入力パラメータから動的条件句を自動生成します。");
+            cgClass.getMethodList().add(cgMethod);
+
+            cgMethod.setStatic(true);
+            cgMethod.setFinal(true);
+            cgMethod.getLangDoc().getDescriptionList().add(
+                    "Excel定義書を元に生成されたMapと、実行時に与えられたパラメータから動的SQLを生成します。<br>");
+            cgMethod.getLangDoc().getDescriptionList().add(
+                    "このメソッドは blancoDbが生成したソースコードから利用されます。直接呼び出すことは推奨されません。");
+
+            /* 第一引数：動的条件式定義のMapクラス */
+            BlancoCgParameter paramMap = fCgFactory.createParameter("argMapClause", "java.util.Map", "動的条件式定義のMapを指定します。");
+            cgMethod.getParameterList().add(paramMap);
+            paramMap.getType().setGenerics("<String, BlancoDbDynamicClause>");
+            /* BlancoDbDynamicClause は BlancoDbUtil と同じパッケージに置かれる前提だが、念のため import リストに入れておく。 */
+            fCgSourceFile.getImportList().add(fCgSourceFile.getPackage() + ".BlancoDbDynamicClause");
+            paramMap.setFinal(true);
+
+            /* 第二引数：動的条件式のパラメータクラス */
+            BlancoCgParameter paramParam = fCgFactory.createParameter("argParameter", "BlancoDbDynamicParameter", "動的条件式を選択するためのパラメータを指定します。");
+            cgMethod.getParameterList().add(paramParam);
+            paramParam.getType().setGenerics("<T>");
+            /* BlancoDbDynamicParameter は BlancoDbUtil と同じパッケージに置かれる前提だが、念のため import リストに入れておく。 */
+            fCgSourceFile.getImportList().add(fCgSourceFile.getPackage() + ".BlancoDbDynamicParameter");
+            paramParam.setFinal(true);
+
+            /* 第三引数：動的条件式のパラメータクラス */
+            BlancoCgParameter paramQuery = fCgFactory.createParameter("argQuery", "java.lang.String", "動的条件式を選択するためのパラメータを指定します。");
+            cgMethod.getParameterList().add(paramQuery);
+            paramQuery.setFinal(true);
+
+            /* 戻り値の定義 */
+            cgMethod.setReturn(fCgFactory.createReturn("java.lang.String",
+                    "Tag置換後のqueryを戻します。"));
+            cgMethod.setVirtualParameterDefinition("<T>");
+
+            /* メソッド本文 */
+            final List<String> listLine = cgMethod.getLineList();
+
+            listLine.add("String query = argQuery;");
+            listLine.add("if (argParameter != null) {");
+            listLine.add("String key = argParameter.getKey();");
+            listLine.add("");
+            listLine.add("List<T> values = argParameter.getValues()");
+            listLine.add("if (key != null) {");
+            listLine.add("BlancoDbDynamicClause dynamicClause = argMapClause.get(key);");
+            listLine.add("if (dynamicClause != null) {"); //80
+            listLine.add("/* 動的条件句Mapは自動生成されるので、不正な値は存在しない前提とする */");
+            listLine.add("StringBuffer sb = new StringBuffer();");
+            listLine.add("String tag = dynamicClause.getTag();");
+            listLine.add("String condition = dynamicClause.getCondition();");
+            listLine.add("");
+            listLine.add("if (\"ITEMONLY\".equals(condition)) {");
+            listLine.add("if (values != null && values.size() > 0) {");
+            listLine.add("int count = 0;");
+            listLine.add("for (T value : values) {");
+            listLine.add("if (count > 0) {"); // 90
+            listLine.add("sb.append(\", \");");
+            listLine.add("}");
+            listLine.add("sb.append(value);");
+            listLine.add("count++;");
+            listLine.add("}");
+            listLine.add("}");
+            listLine.add("} else if (\"BETWEEN\".equals(condition)) {");
+            listLine.add("if (values != null && values.size() == 2) {");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" BETWEEN ? AND ? )\");");
+            listLine.add("}"); // 100
+            listLine.add("} else if (\"IN\".equals(condition)) {");
+            listLine.add("if (values != null && values.size() > 0) {");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" IN ( \");");
+            listLine.add("int count = 0;");
+            listLine.add("for (T value : values) {");
+            listLine.add("if (count > 0) {");
+            listLine.add("sb.append(\", \");");
+            listLine.add("}");
+            listLine.add("sb.append(\"?\");");
+            listLine.add("count++;"); // 110
+            listLine.add("}");
+            listLine.add("sb.append(\" )\");");
+            listLine.add("sb.append(\" )\");");
+            listLine.add("}");
+            listLine.add("} else if (\"COMPARE\".equals(condition)) {");
+            listLine.add("if (values != null && values.size() == 1) {");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" \" + dynamicClause.getComparison() + \" ? )\");");
+            listLine.add("}");
+            listLine.add("}");
+            listLine.add("query = argQuery.replace(\"${\" + tag + \"}\", sb.toString());"); // 120
+            listLine.add("}");
+            listLine.add("}");
+            listLine.add("}");
+            listLine.add("return query;");
+        }
+
+        {
+            /*
+             * 動的SQLのためのInputパラメータ関数を生成します
+             */
+            final BlancoCgMethod cgMethod = fCgFactory.createMethod(
+                    "setInputParameter", "動的SQLのためのInputパラメータ関数です。");
+            cgClass.getMethodList().add(cgMethod);
+
+            cgMethod.setStatic(true);
+            cgMethod.setFinal(true);
+            cgMethod.getLangDoc().getDescriptionList().add(
+                    "実行時に与えられたパラメータを動的に生成された条件句に適用します。<br>");
+            cgMethod.getLangDoc().getDescriptionList().add(
+                    "このメソッドは blancoDbが生成したソースコードから利用されます。直接呼び出すことは推奨されません。");
+
+            /* 第一引数： preparedStatement */
+            BlancoCgParameter paramStatement = fCgFactory.createParameter("argStatement", "java.sql.PreparedStatement", "動的に定義されたpreparedStatementです。");
+            cgMethod.getParameterList().add(paramStatement);
+            paramStatement.setFinal(true);
+
+            /* 第二引数： パラメータのリスト */
+            BlancoCgParameter paramList = fCgFactory.createParameter("values", "java.util.List", "動的に定義されたpreparedStatementです。");
+            cgMethod.getParameterList().add(paramList);
+            paramList.getType().setGenerics("<T>");
+            paramList.setFinal(true);
+
+            /* 第三引数： startIndex */
+            BlancoCgParameter paramIndex = fCgFactory.createParameter("startIndex", "java.lang.Integer", "パラメータの開始indexです。");
+            cgMethod.getParameterList().add(paramIndex);
+            paramIndex.setFinal(true);
+
+            /* 戻り値 */
+            cgMethod.setReturn(fCgFactory.createReturn("java.lang.String",
+                    "Tag置換後のqueryを戻します。"));
+            cgMethod.setVirtualParameterDefinition("<T>");
+
+            /* 例外 */
+            BlancoCgType sqlExpType = new BlancoCgType();
+            sqlExpType.setName("java.sql.SQLException");
+            /* expnadするときにtrimされるかもしれないので、念のため import リストに入れておく。 */
+            fCgSourceFile.getImportList().add("java.sql.SQLException");
+            BlancoCgException sqlExp = new BlancoCgException();
+            sqlExp.setType(sqlExpType);
+            cgMethod.getThrowList().add(sqlExp);
+
+            /* メソッドの本体 */
+            final List<String> listLine = cgMethod.getLineList();
+            listLine.add("int index = startIndex;");
+            listLine.add("for (T value : values) {");
+            listLine.add("/*");
+            listLine.add("* NULL の場合の面倒も見てくれそうだが、");
+            listLine.add("* Database エンジンによってはエラーになるかもしれない。");
+            listLine.add("* e.g. SQLServer は NG, MySQL connector は OK.");
+            listLine.add("*/");
+            listLine.add("argStatement.setObject(index, value);");
+            listLine.add("index++;");
+            listLine.add("}");
+            listLine.add("return index;");
         }
 
         if (fDbSetting.getLogging()) {

@@ -178,6 +178,30 @@ public class BlancoDbProcessInput {
     private String fCache = "false";
 
     /**
+     * ランタイムを使用してインタフェイスやアノテーションを設定します。
+     *
+     * フィールド: [useruntime]。
+     * デフォルト: [false]。
+     */
+    private String fUseruntime = "false";
+
+    /**
+     * 出力先フォルダの書式を指定します。&amp;lt;br&amp;gt;\nblanco: [targetdir]/main&amp;lt;br&amp;gt;\nmaven: [targetdir]/main/java&amp;lt;br&amp;gt;\nfree: [targetdir](targetdirが無指定の場合はblanco/main)
+     *
+     * フィールド: [targetStyle]。
+     * デフォルト: [blanco]。
+     */
+    private String fTargetStyle = "blanco";
+
+    /**
+     * 行末記号をしていします。LF=0x0a, CR=0x0d, CFLF=0x0d0x0a とします。LFがデフォルトです。
+     *
+     * フィールド: [lineSeparator]。
+     * デフォルト: [LF]。
+     */
+    private String fLineSeparator = "LF";
+
+    /**
      * フィールド [verbose] の値を設定します。
      *
      * フィールドの説明: [verboseモードで動作させるかどうか。]。
@@ -696,6 +720,75 @@ public class BlancoDbProcessInput {
     }
 
     /**
+     * フィールド [useruntime] の値を設定します。
+     *
+     * フィールドの説明: [ランタイムを使用してインタフェイスやアノテーションを設定します。]。
+     *
+     * @param argUseruntime フィールド[useruntime]に設定する値。
+     */
+    public void setUseruntime(final String argUseruntime) {
+        fUseruntime = argUseruntime;
+    }
+
+    /**
+     * フィールド [useruntime] の値を取得します。
+     *
+     * フィールドの説明: [ランタイムを使用してインタフェイスやアノテーションを設定します。]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[useruntime]から取得した値。
+     */
+    public String getUseruntime() {
+        return fUseruntime;
+    }
+
+    /**
+     * フィールド [targetStyle] の値を設定します。
+     *
+     * フィールドの説明: [出力先フォルダの書式を指定します。&lt;br&gt;\nblanco: [targetdir]/main&lt;br&gt;\nmaven: [targetdir]/main/java&lt;br&gt;\nfree: [targetdir](targetdirが無指定の場合はblanco/main)]。
+     *
+     * @param argTargetStyle フィールド[targetStyle]に設定する値。
+     */
+    public void setTargetStyle(final String argTargetStyle) {
+        fTargetStyle = argTargetStyle;
+    }
+
+    /**
+     * フィールド [targetStyle] の値を取得します。
+     *
+     * フィールドの説明: [出力先フォルダの書式を指定します。&lt;br&gt;\nblanco: [targetdir]/main&lt;br&gt;\nmaven: [targetdir]/main/java&lt;br&gt;\nfree: [targetdir](targetdirが無指定の場合はblanco/main)]。
+     * デフォルト: [blanco]。
+     *
+     * @return フィールド[targetStyle]から取得した値。
+     */
+    public String getTargetStyle() {
+        return fTargetStyle;
+    }
+
+    /**
+     * フィールド [lineSeparator] の値を設定します。
+     *
+     * フィールドの説明: [行末記号をしていします。LF=0x0a, CR=0x0d, CFLF=0x0d0x0a とします。LFがデフォルトです。]。
+     *
+     * @param argLineSeparator フィールド[lineSeparator]に設定する値。
+     */
+    public void setLineSeparator(final String argLineSeparator) {
+        fLineSeparator = argLineSeparator;
+    }
+
+    /**
+     * フィールド [lineSeparator] の値を取得します。
+     *
+     * フィールドの説明: [行末記号をしていします。LF=0x0a, CR=0x0d, CFLF=0x0d0x0a とします。LFがデフォルトです。]。
+     * デフォルト: [LF]。
+     *
+     * @return フィールド[lineSeparator]から取得した値。
+     */
+    public String getLineSeparator() {
+        return fLineSeparator;
+    }
+
+    /**
      * このバリューオブジェクトの文字列表現を取得します。
      *
      * <P>使用上の注意</P>
@@ -733,6 +826,9 @@ public class BlancoDbProcessInput {
         buf.append(",encoding=" + fEncoding);
         buf.append(",convertStringToMsWindows31jUnicode=" + fConvertStringToMsWindows31jUnicode);
         buf.append(",cache=" + fCache);
+        buf.append(",useruntime=" + fUseruntime);
+        buf.append(",targetStyle=" + fTargetStyle);
+        buf.append(",lineSeparator=" + fLineSeparator);
         buf.append("]");
         return buf.toString();
     }
@@ -824,5 +920,14 @@ public class BlancoDbProcessInput {
         // Name: fCache
         // Type: java.lang.String
         target.fCache = this.fCache;
+        // Name: fUseruntime
+        // Type: java.lang.String
+        target.fUseruntime = this.fUseruntime;
+        // Name: fTargetStyle
+        // Type: java.lang.String
+        target.fTargetStyle = this.fTargetStyle;
+        // Name: fLineSeparator
+        // Type: java.lang.String
+        target.fLineSeparator = this.fLineSeparator;
     }
 }

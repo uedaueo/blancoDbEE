@@ -139,6 +139,21 @@ public class BlancoDbTask extends Task {
     protected boolean fIsFieldCacheProcessed = false;
 
     /**
+     * フィールド [useruntime] に値がセットされたかどうか。
+     */
+    protected boolean fIsFieldUseruntimeProcessed = false;
+
+    /**
+     * フィールド [targetStyle] に値がセットされたかどうか。
+     */
+    protected boolean fIsFieldTargetStyleProcessed = false;
+
+    /**
+     * フィールド [lineSeparator] に値がセットされたかどうか。
+     */
+    protected boolean fIsFieldLineSeparatorProcessed = false;
+
+    /**
      * verboseモードで動作させるかどうか。
      *
      * @param arg verboseモードで動作させるかどうか。
@@ -724,6 +739,84 @@ public class BlancoDbTask extends Task {
     }
 
     /**
+     * Antタスクの[useruntime]アトリビュートのセッターメソッド。
+     *
+     * 項目番号: 24<br>
+     * ランタイムを使用してインタフェイスやアノテーションを設定します。<br>
+     *
+     * @param arg セットしたい値
+     */
+    public void setUseruntime(final String arg) {
+        fInput.setUseruntime(arg);
+        fIsFieldUseruntimeProcessed = true;
+    }
+
+    /**
+     * Antタスクの[useruntime]アトリビュートのゲッターメソッド。
+     *
+     * 項目番号: 24<br>
+     * ランタイムを使用してインタフェイスやアノテーションを設定します。<br>
+     * デフォルト値[false]が設定されています。Apache Antタスク上でアトリビュートの指定が無い場合には、デフォルト値が設定されます。<br>
+     *
+     * @return このフィールドの値
+     */
+    public String getUseruntime() {
+        return fInput.getUseruntime();
+    }
+
+    /**
+     * Antタスクの[targetStyle]アトリビュートのセッターメソッド。
+     *
+     * 項目番号: 25<br>
+     * 出力先フォルダの書式を指定します。&lt;br&gt;\nblanco: [targetdir]/main&lt;br&gt;\nmaven: [targetdir]/main/java&lt;br&gt;\nfree: [targetdir](targetdirが無指定の場合はblanco/main)<br>
+     *
+     * @param arg セットしたい値
+     */
+    public void setTargetStyle(final String arg) {
+        fInput.setTargetStyle(arg);
+        fIsFieldTargetStyleProcessed = true;
+    }
+
+    /**
+     * Antタスクの[targetStyle]アトリビュートのゲッターメソッド。
+     *
+     * 項目番号: 25<br>
+     * 出力先フォルダの書式を指定します。&lt;br&gt;\nblanco: [targetdir]/main&lt;br&gt;\nmaven: [targetdir]/main/java&lt;br&gt;\nfree: [targetdir](targetdirが無指定の場合はblanco/main)<br>
+     * デフォルト値[blanco]が設定されています。Apache Antタスク上でアトリビュートの指定が無い場合には、デフォルト値が設定されます。<br>
+     *
+     * @return このフィールドの値
+     */
+    public String getTargetStyle() {
+        return fInput.getTargetStyle();
+    }
+
+    /**
+     * Antタスクの[lineSeparator]アトリビュートのセッターメソッド。
+     *
+     * 項目番号: 26<br>
+     * 行末記号をしていします。LF=0x0a, CR=0x0d, CFLF=0x0d0x0a とします。LFがデフォルトです。<br>
+     *
+     * @param arg セットしたい値
+     */
+    public void setLineSeparator(final String arg) {
+        fInput.setLineSeparator(arg);
+        fIsFieldLineSeparatorProcessed = true;
+    }
+
+    /**
+     * Antタスクの[lineSeparator]アトリビュートのゲッターメソッド。
+     *
+     * 項目番号: 26<br>
+     * 行末記号をしていします。LF=0x0a, CR=0x0d, CFLF=0x0d0x0a とします。LFがデフォルトです。<br>
+     * デフォルト値[LF]が設定されています。Apache Antタスク上でアトリビュートの指定が無い場合には、デフォルト値が設定されます。<br>
+     *
+     * @return このフィールドの値
+     */
+    public String getLineSeparator() {
+        return fInput.getLineSeparator();
+    }
+
+    /**
      * Antタスクのメイン処理。Apache Antから このメソッドが呼び出されます。
      *
      * @throws BuildException タスクとしての例外が発生した場合。
@@ -781,6 +874,9 @@ public class BlancoDbTask extends Task {
             System.out.println("- encoding:[" + getEncoding() + "]");
             System.out.println("- convertStringToMsWindows31jUnicode:[" + getConvertStringToMsWindows31jUnicode() + "]");
             System.out.println("- cache:[" + getCache() + "]");
+            System.out.println("- useruntime:[" + getUseruntime() + "]");
+            System.out.println("- targetStyle:[" + getTargetStyle() + "]");
+            System.out.println("- lineSeparator:[" + getLineSeparator() + "]");
         }
 
         try {

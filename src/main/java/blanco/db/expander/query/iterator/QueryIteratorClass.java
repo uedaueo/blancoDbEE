@@ -1,7 +1,7 @@
 /*
  * blancoDb
  * Copyright (C) 2004-2006 Yasuo Nakanishi
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -23,18 +23,13 @@ import blanco.db.expander.query.GetStatementMethod;
 import blanco.db.expander.query.PrepareStatementMethod;
 import blanco.db.expander.query.PrepareStatementMethod2;
 import blanco.db.expander.query.QueryConstructor;
-import blanco.db.expander.query.field.ConnectionField;
-import blanco.db.expander.query.field.LogField;
-import blanco.db.expander.query.field.LogSqlDynamicSqlField;
-import blanco.db.expander.query.field.LogSqlInParamField;
-import blanco.db.expander.query.field.ResultSetField;
-import blanco.db.expander.query.field.StatementField;
+import blanco.db.expander.query.field.*;
 import blanco.db.resourcebundle.BlancoDbResourceBundle;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
  * 個別のクラスを展開するためのクラス。
- * 
+ *
  * @author Yasuo Nakanishi
  */
 public class QueryIteratorClass extends BlancoDbAbstractClass {
@@ -57,12 +52,14 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
                 + "] " + fSqlInfo.getDescription() + " (QueryIterator)");
         fCgSourceFile.getClassList().add(fCgClass);
 
-     // (2013/01/08 一旦登録解除) fCgClass.getExtendClassList().add(fCgFactory.createType("java.io.Closeable"));
-        fCgClass.getImplementInterfaceList().add(fCgFactory.createType("blanco.db.runtime.BlancoDbQuery"));
-        
-        // アノテーションを付与します。
-        fCgClass.getAnnotationList().add("BlancoGeneratedBy(name = \"blancoDb\")");
-        fCgSourceFile.getImportList().add("blanco.fw.BlancoGeneratedBy");
+        if (fDbSetting.getUseRuntime()) {
+            // (2013/01/08 一旦登録解除) fCgClass.getExtendClassList().add(fCgFactory.createType("java.io.Closeable"));
+            fCgClass.getImplementInterfaceList().add(fCgFactory.createType("blanco.db.runtime.BlancoDbQuery"));
+
+            // アノテーションを付与します。
+            fCgClass.getAnnotationList().add("BlancoGeneratedBy(name = \"blancoDb\")");
+            fCgSourceFile.getImportList().add("blanco.fw.BlancoGeneratedBy");
+        }
 
         fCgClass.getLangDoc().getDescriptionList()
                 .add("検索型SQL文をラッピングして各種アクセサを提供します。<br>");
@@ -84,6 +81,19 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
                 BlancoDbUtil.getRuntimePackage(fDbSetting)
                         + ".util.BlancoDbUtil");
 
+        /*
+         * DynamicClauseが定義されている場合はインポートします。
+         */
+        if (fSqlInfo.getDynamicConditionList().size() > 0) {
+            fCgSourceFile.getImportList().add(
+                    BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicClause"
+            );
+            fCgSourceFile.getImportList().add(
+                    BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicParameter"
+            );
+        }
+
+        new MapDynamicClauseField(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile, fCgClass).expand();
         new ConnectionField(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile,
                 fCgClass).expand();
         new StatementField(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile,

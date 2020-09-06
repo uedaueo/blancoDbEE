@@ -16,7 +16,7 @@ public class SimpleSqliteTester {
         ite.setInputParameter(1);
 
         final SampleSQLite001Row row = ite.getSingleRow();
-        System.out.println("Search result: [" + row.getColText() + "]");
+//        System.out.println("Search result: [" + row.getColText() + "]");
 
         ite.close();
 

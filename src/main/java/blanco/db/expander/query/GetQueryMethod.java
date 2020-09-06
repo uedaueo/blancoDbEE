@@ -1,7 +1,7 @@
 /*
  * blancoDb
  * Copyright (C) 2004-2006 Yasuo Nakanishi
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -23,7 +23,7 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
  * 個別のメソッドを展開するためのクラス。
- * 
+ *
  * @author Yasuo Nakanishi
  */
 public class GetQueryMethod extends BlancoDbAbstractMethod {
@@ -58,8 +58,8 @@ public class GetQueryMethod extends BlancoDbAbstractMethod {
                 .escapeStringAsJavaSource(fSqlInfo.getQuery());
 
         // クエリの #パラメータの?への変換
-        final String actualSql = new BlancoDbQueryParserUtil(escapedQuery)
-                .getNaturalSqlStringForJava();
+        final String actualSql = new BlancoDbQueryParserUtil(fSqlInfo)
+                .getNaturalSqlStringOnlyStatic(escapedQuery);
 
         listLine.add("return \"" + actualSql + "\";");
     }

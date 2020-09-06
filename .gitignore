@@ -14,3 +14,5 @@ buildNumber.properties
 tmp/
 .idea/
 blancoDbEE.iml
+~$*
+test/backup/
