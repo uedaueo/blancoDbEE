@@ -103,6 +103,25 @@ public class BlancoDbUtilClassJava {
                 break;
             }
 
+            {
+                /* 動的条件句で使用する比較演算子記号をSQLに変換するためのMapを用意します。 */
+                List<String> plainText = cgClass.getPlainTextList();
+                plainText.add("");
+                plainText.add("static final private Map<String, String> mapComparison = new HashMap<String, String>() {");
+                plainText.add("{");
+                plainText.add("put(\"EQ\", \"=\");");
+                plainText.add("put(\"GT\", \"=\");");
+                plainText.add("put(\"LT\", \"=\");");
+                plainText.add("put(\"GE\", \"=\");");
+                plainText.add("put(\"LE\", \"=\");");
+                plainText.add("put(\"LIKE\", \"=\");");
+                plainText.add("put(\"NOT LIKE\", \"=\");");
+                plainText.add("}");
+                plainText.add("};");
+                fCgSourceFile.getImportList().add("java.util.Map");
+                fCgSourceFile.getImportList().add("java.util.HashMap");
+            }
+
             final BlancoCgMethod cgMethod = fCgFactory.createMethod(
                     "convertToBlancoException", null);
             cgClass.getMethodList().add(cgMethod);
@@ -221,11 +240,12 @@ public class BlancoDbUtilClassJava {
             paramMap.setFinal(true);
 
             /* 第二引数：動的条件式のパラメータクラス */
-            BlancoCgParameter paramParam = fCgFactory.createParameter("argParameter", "BlancoDbDynamicParameter", "動的条件式を選択するためのパラメータを指定します。");
+            String dynParam = fCgSourceFile.getPackage() + ".BlancoDbDynamicParameter";
+            BlancoCgParameter paramParam = fCgFactory.createParameter("argParameter", dynParam, "動的条件式を選択するためのパラメータを指定します。");
             cgMethod.getParameterList().add(paramParam);
             paramParam.getType().setGenerics("<T>");
             /* BlancoDbDynamicParameter は BlancoDbUtil と同じパッケージに置かれる前提だが、念のため import リストに入れておく。 */
-            fCgSourceFile.getImportList().add(fCgSourceFile.getPackage() + ".BlancoDbDynamicParameter");
+            fCgSourceFile.getImportList().add(dynParam);
             paramParam.setFinal(true);
 
             /* 第三引数：動的条件式のパラメータクラス */
@@ -245,7 +265,7 @@ public class BlancoDbUtilClassJava {
             listLine.add("if (argParameter != null) {");
             listLine.add("String key = argParameter.getKey();");
             listLine.add("");
-            listLine.add("List<T> values = argParameter.getValues()");
+            listLine.add("List<T> values = argParameter.getValues();");
             listLine.add("if (key != null) {");
             listLine.add("BlancoDbDynamicClause dynamicClause = argMapClause.get(key);");
             listLine.add("if (dynamicClause != null) {"); //80
@@ -285,7 +305,7 @@ public class BlancoDbUtilClassJava {
             listLine.add("}");
             listLine.add("} else if (\"COMPARE\".equals(condition)) {");
             listLine.add("if (values != null && values.size() == 1) {");
-            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" \" + dynamicClause.getComparison() + \" ? )\");");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" \" + mapComparison.get(dynamicClause.getComparison()) + \" ? )\");");
             listLine.add("}");
             listLine.add("}");
             listLine.add("query = argQuery.replace(\"${\" + tag + \"}\", sb.toString());"); // 120
@@ -327,7 +347,7 @@ public class BlancoDbUtilClassJava {
             paramIndex.setFinal(true);
 
             /* 戻り値 */
-            cgMethod.setReturn(fCgFactory.createReturn("java.lang.String",
+            cgMethod.setReturn(fCgFactory.createReturn("int",
                     "Tag置換後のqueryを戻します。"));
             cgMethod.setVirtualParameterDefinition("<T>");
 

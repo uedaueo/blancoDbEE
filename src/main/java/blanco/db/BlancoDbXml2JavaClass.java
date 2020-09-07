@@ -123,6 +123,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
                         } else {
                             // 標準エラー出力にエラー表示の上処理続行します。
                             System.err.println("SQL 定義書例外: " + ex.getMessage());
+                            ex.printStackTrace();
                         }
                     }
                 }

@@ -106,7 +106,8 @@ public class QueryInvokerClass extends BlancoDbAbstractClass {
                 fCgSourceFile, fCgClass).expand();
 
         // 入力パラメータがある場合にのみbindします。
-        if (fSqlInfo.getInParameterList().size() > 0) {
+        if (fSqlInfo.getInParameterList().size() > 0 ||
+                fSqlInfo.getDynamicConditionList().size() > 0) {
             new SetInputParameterMethod(fDbSetting, fSqlInfo, fCgFactory,
                     fCgSourceFile, fCgClass, false).expand();
         }

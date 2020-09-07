@@ -113,7 +113,8 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
                 fCgSourceFile, fCgClass).expand();
 
         // パラメータがある場合にのみ bindメソッドを生成します。
-        if (fSqlInfo.getInParameterList().size() > 0) {
+        if (fSqlInfo.getInParameterList().size() > 0 ||
+        fSqlInfo.getDynamicConditionList().size() > 0) {
             new SetInputParameterMethod(fDbSetting, fSqlInfo, fCgFactory,
                     fCgSourceFile, fCgClass, false).expand();
         }

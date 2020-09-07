@@ -1,6 +1,6 @@
 /*
  * blancoDb Enterprise Edition Copyright (C) 2004-2005 Tosiki Iga
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
@@ -17,15 +17,15 @@ import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
  * blancoDbの型マッピングに関するメソッドを集めたクラス。
- * 
+ *
  * @author ToshikiIga
  */
 public final class BlancoDbMappingUtilJava {
     /**
      * 列構造体からJava言語におけるフルクラス名を取得します。
-     * 
+     *
      * この処理は、プログラミング言語ごとに異なるものです。 Typesを Java言語の何の型にマッピングするのか、という重要な処理にあたります。
-     * 
+     *
      * @param columnStructure
      * @return
      */
@@ -132,7 +132,7 @@ public final class BlancoDbMappingUtilJava {
 
     /**
      * 列構造体からJava言語におけるクラス名を取得します。
-     * 
+     *
      * @param columnStructure
      * @return
      */
@@ -144,9 +144,9 @@ public final class BlancoDbMappingUtilJava {
 
     /**
      * プリミティブでしかもNULLをサポートすべきものかどうかを判断します。
-     * 
+     *
      * プリミティブ型ではnullが表現できない型がありますので、その型に該当するかどうか判定をおこないます。
-     * 
+     *
      * @param columnStructure
      * @return
      */
@@ -235,7 +235,7 @@ public final class BlancoDbMappingUtilJava {
 
     /**
      * 列情報をもとに、PreparedStatementに対するセッターメソッド名を取得します。
-     * 
+     *
      * @param columnStructure
      * @return
      */
@@ -246,7 +246,7 @@ public final class BlancoDbMappingUtilJava {
 
     /**
      * 列情報をもとに、ResultSetに対するゲッターメソッド名を取得します。
-     * 
+     *
      * @param columnStructure
      * @return
      */
@@ -257,7 +257,7 @@ public final class BlancoDbMappingUtilJava {
 
     /**
      * 列情報をもとに、ResultSetに対するupdateメソッド名を取得します。
-     * 
+     *
      * @param columnStructure
      * @return
      */
@@ -268,7 +268,7 @@ public final class BlancoDbMappingUtilJava {
 
     /**
      * ゲッターセッターメソッド名のベース名称を取得します。
-     * 
+     *
      * @param columnStructure
      * @return
      */
@@ -340,15 +340,13 @@ public final class BlancoDbMappingUtilJava {
 
     /**
      * 必要な場合のみ、プリミティブ型などに対してラッパークラスをラッピングします。
-     * 
+     *
      * プリミティブ型をラッパークラスのオブジェクトへと置き換える処理をおこないます。<br>
      * 加えて、java.sql.Dateやjava.sql.Timestampなどから
      * java.util.Dateへの置き換えもここでおこなわれています。
-     * 
-     * @param String
-     *            originalLine オリジナル行
-     * @param String
-     *            javaTypeName Java言語上の型
+     *
+     * @param columnStructure
+     * @param originalLine
      * @return
      */
     public static final String mapPrimitiveIntoWrapperClass(
@@ -418,9 +416,9 @@ public final class BlancoDbMappingUtilJava {
      * ラッパークラスをプリミティブに変換します。<br>
      * ラッパークラスのオブジェクトをプリミティブ型へと置き換える処理をおこないます。<br>
      * 加えて、java.util.Dateから java.sql.Timestampへの置き換えもここでおこなわれています。
-     * 
+     *
+     * @param columnStructure
      * @param originalLine
-     * @param javaTypeName
      * @return
      */
     public static final String mapWrapperClassIntoPrimitive(

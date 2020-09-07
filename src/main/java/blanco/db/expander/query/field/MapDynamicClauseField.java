@@ -45,7 +45,9 @@ public class MapDynamicClauseField extends BlancoDbAbstractField {
 
         List<BlancoDbDynamicConditionStructure> conditions = fSqlInfo.getDynamicConditionList();
 
-        System.out.println("Dynamic!!! " + conditions.size());
+        if (fDbSetting.getVerbose()) {
+            System.out.println("Dynamic!!! " + conditions.size());
+        }
 
         if (conditions == null || conditions.size() == 0) {
             if (fDbSetting.getVerbose()) {

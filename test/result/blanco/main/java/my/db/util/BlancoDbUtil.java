@@ -7,10 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import BlancoDbDynamicParameter;
 import my.db.exception.DeadlockException;
 import my.db.exception.IntegrityConstraintException;
 import my.db.exception.TimeoutException;
@@ -23,6 +23,18 @@ import my.db.exception.TimeoutException;
  * @author blanco Framework
  */
 public class BlancoDbUtil {
+    static final private Map<String, String> mapComparison = new HashMap<String, String>() {
+        {
+            put("EQ", "=");
+            put("GT", "=");
+            put("LT", "=");
+            put("GE", "=");
+            put("LE", "=");
+            put("LIKE", "=");
+            put("NOT LIKE", "=");
+        }
+    };
+
     /**
      * SQL例外をblanco Framework例外オブジェクトに変換します。<br>
      * SQL例外のなかで、blanco Frameworkの例外オブジェクトに変換すべきものについて変換します。<br>
@@ -82,7 +94,7 @@ public class BlancoDbUtil {
         if (argParameter != null) {
             String key = argParameter.getKey();
 
-            List<T> values = argParameter.getValues()
+            List<T> values = argParameter.getValues();
             if (key != null) {
                 BlancoDbDynamicClause dynamicClause = argMapClause.get(key);
                 if (dynamicClause != null) {
@@ -122,7 +134,7 @@ public class BlancoDbUtil {
                         }
                     } else if ("COMPARE".equals(condition)) {
                         if (values != null && values.size() == 1) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " " + dynamicClause.getComparison() + " ? )");
+                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " " + mapComparison.get(dynamicClause.getComparison()) + " ? )");
                         }
                     }
                     query = argQuery.replace("${" + tag + "}", sb.toString());
@@ -144,7 +156,7 @@ public class BlancoDbUtil {
      * @return Tag置換後のqueryを戻します。
      * @throws SQLException
      */
-    public static final <T> String setInputParameter(final PreparedStatement argStatement, final List<T> values, final Integer startIndex) throws SQLException {
+    public static final <T> int setInputParameter(final PreparedStatement argStatement, final List<T> values, final Integer startIndex) throws SQLException {
         int index = startIndex;
         for (T value : values) {
             /*
