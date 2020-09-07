@@ -372,7 +372,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         String tag = conditionStructure.getTag();
         String type = conditionStructure.getType();
         listLine.add("if (" + tag + " != null) {");
-        listLine.add("List<" + type + "> values = " + tag + ".getValues();");
+        listLine.add("java.util.List<" + type + "> values = " + tag + ".getValues();");
         listLine.add("index = BlancoDbUtil.setInputParameter(fStatement, values, index);");
         listLine.add("}");
 

@@ -160,17 +160,17 @@ public class SampleSQLite002Iterator {
         index++;
 
         if (BETWEEN01 != null) {
-            List<java.lang.Double> values = BETWEEN01.getValues();
+            java.util.List<java.lang.Double> values = BETWEEN01.getValues();
             index = BlancoDbUtil.setInputParameter(fStatement, values, index);
         }
 
         if (INCLAUSE01 != null) {
-            List<java.lang.Long> values = INCLAUSE01.getValues();
+            java.util.List<java.lang.Long> values = INCLAUSE01.getValues();
             index = BlancoDbUtil.setInputParameter(fStatement, values, index);
         }
 
         if (COMPARE01 != null) {
-            List<java.lang.String> values = COMPARE01.getValues();
+            java.util.List<java.lang.String> values = COMPARE01.getValues();
             index = BlancoDbUtil.setInputParameter(fStatement, values, index);
         }
 
