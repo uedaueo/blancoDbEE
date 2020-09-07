@@ -1,10 +1,10 @@
 package sqlite;
 
-import my.db.query.SampleSQLite001Iterator;
 import my.db.query.SampleSQLite002Iterator;
-import my.db.row.SampleSQLite001Row;
+import my.db.row.SampleSQLite002Row;
 import my.db.util.BlancoDbDynamicParameter;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -46,30 +46,27 @@ public class SimpleSqlite002Tester {
         o.add("COL_ID");
         o.add("COL_TEXT");
 
-        String query = ite.setInputParameter(
+        ite.setInputParameter(
                 "%",
+                12.345,
                 betweenNumeric,
                 inId,
                 compText,
-                orderbyColumns,
-                12.345
+                orderbyColumns
         );
 
-        System.out.println("query = " + query);
-
         ite.executeQuery();
-        ResultSet result = ite.getResultSet();
+        List<SampleSQLite002Row> rows = ite.getList(6000);
 
-        while (result.next()) {
-            int col_id = result.getInt("COL_ID");
-            String col_text = result.getString("COL_TEXT");
-            Double col_numeric = result.getDouble("COL_NUMERIC");
+        for (SampleSQLite002Row row : rows) {
+            int col_id = row.getColId();
+            String col_text = row.getColText();
+            BigDecimal col_numeric = row.getColNumeric();
 
             System.out.println("Search result: [" + col_id + "][" + col_text + "][" + col_numeric + "]");
         }
 
         ite.close();
-
         conn.close();
     }
 }
