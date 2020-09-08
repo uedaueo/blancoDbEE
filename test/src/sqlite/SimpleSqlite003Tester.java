@@ -1,30 +1,31 @@
 package sqlite;
 
 import my.db.query.SampleSQLite002Iterator;
+import my.db.query.SampleSQLite003Iterator;
 import my.db.row.SampleSQLite002Row;
+import my.db.row.SampleSQLite003Row;
 import my.db.util.BlancoDbDynamicParameter;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleSqlite002Tester {
+public class SimpleSqlite003Tester {
     public static void main(String[] args) throws Exception {
         Class.forName("org.sqlite.JDBC");
         final Connection conn = DriverManager.getConnection("jdbc:sqlite:./test/data/sqlite/sqlite.db");
         conn.setAutoCommit(false);
 
-        final SampleSQLite002Iterator ite = new SampleSQLite002Iterator(conn);
+        final SampleSQLite003Iterator ite = new SampleSQLite003Iterator(conn);
 
         BlancoDbDynamicParameter<Double> betweenNumeric =  new BlancoDbDynamicParameter<>();
         betweenNumeric.setKey("betweenNumeric");
         betweenNumeric.setValues(new ArrayList<>());
         List<Double> btw = betweenNumeric.getValues();
-        btw.add(10.0);
-        btw.add(15.0);
+        btw.add(0.0);
+        btw.add(1.0);
 
         // between ? AND ?
 
@@ -64,9 +65,9 @@ public class SimpleSqlite002Tester {
         );
 
         ite.executeQuery();
-        List<SampleSQLite002Row> rows = ite.getList(6000);
+        List<SampleSQLite003Row> rows = ite.getList(6000);
 
-        for (SampleSQLite002Row row : rows) {
+        for (SampleSQLite003Row row : rows) {
             int col_id = row.getColId();
             String col_text = row.getColText();
             BigDecimal col_numeric = row.getColNumeric();

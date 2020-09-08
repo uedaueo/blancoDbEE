@@ -289,9 +289,27 @@ public class BlancoDbUtilClassJava {
             listLine.add("if (values != null && values.size() == 2) {");
             listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" BETWEEN ? AND ? )\");");
             listLine.add("}"); // 100
+            listLine.add("} else if (\"NOT BETWEEN\".equals(condition)) {");
+            listLine.add("if (values != null && values.size() == 2) {");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" NOT BETWEEN ? AND ? )\");");
+            listLine.add("}"); // 100
             listLine.add("} else if (\"IN\".equals(condition)) {");
             listLine.add("if (values != null && values.size() > 0) {");
             listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" IN ( \");");
+            listLine.add("int count = 0;");
+            listLine.add("for (T value : values) {");
+            listLine.add("if (count > 0) {");
+            listLine.add("sb.append(\", \");");
+            listLine.add("}");
+            listLine.add("sb.append(\"?\");");
+            listLine.add("count++;"); // 110
+            listLine.add("}");
+            listLine.add("sb.append(\" )\");");
+            listLine.add("sb.append(\" )\");");
+            listLine.add("}");
+            listLine.add("} else if (\"NOT IN\".equals(condition)) {");
+            listLine.add("if (values != null && values.size() > 0) {");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" NOT IN ( \");");
             listLine.add("int count = 0;");
             listLine.add("for (T value : values) {");
             listLine.add("if (count > 0) {");

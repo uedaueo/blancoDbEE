@@ -118,9 +118,27 @@ public class BlancoDbUtil {
                         if (values != null && values.size() == 2) {
                             sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " BETWEEN ? AND ? )");
                         }
+                    } else if ("NOT BETWEEN".equals(condition)) {
+                        if (values != null && values.size() == 2) {
+                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " NOT BETWEEN ? AND ? )");
+                        }
                     } else if ("IN".equals(condition)) {
                         if (values != null && values.size() > 0) {
                             sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " IN ( ");
+                            int count = 0;
+                            for (T value : values) {
+                                if (count > 0) {
+                                    sb.append(", ");
+                                }
+                                sb.append("?");
+                                count++;
+                            }
+                            sb.append(" )");
+                            sb.append(" )");
+                        }
+                    } else if ("NOT IN".equals(condition)) {
+                        if (values != null && values.size() > 0) {
+                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " NOT IN ( ");
                             int count = 0;
                             for (T value : values) {
                                 if (count > 0) {
