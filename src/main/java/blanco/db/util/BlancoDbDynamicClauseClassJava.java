@@ -10,10 +10,7 @@
 package blanco.db.util;
 
 import blanco.cg.BlancoCgObjectFactory;
-import blanco.cg.valueobject.BlancoCgClass;
-import blanco.cg.valueobject.BlancoCgField;
-import blanco.cg.valueobject.BlancoCgMethod;
-import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoNameAdjuster;
 import blanco.db.common.stringgroup.BlancoDbLoggingModeStringGroup;
 import blanco.db.common.valueobject.BlancoDbSetting;
@@ -83,7 +80,7 @@ public class BlancoDbDynamicClauseClassJava {
                     buildField("condition", "条件句タイプ")
             );
             cgClass.getFieldList().add(
-                    buildField("item", "対象Item")
+                    buildField("items", "対象Items", "java.util.List", "java.lang.String", "null")
             );
             cgClass.getFieldList().add(
                     buildField("comparison", "比較演算子")
@@ -102,7 +99,7 @@ public class BlancoDbDynamicClauseClassJava {
                     buildConstructor("DEFAULT")
             );
             cgClass.getMethodList().add(
-                    buildConstructor("ITEMONLY")
+                    buildConstructor("ORDERBY")
             );
             cgClass.getMethodList().add(
                     buildConstructor("NOTCOMPARE")
@@ -129,10 +126,10 @@ public class BlancoDbDynamicClauseClassJava {
             );
 
             cgClass.getMethodList().add(
-                    buildMethodSet("item", "対象Item")
+                    buildMethodSet("items", "対象Item", "java.util.List", "java.lang.String")
             );
             cgClass.getMethodList().add(
-                    buildMethodGet("item", "対象Item")
+                    buildMethodGet("items", "対象Item", "java.util.List", "java.lang.String")
             );
 
             cgClass.getMethodList().add(
@@ -155,15 +152,22 @@ public class BlancoDbDynamicClauseClassJava {
             cgClass.getMethodList().add(
                     buildMethodGet("type", "値の型")
             );
+
+            cgClass.getMethodList().add(
+                    buildMethodItems()
+            );
+            cgClass.getMethodList().add(
+                    buildMethodGetItem()
+            );
         }
 
         if (fDbSetting.getLogging()) {
             switch (fDbSetting.getLoggingMode()) {
-            case BlancoDbLoggingModeStringGroup.PERFORMANCE:
-            case BlancoDbLoggingModeStringGroup.SQLID:
-                BlancoPerfomanceCommonUtil.addPerfomanceFieldMethod(fCgFactory,
-                        fCgSourceFile, cgClass);
-                break;
+                case BlancoDbLoggingModeStringGroup.PERFORMANCE:
+                case BlancoDbLoggingModeStringGroup.SQLID:
+                    BlancoPerfomanceCommonUtil.addPerfomanceFieldMethod(fCgFactory,
+                            fCgSourceFile, cgClass);
+                    break;
             }
         }
 
@@ -198,13 +202,13 @@ public class BlancoDbDynamicClauseClassJava {
                 fCgFactory.createParameter("argCondition", "java.lang.String", "条件句タイプ"));
         lineList.add("this.condition = argCondition;");
 
-        if ("ITEMONLY".equals(type)) {
-            return cgMethod;
-        }
-
         cgMethod.getParameterList().add(
                 fCgFactory.createParameter("argItem", "java.lang.String", "対象Item"));
-        lineList.add("this.item = argItem;");
+        lineList.add("this.items = this.parseItems(argItem);");
+
+        if ("ORDERBY".equals(type)) {
+            return cgMethod;
+        }
 
         cgMethod.getParameterList().add(
                 fCgFactory.createParameter("argLogical", "java.lang.String", "論理演算子（先導）"));
@@ -254,6 +258,114 @@ public class BlancoDbDynamicClauseClassJava {
         // メソッドの実装
         cgMethod.getLineList().add(
                 "return this." + name + ";");
+
+        return cgMethod;
+    }
+
+    private BlancoCgField buildField(
+            final String name,
+            final String desc,
+            final String type,
+            final String generic,
+            final String defaultValud
+    ) {
+        final BlancoCgField cgField = fCgFactory.createField(name, type, desc);
+        cgField.setAccess("private");
+        if (generic != null && generic.length() > 0) {
+            cgField.getType().setGenerics("<" + generic + ">");
+        }
+        cgField.setDefault(defaultValud);
+        return cgField;
+    }
+
+    private BlancoCgMethod buildMethodSet(
+            final String name,
+            final String desc,
+            final String type,
+            final String generic
+    ) {
+        // おのおののフィールドに対するセッターメソッドを生成します。
+        final BlancoCgMethod cgMethod = fCgFactory.createMethod("set" + BlancoNameAdjuster.toClassName(name), desc);
+
+        BlancoCgParameter parameter = fCgFactory.createParameter("arg" + BlancoNameAdjuster.toClassName(name), type, desc);
+        if (generic != null && generic.length() > 0) {
+            parameter.getType().setGenerics("<" + generic + ">");
+        }
+        cgMethod.getParameterList().add(parameter);
+
+        // メソッドの実装
+        cgMethod.getLineList().add(
+                "this." + name + " = " + "arg" + BlancoNameAdjuster.toClassName(name) + ";"
+        );
+        return cgMethod;
+    }
+
+    private BlancoCgMethod buildMethodGet(
+            final String name,
+            final String desc,
+            final String type,
+            final String generic
+    ) {
+        // おのおののフィールドに対するゲッターメソッドを生成します。
+        final BlancoCgMethod cgMethod = fCgFactory.createMethod("get" + BlancoNameAdjuster.toClassName(name), desc);
+
+        cgMethod.setReturn(fCgFactory.createReturn(type, desc));
+        if (generic != null && generic.length() > 0) {
+            cgMethod.getReturn().getType().setGenerics("<" + generic + ">");
+        }
+
+        // メソッドの実装
+        cgMethod.getLineList().add(
+                "return this." + name + ";");
+
+        return cgMethod;
+    }
+
+    private BlancoCgMethod buildMethodItems() {
+        final BlancoCgMethod cgMethod = fCgFactory.createMethod("parseItems", "カンマ区切りで指定された対象itemを文字列のリストに投入します。");
+        BlancoCgParameter parameter = fCgFactory.createParameter("argItem", "java.lang.String", "対象itemsに入力されたカンマ区切りのitemのリストです。");
+        parameter.setFinal(true);
+        cgMethod.getParameterList().add(
+                parameter
+        );
+        cgMethod.setReturn(
+                fCgFactory.createReturn("java.util.List", "itemのListです。")
+        );
+        cgMethod.getReturn().getType().setGenerics("<java.lang.String>");
+
+        List<String> lineList = cgMethod.getLineList();
+        lineList.add("java.util.List<java.lang.String> items = new java.util.ArrayList<>();");
+        lineList.add("if (argItem != null && argItem.length() > 0) {");
+        lineList.add("java.lang.String [] itemArray = argItem.split(\",\");");
+        lineList.add("for (int i = 0; i < itemArray.length; i++) {");
+        lineList.add("items.add(itemArray[i].trim());");
+        lineList.add("}");
+        lineList.add("}");
+        lineList.add("return items;");
+
+        return cgMethod;
+    }
+
+    private BlancoCgMethod buildMethodGetItem() {
+        final BlancoCgMethod cgMethod = fCgFactory.createMethod("getItem", "定義済みのitem群からitemを選択します。");
+        BlancoCgParameter parameter = fCgFactory.createParameter("argKey", "java.lang.String", "入力されたitemです。");
+        parameter.setFinal(true);
+        cgMethod.getParameterList().add(
+                parameter
+        );
+        cgMethod.setReturn(
+                fCgFactory.createReturn("java.lang.String", "指定されたitemが存在しなければ null を返します。")
+        );
+
+        List<String> lineList = cgMethod.getLineList();
+        lineList.add("String item = null;");
+        lineList.add("for (String defined : this.items) {");
+        lineList.add("if (defined.equals(argKey)) {");
+        lineList.add("item = defined;");
+        lineList.add("break;");
+        lineList.add("}");
+        lineList.add("}");
+        lineList.add("return item;");
 
         return cgMethod;
     }

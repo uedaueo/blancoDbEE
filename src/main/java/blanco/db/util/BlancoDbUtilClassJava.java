@@ -9,8 +9,6 @@
  */
 package blanco.db.util;
 
-import java.util.List;
-
 import blanco.cg.BlancoCgObjectFactory;
 import blanco.cg.valueobject.*;
 import blanco.db.common.stringgroup.BlancoDbDriverNameStringGroup;
@@ -18,6 +16,8 @@ import blanco.db.common.stringgroup.BlancoDbLoggingModeStringGroup;
 import blanco.db.common.util.BlancoDbUtil;
 import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.expander.query.BlancoPerfomanceCommonUtil;
+
+import java.util.List;
 
 /**
  * blancoDbが共通的に利用するユーティリティクラス。
@@ -226,6 +226,12 @@ public class BlancoDbUtilClassJava {
 
             cgMethod.setStatic(true);
             cgMethod.setFinal(true);
+            cgMethod.getThrowList().add(
+                    fCgFactory.createException(
+                    "java.sql.SQLException",
+                    "SQL例外を投げる可能性があります。")
+            );
+
             cgMethod.getLangDoc().getDescriptionList().add(
                     "Excel定義書を元に生成されたMapと、実行時に与えられたパラメータから動的SQLを生成します。<br>");
             cgMethod.getLangDoc().getDescriptionList().add(
@@ -274,28 +280,39 @@ public class BlancoDbUtilClassJava {
             listLine.add("String tag = dynamicClause.getTag();");
             listLine.add("String condition = dynamicClause.getCondition();");
             listLine.add("");
-            listLine.add("if (\"ITEMONLY\".equals(condition)) {");
+            listLine.add("if (\"ORDERBY\".equals(condition)) {");
             listLine.add("if (values != null && values.size() > 0) {");
+            listLine.add("sb.append(\"ORDER BY \");");
             listLine.add("int count = 0;");
             listLine.add("for (T value : values) {");
-            listLine.add("if (count > 0) {"); // 90
+            listLine.add("BlancoDbDynamicOrderBy orderBy = (BlancoDbDynamicOrderBy) value;");
+            listLine.add("if (count > 0) {");
             listLine.add("sb.append(\", \");");
             listLine.add("}");
-            listLine.add("sb.append(value);");
+            listLine.add("String column = dynamicClause.getItem(orderBy.getColumn());");
+            listLine.add("if (column == null) {");
+            listLine.add("throw new SQLException(\"入力に指定された[ \" + orderBy.getColumn() + \" ]は定義書で未定義です。\");");
+            listLine.add("}");
+            listLine.add("sb.append(column);");
+            listLine.add("if (!\"ASC\".equals(orderBy.getOrder())) {");
+            listLine.add("sb.append(\" DESC\");");
+            listLine.add("} else {");
+            listLine.add("sb.append(\" ASC\");");
+            listLine.add("}");
             listLine.add("count++;");
             listLine.add("}");
             listLine.add("}");
             listLine.add("} else if (\"BETWEEN\".equals(condition)) {");
             listLine.add("if (values != null && values.size() == 2) {");
-            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" BETWEEN ? AND ? )\");");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItems().get(0) + \" BETWEEN ? AND ? )\");");
             listLine.add("}"); // 100
             listLine.add("} else if (\"NOT BETWEEN\".equals(condition)) {");
             listLine.add("if (values != null && values.size() == 2) {");
-            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" NOT BETWEEN ? AND ? )\");");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItems().get(0) + \" NOT BETWEEN ? AND ? )\");");
             listLine.add("}"); // 100
             listLine.add("} else if (\"IN\".equals(condition)) {");
             listLine.add("if (values != null && values.size() > 0) {");
-            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" IN ( \");");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItems().get(0) + \" IN ( \");");
             listLine.add("int count = 0;");
             listLine.add("for (T value : values) {");
             listLine.add("if (count > 0) {");
@@ -309,7 +326,7 @@ public class BlancoDbUtilClassJava {
             listLine.add("}");
             listLine.add("} else if (\"NOT IN\".equals(condition)) {");
             listLine.add("if (values != null && values.size() > 0) {");
-            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" NOT IN ( \");");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItems().get(0) + \" NOT IN ( \");");
             listLine.add("int count = 0;");
             listLine.add("for (T value : values) {");
             listLine.add("if (count > 0) {");
@@ -323,7 +340,7 @@ public class BlancoDbUtilClassJava {
             listLine.add("}");
             listLine.add("} else if (\"COMPARE\".equals(condition)) {");
             listLine.add("if (values != null && values.size() == 1) {");
-            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItem() + \" \" + mapComparison.get(dynamicClause.getComparison()) + \" ? )\");");
+            listLine.add("sb.append(dynamicClause.getLogical() + \" ( \" + dynamicClause.getItems().get(0) + \" \" + mapComparison.get(dynamicClause.getComparison()) + \" ? )\");");
             listLine.add("}");
             listLine.add("}");
             listLine.add("query = argQuery.replace(\"${\" + tag + \"}\", sb.toString());"); // 120

@@ -2,6 +2,7 @@ package sqlite;
 
 import my.db.query.SampleSQLite002Iterator;
 import my.db.row.SampleSQLite002Row;
+import my.db.util.BlancoDbDynamicOrderBy;
 import my.db.util.BlancoDbDynamicParameter;
 
 import java.math.BigDecimal;
@@ -46,11 +47,11 @@ public class SimpleSqlite002Tester {
         // COL_ID = ?
         // COL_ID LIKE ? -- '%Field%'
 
-        BlancoDbDynamicParameter<String> orderbyColumns = new BlancoDbDynamicParameter<>();
+        BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> orderbyColumns = new BlancoDbDynamicParameter<>();
         orderbyColumns.setKey("orderbyColumns");
         orderbyColumns.setValues(new ArrayList<>());
-        List<String> o = orderbyColumns.getValues();
-        o.add("COL_ID");
+        List<BlancoDbDynamicOrderBy> o = orderbyColumns.getValues();
+        o.add(new BlancoDbDynamicOrderBy("COL_ID", "ASC"));
 
         // order by COL_TEXT, COL_ID
 

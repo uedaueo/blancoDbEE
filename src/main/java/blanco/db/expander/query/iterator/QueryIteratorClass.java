@@ -17,12 +17,7 @@ import blanco.db.common.stringgroup.BlancoDbSqlInfoScrollStringGroup;
 import blanco.db.common.util.BlancoDbUtil;
 import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
-import blanco.db.expander.query.Finalize;
-import blanco.db.expander.query.GetQueryMethod;
-import blanco.db.expander.query.GetStatementMethod;
-import blanco.db.expander.query.PrepareStatementMethod;
-import blanco.db.expander.query.PrepareStatementMethod2;
-import blanco.db.expander.query.QueryConstructor;
+import blanco.db.expander.query.*;
 import blanco.db.expander.query.field.*;
 import blanco.db.resourcebundle.BlancoDbResourceBundle;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
@@ -90,6 +85,9 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
             );
             fCgSourceFile.getImportList().add(
                     BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicParameter"
+            );
+            fCgSourceFile.getImportList().add(
+                    BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicOrderBy"
             );
         }
 

@@ -16,6 +16,7 @@ import my.db.exception.DeadlockException;
 import my.db.exception.TimeoutException;
 import my.db.row.SampleSQLite002Row;
 import my.db.util.BlancoDbDynamicClause;
+import my.db.util.BlancoDbDynamicOrderBy;
 import my.db.util.BlancoDbDynamicParameter;
 import my.db.util.BlancoDbUtil;
 
@@ -33,7 +34,7 @@ public class SampleSQLite002Iterator {
             put("inId", new BlancoDbDynamicClause("INCLAUSE01", "IN", "COL_ID", "AND", "java.lang.Long"));
             put("compTextEq", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "EQ"));
             put("compTextLike", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "LIKE"));
-            put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ITEMONLY"));
+            put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ORDERBY", "COL_TEXT"));
         }
     };
 
@@ -100,7 +101,7 @@ public class SampleSQLite002Iterator {
      * @return JDBCドライバに与えて実行可能な状態のSQL文。
      */
     public String getQuery() {
-        return "select COL_ID, COL_TEXT, COL_NUMERIC from\n   TEST_BLANCODB\nwhere\n   COL_TEXT like ?\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND COL_NUMERIC = ?\norder by ${ORDERBY}";
+        return "select COL_ID, COL_TEXT, COL_NUMERIC from\n   TEST_BLANCODB\nwhere\n   COL_TEXT like ?\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND COL_NUMERIC = ?\n${ORDERBY}";
     }
 
     /**
@@ -143,7 +144,7 @@ public class SampleSQLite002Iterator {
      * @param ORDERBY 'ORDERBY'列の値
      * @throws SQLException SQL例外が発生した場合。
      */
-    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<java.lang.Double> BETWEEN01, final BlancoDbDynamicParameter<java.lang.Long> INCLAUSE01, final BlancoDbDynamicParameter<java.lang.String> COMPARE01, final BlancoDbDynamicParameter<java.lang.String> ORDERBY) throws SQLException {
+    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<java.lang.Double> BETWEEN01, final BlancoDbDynamicParameter<java.lang.Long> INCLAUSE01, final BlancoDbDynamicParameter<java.lang.String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY) throws SQLException {
         /* タグを置換する */
         String query = this.getQuery();
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, BETWEEN01, query);

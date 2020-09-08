@@ -9,21 +9,6 @@
  */
 package blanco.db;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import blanco.db.util.BlancoDbDynamicClauseClassJava;
-import blanco.db.util.BlancoDbDynamicParameterClassJava;
-import blanco.valueobject.BlancoValueObjectConstants;
-import org.xml.sax.SAXException;
-
 import blanco.cg.BlancoCgObjectFactory;
 import blanco.cg.BlancoCgTransformer;
 import blanco.cg.transformer.BlancoCgTransformerFactory;
@@ -37,24 +22,25 @@ import blanco.db.common.stringgroup.BlancoDbSqlInfoTypeStringGroup;
 import blanco.db.common.util.BlancoDbUtil;
 import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
-import blanco.db.expander.exception.DeadlockExceptionClass;
-import blanco.db.expander.exception.IntegrityConstraintExceptionClass;
-import blanco.db.expander.exception.LockTimeoutExceptionClass;
-import blanco.db.expander.exception.NoRowFoundExceptionClass;
-import blanco.db.expander.exception.NoRowModifiedExceptionClass;
-import blanco.db.expander.exception.NotSingleRowExceptionClass;
-import blanco.db.expander.exception.TimeoutExceptionClass;
-import blanco.db.expander.exception.TooManyRowsFoundExceptionClass;
-import blanco.db.expander.exception.TooManyRowsModifiedExceptionClass;
+import blanco.db.expander.exception.*;
 import blanco.db.expander.query.caller.QueryCallerClass;
 import blanco.db.expander.query.invoker.QueryInvokerClass;
 import blanco.db.expander.query.iterator.QueryIteratorClass;
-import blanco.db.util.BlancoDbMappingUtilJava;
-import blanco.db.util.BlancoDbUtilClassJava;
+import blanco.db.util.*;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 import blanco.valueobject.BlancoValueObjectXml2JavaClass;
 import blanco.valueobject.valueobject.BlancoValueObjectClassStructure;
 import blanco.valueobject.valueobject.BlancoValueObjectFieldStructure;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 中間XMLファイルからソースコードを生成します。
@@ -253,6 +239,9 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
                 BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util",
                 fDbSetting).expand()), fileBlancoMain);
         transformer.transform(adjust(new BlancoDbDynamicParameterClassJava(cgFactory,
+                BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util",
+                fDbSetting).expand()), fileBlancoMain);
+        transformer.transform(adjust(new BlancoDbDynamicOrderByClassJava(cgFactory,
                 BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util",
                 fDbSetting).expand()), fileBlancoMain);
 

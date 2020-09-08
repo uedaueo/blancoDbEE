@@ -3,6 +3,8 @@
  */
 package my.db.util;
 
+import java.util.List;
+
 /**
  * 動的条件句を定義するクラス。
  * このクラスはblancoDbが生成したソースコードで利用されます <br>
@@ -22,9 +24,9 @@ public class BlancoDbDynamicClause {
     private String condition = null;
 
     /**
-     * 対象Item
+     * 対象Items
      */
-    private String item = null;
+    private List<java.lang.String> items = null;
 
     /**
      * 比較演算子
@@ -52,10 +54,12 @@ public class BlancoDbDynamicClause {
      *
      * @param argTag タグ名
      * @param argCondition 条件句タイプ
+     * @param argItem 対象Item
      */
-    public BlancoDbDynamicClause(final String argTag, final String argCondition) {
+    public BlancoDbDynamicClause(final String argTag, final String argCondition, final String argItem) {
         this.tag = argTag;
         this.condition = argCondition;
+        this.items = this.parseItems(argItem);
     }
 
     /**
@@ -70,7 +74,7 @@ public class BlancoDbDynamicClause {
     public BlancoDbDynamicClause(final String argTag, final String argCondition, final String argItem, final String argLogical, final String argType) {
         this.tag = argTag;
         this.condition = argCondition;
-        this.item = argItem;
+        this.items = this.parseItems(argItem);
         this.logical = argLogical;
         this.type = argType;
     }
@@ -88,7 +92,7 @@ public class BlancoDbDynamicClause {
     public BlancoDbDynamicClause(final String argTag, final String argCondition, final String argItem, final String argLogical, final String argType, final String argComparison) {
         this.tag = argTag;
         this.condition = argCondition;
-        this.item = argItem;
+        this.items = this.parseItems(argItem);
         this.logical = argLogical;
         this.type = argType;
         this.comparison = argComparison;
@@ -133,10 +137,10 @@ public class BlancoDbDynamicClause {
     /**
      * 対象Item
      *
-     * @param argItem 対象Item
+     * @param argItems 対象Item
      */
-    public void setItem(final String argItem) {
-        this.item = argItem;
+    public void setItems(final List<java.lang.String> argItems) {
+        this.items = argItems;
     }
 
     /**
@@ -144,8 +148,8 @@ public class BlancoDbDynamicClause {
      *
      * @return 対象Item
      */
-    public String getItem() {
-        return this.item;
+    public List<java.lang.String> getItems() {
+        return this.items;
     }
 
     /**
@@ -200,5 +204,39 @@ public class BlancoDbDynamicClause {
      */
     public String getType() {
         return this.type;
+    }
+
+    /**
+     * カンマ区切りで指定された対象itemを文字列のリストに投入します。
+     *
+     * @param argItem 対象itemsに入力されたカンマ区切りのitemのリストです。
+     * @return itemのListです。
+     */
+    public List<java.lang.String> parseItems(final String argItem) {
+        java.util.List<java.lang.String> items = new java.util.ArrayList<>();
+        if (argItem != null && argItem.length() > 0) {
+            java.lang.String [] itemArray = argItem.split(",");
+            for (int i = 0; i < itemArray.length; i++) {
+                items.add(itemArray[i].trim());
+            }
+        }
+        return items;
+    }
+
+    /**
+     * 定義済みのitem群からitemを選択します。
+     *
+     * @param argKey 入力されたitemです。
+     * @return 指定されたitemが存在しなければ null を返します。
+     */
+    public String getItem(final String argKey) {
+        String item = null;
+        for (String defined : this.items) {
+            if (defined.equals(argKey)) {
+                item = defined;
+                break;
+            }
+        }
+        return item;
     }
 }

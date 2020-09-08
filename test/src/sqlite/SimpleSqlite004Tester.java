@@ -1,9 +1,8 @@
 package sqlite;
 
-import my.db.query.SampleSQLite002Iterator;
-import my.db.query.SampleSQLite003Iterator;
-import my.db.row.SampleSQLite002Row;
-import my.db.row.SampleSQLite003Row;
+import my.db.query.SampleSQLite004Iterator;
+import my.db.row.SampleSQLite004Row;
+import my.db.util.BlancoDbDynamicOrderBy;
 import my.db.util.BlancoDbDynamicParameter;
 
 import java.math.BigDecimal;
@@ -12,13 +11,13 @@ import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleSqlite003Tester {
+public class SimpleSqlite004Tester {
     public static void main(String[] args) throws Exception {
         Class.forName("org.sqlite.JDBC");
         final Connection conn = DriverManager.getConnection("jdbc:sqlite:./test/data/sqlite/sqlite.db");
         conn.setAutoCommit(false);
 
-        final SampleSQLite003Iterator ite = new SampleSQLite003Iterator(conn);
+        final SampleSQLite004Iterator ite = new SampleSQLite004Iterator(conn);
 
         BlancoDbDynamicParameter<Double> betweenNumeric =  new BlancoDbDynamicParameter<>();
         betweenNumeric.setKey("betweenNumeric");
@@ -47,11 +46,12 @@ public class SimpleSqlite003Tester {
         // COL_ID = ?
         // COL_ID LIKE ? -- '%Field%'
 
-        BlancoDbDynamicParameter<String> orderbyColumns = new BlancoDbDynamicParameter<>();
+        BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> orderbyColumns = new BlancoDbDynamicParameter<>();
         orderbyColumns.setKey("orderbyColumns");
         orderbyColumns.setValues(new ArrayList<>());
-        List<String> o = orderbyColumns.getValues();
-        o.add("COL_ID");
+        List<BlancoDbDynamicOrderBy> o = orderbyColumns.getValues();
+        o.add(new BlancoDbDynamicOrderBy("COL_TEXT", "ASC"));
+        o.add(new BlancoDbDynamicOrderBy("COL_ID", "DESC"));
 
         // order by COL_TEXT, COL_ID
 
@@ -65,9 +65,9 @@ public class SimpleSqlite003Tester {
         );
 
         ite.executeQuery();
-        List<SampleSQLite003Row> rows = ite.getList(6000);
+        List<SampleSQLite004Row> rows = ite.getList(6000);
 
-        for (SampleSQLite003Row row : rows) {
+        for (SampleSQLite004Row row : rows) {
             int col_id = row.getColId();
             String col_text = row.getColText();
             BigDecimal col_numeric = row.getColNumeric();

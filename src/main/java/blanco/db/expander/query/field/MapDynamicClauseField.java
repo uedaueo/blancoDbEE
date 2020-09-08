@@ -13,7 +13,6 @@ import blanco.cg.BlancoCgObjectFactory;
 import blanco.cg.valueobject.BlancoCgClass;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.db.common.expander.BlancoDbAbstractField;
-import blanco.db.common.util.BlancoDbUtil;
 import blanco.db.common.valueobject.BlancoDbDynamicConditionStructure;
 import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
@@ -72,8 +71,8 @@ public class MapDynamicClauseField extends BlancoDbAbstractField {
                     "\", new BlancoDbDynamicClause(\"" +
                     conditionStructure.getTag() +
                     "\", \"" + conditionStructure.getCondition() + "\"");
-            if (!"ITEMONLY".equals(conditionStructure.getCondition())) {
-                sb.append(", \"" + conditionStructure.getItem() + "\"");
+            sb.append(", \"" + conditionStructure.getItem() + "\"");
+            if (!"ORDERBY".equals(conditionStructure.getCondition())) {
                 sb.append(", \"" + conditionStructure.getLogical() + "\"");
                 sb.append(", \"" + conditionStructure.getType() + "\"");
                 fCgSourceFile.getImportList().add(conditionStructure.getType());

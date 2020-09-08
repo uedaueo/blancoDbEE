@@ -9,12 +9,6 @@
  */
 package blanco.db.expander.query.iterator;
 
-import java.sql.Types;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import blanco.cg.BlancoCgObjectFactory;
 import blanco.cg.valueobject.BlancoCgClass;
 import blanco.cg.valueobject.BlancoCgMethod;
@@ -31,6 +25,11 @@ import blanco.db.util.BlancoDbCgUtilJava;
 import blanco.db.util.BlancoDbMappingUtilJava;
 import blanco.dbmetadata.BlancoDbMetaDataUtil;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
+
+import java.sql.Types;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 個別のメソッドを展開するためのクラス。
@@ -69,10 +68,12 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         String dbUtilClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbUtil";
         String dynamicClauseClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicClause";
         String dynamicParameterClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicParameter";
+        String dynamicOrderByClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicOrderBy";
 
         fCgSourceFile.getImportList().add(dbUtilClass);
         fCgSourceFile.getImportList().add(dynamicClauseClass);
         fCgSourceFile.getImportList().add(dynamicParameterClass);
+        fCgSourceFile.getImportList().add(dynamicOrderByClass);
 
         /*
          * 次に動的条件句定義の順にパラメータを作ります。
@@ -204,7 +205,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
                 this.createStaticInput(listLine, columnStructure);
             } else {
                 // 動的条件句パラメータです。
-                if ((inputDone.get(conditionStructure.getTag()) == null || !inputDone.get(conditionStructure.getTag())) && !"ITEMONLY".equals(conditionStructure.getCondition())) {
+                if ((inputDone.get(conditionStructure.getTag()) == null || !inputDone.get(conditionStructure.getTag())) && !"ORDERBY".equals(conditionStructure.getCondition())) {
                     this.createDynamicInput(listLine, conditionStructure);
                     inputDone.put(conditionStructure.getTag(), true);
                 }
@@ -258,8 +259,8 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
                 dynamicParameterClass,
                 "'" + conditionStructure.getTag() + "'列の値");
         cgMethod.getParameterList().add(param);
-        if ("ITEMONLY".equals(conditionStructure.getCondition())) {
-            param.getType().setGenerics("<java.lang.String>");
+        if ("ORDERBY".equals(conditionStructure.getCondition())) {
+            param.getType().setGenerics("<BlancoDbDynamicOrderBy>");
         } else {
             param.getType().setGenerics("<" + conditionStructure.getType() + ">");
         }

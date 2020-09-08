@@ -88,8 +88,9 @@ public class BlancoDbUtil {
      * @param argParameter 動的条件式を選択するためのパラメータを指定します。
      * @param argQuery 動的条件式を選択するためのパラメータを指定します。
      * @return Tag置換後のqueryを戻します。
+     * @throws SQLException SQL例外を投げる可能性があります。
      */
-    public static final <T> String createDynamicClause(final Map<String, BlancoDbDynamicClause> argMapClause, final BlancoDbDynamicParameter<T> argParameter, final String argQuery) {
+    public static final <T> String createDynamicClause(final Map<String, BlancoDbDynamicClause> argMapClause, final BlancoDbDynamicParameter<T> argParameter, final String argQuery) throws SQLException {
         String query = argQuery;
         if (argParameter != null) {
             String key = argParameter.getKey();
@@ -103,28 +104,39 @@ public class BlancoDbUtil {
                     String tag = dynamicClause.getTag();
                     String condition = dynamicClause.getCondition();
 
-                    if ("ITEMONLY".equals(condition)) {
+                    if ("ORDERBY".equals(condition)) {
                         if (values != null && values.size() > 0) {
+                            sb.append("ORDER BY ");
                             int count = 0;
                             for (T value : values) {
+                                BlancoDbDynamicOrderBy orderBy = (BlancoDbDynamicOrderBy) value;
                                 if (count > 0) {
                                     sb.append(", ");
                                 }
-                                sb.append(value);
+                                String column = dynamicClause.getItem(orderBy.getColumn());
+                                if (column == null) {
+                                    throw new SQLException("入力に指定された[ " + orderBy.getColumn() + " ]は定義書で未定義です。");
+                                }
+                                sb.append(column);
+                                if (!"ASC".equals(orderBy.getOrder())) {
+                                    sb.append(" DESC");
+                                } else {
+                                    sb.append(" ASC");
+                                }
                                 count++;
                             }
                         }
                     } else if ("BETWEEN".equals(condition)) {
                         if (values != null && values.size() == 2) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " BETWEEN ? AND ? )");
+                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " BETWEEN ? AND ? )");
                         }
                     } else if ("NOT BETWEEN".equals(condition)) {
                         if (values != null && values.size() == 2) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " NOT BETWEEN ? AND ? )");
+                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " NOT BETWEEN ? AND ? )");
                         }
                     } else if ("IN".equals(condition)) {
                         if (values != null && values.size() > 0) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " IN ( ");
+                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " IN ( ");
                             int count = 0;
                             for (T value : values) {
                                 if (count > 0) {
@@ -138,7 +150,7 @@ public class BlancoDbUtil {
                         }
                     } else if ("NOT IN".equals(condition)) {
                         if (values != null && values.size() > 0) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " NOT IN ( ");
+                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " NOT IN ( ");
                             int count = 0;
                             for (T value : values) {
                                 if (count > 0) {
@@ -152,7 +164,7 @@ public class BlancoDbUtil {
                         }
                     } else if ("COMPARE".equals(condition)) {
                         if (values != null && values.size() == 1) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItem() + " " + mapComparison.get(dynamicClause.getComparison()) + " ? )");
+                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " " + mapComparison.get(dynamicClause.getComparison()) + " ? )");
                         }
                     }
                     query = argQuery.replace("${" + tag + "}", sb.toString());

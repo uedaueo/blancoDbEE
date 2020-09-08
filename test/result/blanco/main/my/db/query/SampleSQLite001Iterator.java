@@ -14,6 +14,7 @@ import my.db.exception.TimeoutException;
 import my.db.exception.TooManyRowsFoundException;
 import my.db.row.SampleSQLite001Row;
 import my.db.util.BlancoDbDynamicClause;
+import my.db.util.BlancoDbDynamicOrderBy;
 import my.db.util.BlancoDbDynamicParameter;
 import my.db.util.BlancoDbUtil;
 
