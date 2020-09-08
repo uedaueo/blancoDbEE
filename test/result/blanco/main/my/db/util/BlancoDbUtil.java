@@ -26,12 +26,13 @@ public class BlancoDbUtil {
     static final private Map<String, String> mapComparison = new HashMap<String, String>() {
         {
             put("EQ", "=");
-            put("GT", "=");
-            put("LT", "=");
-            put("GE", "=");
-            put("LE", "=");
-            put("LIKE", "=");
-            put("NOT LIKE", "=");
+            put("NE", "<>");
+            put("GT", ">");
+            put("LT", "<");
+            put("GE", ">=");
+            put("LE", "<=");
+            put("LIKE", "LIKE");
+            put("NOT LIKE", "NOT LIKE");
         }
     };
 

@@ -32,7 +32,7 @@ public class SampleSQLite002Iterator {
         {
             put("betweenNumeric", new BlancoDbDynamicClause("BETWEEN01", "BETWEEN", "COL_NUMERIC", "AND", "java.lang.Double"));
             put("inId", new BlancoDbDynamicClause("INCLAUSE01", "IN", "COL_ID", "AND", "java.lang.Long"));
-            put("compTextEq", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "EQ"));
+            put("compTextEq", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "NE"));
             put("compTextLike", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "LIKE"));
             put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ORDERBY", "COL_TEXT"));
         }

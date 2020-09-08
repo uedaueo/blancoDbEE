@@ -51,7 +51,8 @@ public class SimpleSqlite002Tester {
         orderbyColumns.setKey("orderbyColumns");
         orderbyColumns.setValues(new ArrayList<>());
         List<BlancoDbDynamicOrderBy> o = orderbyColumns.getValues();
-        o.add(new BlancoDbDynamicOrderBy("COL_ID", "ASC"));
+//        o.add(new BlancoDbDynamicOrderBy("COL_ID", "ASC"));
+        o.add(new BlancoDbDynamicOrderBy("COL_TEXT", "ASC"));
 
         // order by COL_TEXT, COL_ID
 
