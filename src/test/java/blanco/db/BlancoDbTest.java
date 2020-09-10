@@ -50,4 +50,30 @@ public class BlancoDbTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testMySQLBlancoDb() {
+
+        BlancoDbProcessInput input = new BlancoDbProcessInput();
+        input.setBasepackage("my.db");
+        input.setJdbcdriver("com.mysql.cj.jdbc.Driver");
+        input.setJdbcurl("jdbc:mysql://10.211.55.26:3306/blancoDb");
+        input.setJdbcuser("blancodb");
+        input.setJdbcpassword("blancodb");
+        input.setMetadir("test/data/mysql/");
+        input.setTargetdir("test/result/blanco");
+        input.setSql("true");
+        input.setTable("false");
+        input.setEncoding("UTF-8");
+        input.setLineSeparator("LF");
+        input.setTargetStyle("maven");
+//        input.setExecutesql("none"); // TODO interator の場合に動的SQLの置換がちゃんとできるようにする。
+
+        BlancoDbProcessImpl imple = new BlancoDbProcessImpl();
+        try {
+            imple.execute(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

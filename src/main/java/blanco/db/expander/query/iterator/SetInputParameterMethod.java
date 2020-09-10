@@ -293,7 +293,8 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         for (BlancoDbDynamicConditionStructure conditionStructure : conditionStructureList) {
             if (convDone.get(conditionStructure.getTag()) == null || !convDone.get(conditionStructure.getTag())) {
                 listLine.add("query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, " +
-                        conditionStructure.getTag() + ", query);");
+                        conditionStructure.getTag() + ", query, \"" + conditionStructure.getTag() + "\");");
+                convDone.put(conditionStructure.getTag(), true);
             }
         }
     }

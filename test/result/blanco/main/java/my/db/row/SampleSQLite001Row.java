@@ -1,5 +1,6 @@
 package my.db.row;
 
+import java.io.Reader;
 import java.math.BigDecimal;
 
 /**
@@ -7,7 +8,7 @@ import java.math.BigDecimal;
  *
  * 'SampleSQLite001Row'行を表現します。
  * (1) 'COL_ID'列 型:int
- * (2) 'COL_TEXT'列 型:java.lang.String
+ * (2) 'COL_TEXT'列 型:java.io.Reader
  * (3) 'COL_NUMERIC'列 型:java.math.BigDecimal
  */
 public class SampleSQLite001Row {
@@ -23,7 +24,7 @@ public class SampleSQLite001Row {
      *
      * フィールド: [COL_TEXT]。
      */
-    private String fColText;
+    private Reader fColText;
 
     /**
      * フィールド[COL_NUMERIC]です。
@@ -61,7 +62,7 @@ public class SampleSQLite001Row {
      *
      * @param argColText フィールド[COL_TEXT]に設定する値。
      */
-    public void setColText(final String argColText) {
+    public void setColText(final Reader argColText) {
         fColText = argColText;
     }
 
@@ -72,7 +73,7 @@ public class SampleSQLite001Row {
      *
      * @return フィールド[COL_TEXT]から取得した値。
      */
-    public String getColText() {
+    public Reader getColText() {
         return fColText;
     }
 
@@ -142,8 +143,8 @@ public class SampleSQLite001Row {
         // Type: int
         target.fColId = this.fColId;
         // Name: fColText
-        // Type: java.lang.String
-        target.fColText = this.fColText;
+        // Type: java.io.Reader
+        // フィールド[fColText]はサポート外の型[java.io.Reader]です。
         // Name: fColNumeric
         // Type: java.math.BigDecimal
         target.fColNumeric = this.fColNumeric;

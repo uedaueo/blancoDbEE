@@ -88,10 +88,11 @@ public class BlancoDbUtil {
      * @param argMapClause 動的条件式定義のMapを指定します。
      * @param argParameter 動的条件式を選択するためのパラメータを指定します。
      * @param argQuery 動的条件式を選択するためのパラメータを指定します。
+     * @param argExpectedTag パラメータとして null が渡された場合に削除するtagを指定します。
      * @return Tag置換後のqueryを戻します。
      * @throws SQLException SQL例外を投げる可能性があります。
      */
-    public static final <T> String createDynamicClause(final Map<String, BlancoDbDynamicClause> argMapClause, final BlancoDbDynamicParameter<T> argParameter, final String argQuery) throws SQLException {
+    public static final <T> String createDynamicClause(final Map<String, BlancoDbDynamicClause> argMapClause, final BlancoDbDynamicParameter<T> argParameter, final String argQuery, final String argExpectedTag) throws SQLException {
         String query = argQuery;
         if (argParameter != null) {
             String key = argParameter.getKey();
@@ -171,6 +172,8 @@ public class BlancoDbUtil {
                     query = argQuery.replace("${" + tag + "}", sb.toString());
                 }
             }
+        } else {
+            query = argQuery.replace("${" + argExpectedTag + "}", "");
         }
         return query;
     }

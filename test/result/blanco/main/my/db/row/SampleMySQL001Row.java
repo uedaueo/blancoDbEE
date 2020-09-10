@@ -1,17 +1,16 @@
 package my.db.row;
 
-import java.io.Reader;
 import java.math.BigDecimal;
 
 /**
  * SQL定義書(blancoDb)から作成された行クラス。
  *
- * 'SampleSQLite004Row'行を表現します。
+ * 'SampleMySQL001Row'行を表現します。
  * (1) 'COL_ID'列 型:int
- * (2) 'COL_TEXT'列 型:java.io.Reader
+ * (2) 'COL_TEXT'列 型:java.lang.String
  * (3) 'COL_NUMERIC'列 型:java.math.BigDecimal
  */
-public class SampleSQLite004Row {
+public class SampleMySQL001Row {
     /**
      * フィールド[COL_ID]です。
      *
@@ -24,7 +23,7 @@ public class SampleSQLite004Row {
      *
      * フィールド: [COL_TEXT]。
      */
-    private Reader fColText;
+    private String fColText;
 
     /**
      * フィールド[COL_NUMERIC]です。
@@ -62,7 +61,7 @@ public class SampleSQLite004Row {
      *
      * @param argColText フィールド[COL_TEXT]に設定する値。
      */
-    public void setColText(final Reader argColText) {
+    public void setColText(final String argColText) {
         fColText = argColText;
     }
 
@@ -73,7 +72,7 @@ public class SampleSQLite004Row {
      *
      * @return フィールド[COL_TEXT]から取得した値。
      */
-    public Reader getColText() {
+    public String getColText() {
         return fColText;
     }
 
@@ -113,7 +112,7 @@ public class SampleSQLite004Row {
     @Override
     public String toString() {
         final StringBuffer buf = new StringBuffer();
-        buf.append("my.db.row.SampleSQLite004Row[");
+        buf.append("my.db.row.SampleMySQL001Row[");
         buf.append("COL_ID=" + fColId);
         buf.append(",COL_TEXT=" + fColText);
         buf.append(",COL_NUMERIC=" + fColNumeric);
@@ -132,9 +131,9 @@ public class SampleSQLite004Row {
      *
      * @param target target value object.
      */
-    public void copyTo(final SampleSQLite004Row target) {
+    public void copyTo(final SampleMySQL001Row target) {
         if (target == null) {
-            throw new IllegalArgumentException("Bug: SampleSQLite004Row#copyTo(target): argument 'target' is null");
+            throw new IllegalArgumentException("Bug: SampleMySQL001Row#copyTo(target): argument 'target' is null");
         }
 
         // No needs to copy parent class.
@@ -143,8 +142,8 @@ public class SampleSQLite004Row {
         // Type: int
         target.fColId = this.fColId;
         // Name: fColText
-        // Type: java.io.Reader
-        // フィールド[fColText]はサポート外の型[java.io.Reader]です。
+        // Type: java.lang.String
+        target.fColText = this.fColText;
         // Name: fColNumeric
         // Type: java.math.BigDecimal
         target.fColNumeric = this.fColNumeric;

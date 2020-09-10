@@ -260,6 +260,11 @@ public class BlancoDbUtilClassJava {
             cgMethod.getParameterList().add(paramQuery);
             paramQuery.setFinal(true);
 
+            /* 第四引数：パラメータとして null が渡された場合に削除するtag */
+            BlancoCgParameter paramExpectedTag = fCgFactory.createParameter("argExpectedTag", "java.lang.String", "パラメータとして null が渡された場合に削除するtagを指定します。");
+            cgMethod.getParameterList().add(paramExpectedTag);
+            paramQuery.setFinal(true);
+
             /* 戻り値の定義 */
             cgMethod.setReturn(fCgFactory.createReturn("java.lang.String",
                     "Tag置換後のqueryを戻します。"));
@@ -347,6 +352,8 @@ public class BlancoDbUtilClassJava {
             listLine.add("query = argQuery.replace(\"${\" + tag + \"}\", sb.toString());"); // 120
             listLine.add("}");
             listLine.add("}");
+            listLine.add("} else {");
+            listLine.add("query = argQuery.replace(\"${\" + argExpectedTag + \"}\", \"\");");
             listLine.add("}");
             listLine.add("return query;");
         }

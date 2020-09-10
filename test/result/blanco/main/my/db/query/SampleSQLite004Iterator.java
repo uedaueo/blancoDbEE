@@ -147,11 +147,10 @@ public class SampleSQLite004Iterator {
     public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<java.lang.Double> BETWEEN01, final BlancoDbDynamicParameter<java.lang.Long> INCLAUSE01, final BlancoDbDynamicParameter<java.lang.String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY) throws SQLException {
         /* タグを置換する */
         String query = this.getQuery();
-        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, BETWEEN01, query);
-        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, INCLAUSE01, query);
-        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, COMPARE01, query);
-        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, COMPARE01, query);
-        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, ORDERBY, query);
+        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, BETWEEN01, query, "BETWEEN01");
+        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, INCLAUSE01, query, "INCLAUSE01");
+        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, COMPARE01, query, "COMPARE01");
+        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, ORDERBY, query, "ORDERBY");
 
         /* 必ず statement を作り直す */
         prepareStatement(query);

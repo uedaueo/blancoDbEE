@@ -14,27 +14,27 @@ import java.util.Map;
 
 import my.db.exception.DeadlockException;
 import my.db.exception.TimeoutException;
-import my.db.row.SampleSQLite002Row;
+import my.db.row.SampleMySQL002Row;
 import my.db.util.BlancoDbDynamicClause;
 import my.db.util.BlancoDbDynamicOrderBy;
 import my.db.util.BlancoDbDynamicParameter;
 import my.db.util.BlancoDbUtil;
 
 /**
- * [SampleSQLite002] 簡易なSQLのサンプルです。 (QueryIterator)
+ * [SampleMySQL002] 簡易なSQLのサンプルです。 (QueryIterator)
  *
  * 検索型SQL文をラッピングして各種アクセサを提供します。<br>
  * スクロール属性: forward_only<br>
  */
-public class SampleSQLite002Iterator {
+public class SampleMySQL002Iterator {
     protected Map<String, BlancoDbDynamicClause> fMapDynamicClause = new HashMap<String, BlancoDbDynamicClause>()
     {
         {
-            put("betweenNumeric", new BlancoDbDynamicClause("BETWEEN01", "BETWEEN", "COL_NUMERIC", "AND", "java.lang.Double"));
+            put("betweenNumeric", new BlancoDbDynamicClause("BETWEEN01", "NOT BETWEEN", "COL_NUMERIC", "", "java.lang.Double"));
             put("inId", new BlancoDbDynamicClause("INCLAUSE01", "IN", "COL_ID", "AND", "java.lang.Long"));
-            put("compTextEq", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "NE"));
+            put("compTextEq", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "EQ"));
             put("compTextLike", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "LIKE"));
-            put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ORDERBY", "COL_TEXT"));
+            put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ORDERBY", "COL_ID,COL_TEXT,COL_NUMERIC"));
         }
     };
 
@@ -63,28 +63,28 @@ public class SampleSQLite002Iterator {
     protected ResultSet fResultSet;
 
     /**
-     * SampleSQLite002Iteratorクラスのコンストラクタ。
+     * SampleMySQL002Iteratorクラスのコンストラクタ。
      *
      * データベースコネクションオブジェクトを引数としてクエリクラスを作成します。<br>
      * このクラスの利用後は、必ず close()メソッドを呼び出す必要があります。<br>
      *
      * @param conn データベース接続
      */
-    public SampleSQLite002Iterator(final Connection conn) {
+    public SampleMySQL002Iterator(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SampleSQLite002Iteratorクラスのコンストラクタ。
+     * SampleMySQL002Iteratorクラスのコンストラクタ。
      *
      * データベースコネクションオブジェクトを与えずにクエリクラスを作成します。<br>
      */
     @Deprecated
-    public SampleSQLite002Iterator() {
+    public SampleMySQL002Iterator() {
     }
 
     /**
-     * SampleSQLite002Iteratorクラスにデータベース接続を設定。
+     * SampleMySQL002Iteratorクラスにデータベース接続を設定。
      *
      * @param conn データベース接続
      */
@@ -101,7 +101,7 @@ public class SampleSQLite002Iterator {
      * @return JDBCドライバに与えて実行可能な状態のSQL文。
      */
     public String getQuery() {
-        return "select COL_ID, COL_TEXT, COL_NUMERIC from\n   TEST_BLANCODB\nwhere\n   COL_TEXT like ?\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND COL_NUMERIC = ?\n${ORDERBY}";
+        return "select COL_ID, COL_TEXT, COL_NUMERIC from\n   TEST_BLANCODB\nwhere\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND COL_NUMERIC = ?\n${ORDERBY}";
     }
 
     /**
@@ -136,7 +136,6 @@ public class SampleSQLite002Iterator {
      *
      * 内部的には PreparedStatementにSQL入力パラメータをセットします。
      *
-     * @param colText 'colText'列の値
      * @param colNumeric 'colNumeric'列の値
      * @param BETWEEN01 'BETWEEN01'列の値
      * @param INCLAUSE01 'INCLAUSE01'列の値
@@ -144,7 +143,7 @@ public class SampleSQLite002Iterator {
      * @param ORDERBY 'ORDERBY'列の値
      * @throws SQLException SQL例外が発生した場合。
      */
-    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<java.lang.Double> BETWEEN01, final BlancoDbDynamicParameter<java.lang.Long> INCLAUSE01, final BlancoDbDynamicParameter<java.lang.String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY) throws SQLException {
+    public void setInputParameter(final Double colNumeric, final BlancoDbDynamicParameter<java.lang.Double> BETWEEN01, final BlancoDbDynamicParameter<java.lang.Long> INCLAUSE01, final BlancoDbDynamicParameter<java.lang.String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY) throws SQLException {
         /* タグを置換する */
         String query = this.getQuery();
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, BETWEEN01, query, "BETWEEN01");
@@ -156,9 +155,6 @@ public class SampleSQLite002Iterator {
         prepareStatement(query);
 
         int index = 1;
-        fStatement.setString(index, colText);
-        index++;
-
         if (BETWEEN01 != null) {
             java.util.List<java.lang.Double> values = BETWEEN01.getValues();
             index = BlancoDbUtil.setInputParameter(fStatement, values, index);
@@ -236,10 +232,10 @@ public class SampleSQLite002Iterator {
      * @return 行オブジェクト。
      * @throws SQLException SQL例外が発生した場合。
      */
-    public SampleSQLite002Row getRow() throws SQLException {
-        SampleSQLite002Row result = new SampleSQLite002Row();
+    public SampleMySQL002Row getRow() throws SQLException {
+        SampleMySQL002Row result = new SampleMySQL002Row();
         result.setColId(fResultSet.getInt(1));
-        result.setColText(fResultSet.getCharacterStream(2));
+        result.setColText(fResultSet.getString(2));
         result.setColNumeric(fResultSet.getBigDecimal(3));
 
         return result;
@@ -269,17 +265,17 @@ public class SampleSQLite002Iterator {
     /**
      * 検索結果をリストの形式で取得します。
      *
-     * リストには SampleSQLite002クラスが格納されます。<br>
+     * リストには SampleMySQL002クラスが格納されます。<br>
      * 検索結果の件数があらかじめわかっていて、且つ件数が少ない場合に利用することができます。<br>
      * 検索結果の件数が多い場合には、このメソッドは利用せず、代わりに next()メソッドを利用することをお勧めします。<br>
      * このQueryIteratorは FORWARD_ONLY(順方向カーソル)です。大量のデータを扱うことがわかっている場合には、このgetListメソッドの利用は極力避けるか、あるいは スクロールカーソルとしてソースコードを再生成してください。
      *
      * @param size 読み出しを行う行数。
-     * @return SampleSQLite002クラスのList。検索結果が0件の場合には空のリストが戻ります。
+     * @return SampleMySQL002クラスのList。検索結果が0件の場合には空のリストが戻ります。
      * @throws SQLException SQL例外が発生した場合。
      */
-    public List<SampleSQLite002Row> getList(final int size) throws SQLException {
-        List<SampleSQLite002Row> result = new ArrayList<SampleSQLite002Row>(8192);
+    public List<SampleMySQL002Row> getList(final int size) throws SQLException {
+        List<SampleMySQL002Row> result = new ArrayList<SampleMySQL002Row>(8192);
         for (int count = 1; count <= size; count++) {
             if (next() == false) {
                 break;
@@ -321,7 +317,7 @@ public class SampleSQLite002Iterator {
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SampleSQLite002Iterator : close()メソッドによるリソースの開放が行われていません。";
+            final String message = "SampleMySQL002Iterator : close()メソッドによるリソースの開放が行われていません。";
             System.out.println(message);
         }
     }
