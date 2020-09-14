@@ -64,8 +64,6 @@ public class BlancoDbDynamicOrderByClassJava {
             listDesc.add("動的に生成されるORDERBY句を定義するクラス。");
             listDesc.add("");
             listDesc.add("このクラスはblancoDbが生成したソースコードで利用されます <br>");
-            listDesc
-                    .add("このクラスは blancoDbが生成したソースコードから利用されます。直接呼び出すことは推奨されません。");
             listDesc.add("");
             listDesc.add("@since 2020.09.04");
             listDesc.add("@author blanco Framework");

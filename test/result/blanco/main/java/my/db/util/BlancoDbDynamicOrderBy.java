@@ -6,7 +6,6 @@ package my.db.util;
 /**
  * 動的に生成されるORDERBY句を定義するクラス。
  * このクラスはblancoDbが生成したソースコードで利用されます <br>
- * このクラスは blancoDbが生成したソースコードから利用されます。直接呼び出すことは推奨されません。
  * @since 2020.09.04
  * @author blanco Framework
  */

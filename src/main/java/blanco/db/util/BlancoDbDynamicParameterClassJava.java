@@ -65,8 +65,6 @@ public class BlancoDbDynamicParameterClassJava {
             listDesc.add("動的条件句に対するパラメータを定義するクラス。");
             listDesc.add("");
             listDesc.add("このクラスはblancoDbが生成したソースコードで利用されます <br>");
-            listDesc
-                    .add("このクラスは blancoDbが生成したソースコードから利用されます。直接呼び出すことは推奨されません。");
             listDesc.add("");
             listDesc.add("@since 2020.09.04");
             listDesc.add("@author blanco Framework");
@@ -75,10 +73,13 @@ public class BlancoDbDynamicParameterClassJava {
         {
             /* fields */
             cgClass.getFieldList().add(
-                    buildField("key", "DynamicClause を引き当てるキー", "java.lang.String", null)
+                    buildField("key", "DynamicClause を引き当てるキー", "java.lang.String", null, null)
             );
             cgClass.getFieldList().add(
-                    buildField("values", "PreparedStatement のプレースホルダに適用する値", "java.util.List", "<T>")
+                    buildField("logicalOperator", "COMPARE動的条件句タイプを繰り返す際に接続に用いる論理演算子", "java.lang.String", null, "OR")
+            );
+            cgClass.getFieldList().add(
+                    buildField("values", "PreparedStatement のプレースホルダに適用する値", "java.util.List", "<T>", null)
             );
         }
 
@@ -89,6 +90,13 @@ public class BlancoDbDynamicParameterClassJava {
             );
             cgClass.getMethodList().add(
                     buildMethodGet("key", "DynamicClause を引き当てるキー", "java.lang.String", null)
+            );
+
+            cgClass.getMethodList().add(
+                buildMethodSet("logicalOperator", "COMPARE動的条件句タイプを繰り返す際に接続に用いる論理演算子", "java.lang.String", null)
+            );
+            cgClass.getMethodList().add(
+                    buildMethodGet("logicalOperator", "COMPARE動的条件句タイプを繰り返す際に接続に用いる論理演算子", "java.lang.String", null)
             );
 
             cgClass.getMethodList().add(
@@ -116,12 +124,20 @@ public class BlancoDbDynamicParameterClassJava {
             final String name,
             final String desc,
             final String type,
-            final String generic
+            final String generic,
+            final String defaultValue
     ) {
         final BlancoCgField cgField = fCgFactory.createField(name, type, desc);
         cgField.setAccess("private");
         if (generic != null && generic.length() > 0) {
             cgField.getType().setGenerics(generic);
+        }
+        if (defaultValue != null && defaultValue.length() > 0) {
+            if ("java.lang.String".equals(type)) {
+                cgField.setDefault("\"" + defaultValue + "\"");
+            } else {
+                cgField.setDefault(defaultValue);
+            }
         }
         return cgField;
     }

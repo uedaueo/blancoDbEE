@@ -7,7 +7,6 @@ import my.db.util.BlancoDbDynamicParameter;
 
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.nio.CharBuffer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
@@ -42,7 +41,9 @@ public class SampleMySQL001Tester {
         BlancoDbDynamicParameter<String> compText = new BlancoDbDynamicParameter<>();
         compText.setKey("compTextLike");
         compText.setValues(new ArrayList<>());
+        compText.setLogicalOperator("AND");
         List<String> s = compText.getValues();
+        s.add("%Field%");
         s.add("%Field%");
 
         // COL_ID = ?

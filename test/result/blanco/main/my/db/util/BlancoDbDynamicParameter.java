@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * 動的条件句に対するパラメータを定義するクラス。
  * このクラスはblancoDbが生成したソースコードで利用されます <br>
- * このクラスは blancoDbが生成したソースコードから利用されます。直接呼び出すことは推奨されません。
  * @since 2020.09.04
  * @author blanco Framework
  */
@@ -17,6 +16,11 @@ public class BlancoDbDynamicParameter<T> {
      * DynamicClause を引き当てるキー
      */
     private String key;
+
+    /**
+     * COMPARE動的条件句タイプを繰り返す際に接続に用いる論理演算子
+     */
+    private String logicalOperator = "OR";
 
     /**
      * PreparedStatement のプレースホルダに適用する値
@@ -39,6 +43,24 @@ public class BlancoDbDynamicParameter<T> {
      */
     public String getKey() {
         return this.key;
+    }
+
+    /**
+     * COMPARE動的条件句タイプを繰り返す際に接続に用いる論理演算子
+     *
+     * @param argLogicalOperator COMPARE動的条件句タイプを繰り返す際に接続に用いる論理演算子
+     */
+    public void setLogicalOperator(final String argLogicalOperator) {
+        this.logicalOperator = argLogicalOperator;
+    }
+
+    /**
+     * COMPARE動的条件句タイプを繰り返す際に接続に用いる論理演算子
+     *
+     * @return COMPARE動的条件句タイプを繰り返す際に接続に用いる論理演算子
+     */
+    public String getLogicalOperator() {
+        return this.logicalOperator;
     }
 
     /**

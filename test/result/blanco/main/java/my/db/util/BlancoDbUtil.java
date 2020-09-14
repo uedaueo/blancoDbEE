@@ -130,15 +130,15 @@ public class BlancoDbUtil {
                         }
                     } else if ("BETWEEN".equals(condition)) {
                         if (values != null && values.size() == 2) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " BETWEEN ? AND ? )");
+                            sb.append(" " + dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " BETWEEN ? AND ? )");
                         }
                     } else if ("NOT BETWEEN".equals(condition)) {
                         if (values != null && values.size() == 2) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " NOT BETWEEN ? AND ? )");
+                            sb.append(" " + dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " NOT BETWEEN ? AND ? )");
                         }
                     } else if ("IN".equals(condition)) {
                         if (values != null && values.size() > 0) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " IN ( ");
+                            sb.append(" " + dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " IN ( ");
                             int count = 0;
                             for (T value : values) {
                                 if (count > 0) {
@@ -152,7 +152,7 @@ public class BlancoDbUtil {
                         }
                     } else if ("NOT IN".equals(condition)) {
                         if (values != null && values.size() > 0) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " NOT IN ( ");
+                            sb.append(" " + dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " NOT IN ( ");
                             int count = 0;
                             for (T value : values) {
                                 if (count > 0) {
@@ -165,8 +165,19 @@ public class BlancoDbUtil {
                             sb.append(" )");
                         }
                     } else if ("COMPARE".equals(condition)) {
-                        if (values != null && values.size() == 1) {
-                            sb.append(dynamicClause.getLogical() + " ( " + dynamicClause.getItems().get(0) + " " + mapComparison.get(dynamicClause.getComparison()) + " ? )");
+                        if (values != null && values.size() > 0) {
+                            String logicalOperator = "OR";
+                            if (argParameter.getLogicalOperator() != null && argParameter.getLogicalOperator().equalsIgnoreCase("AND")) {
+                                logicalOperator = "AND";
+                            }
+                            sb.append(" " + dynamicClause.getLogical() + " ( ");
+                            for (int count = 0; count < values.size(); count++) {
+                                if (count > 0) {
+                                    sb.append(" " + logicalOperator + " ");
+                                }
+                                sb.append(dynamicClause.getItems().get(0) + " " + mapComparison.get(dynamicClause.getComparison()) + " ?");
+                            }
+                            sb.append(" )");
                         }
                     }
                     query = argQuery.replace("${" + tag + "}", sb.toString());
