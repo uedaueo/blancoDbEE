@@ -20,7 +20,7 @@ public class BlancoDbConstants {
      * 項目番号:3<br>
      * バージョン番号。
      */
-    public static final String VERSION = "2.3.0.";
+    public static final String VERSION = "2.4.0";
 
     /**
      * 項目番号:4<br>
