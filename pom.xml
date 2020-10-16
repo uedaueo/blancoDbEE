@@ -5,7 +5,7 @@
 	<groupId>blanco.db</groupId>
 	<artifactId>blanco-db</artifactId>
 	<packaging>jar</packaging>
-	<version>2.4.0</version>
+	<version>2.4.1</version>
 	<name>blanco-db</name>
 	<url>https://igapyon.github.io/blancofw-maven2</url>
 

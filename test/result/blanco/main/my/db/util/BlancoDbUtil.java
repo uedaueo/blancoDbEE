@@ -89,6 +89,7 @@ public class BlancoDbUtil {
      * @param argParameter 動的条件式を選択するためのパラメータを指定します。
      * @param argQuery 動的条件式を選択するためのパラメータを指定します。
      * @param argExpectedTag パラメータとして null が渡された場合に削除するtagを指定します。
+     * @param <T>  Virtual parameter for BlancoDbDynamicParameter.
      * @return Tag置換後のqueryを戻します。
      * @throws SQLException SQL例外を投げる可能性があります。
      */

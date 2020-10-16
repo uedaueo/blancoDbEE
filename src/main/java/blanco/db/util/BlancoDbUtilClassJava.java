@@ -268,7 +268,11 @@ public class BlancoDbUtilClassJava {
             /* 戻り値の定義 */
             cgMethod.setReturn(fCgFactory.createReturn("java.lang.String",
                     "Tag置換後のqueryを戻します。"));
-            cgMethod.setVirtualParameterDefinition("<T>");
+
+            // define virtual parameter generic for LangDoc.
+            BlancoCgVirtualParameter cgVirtualParameter = fCgFactory.createVirtualParameter("typeT", "T", "Virtual parameter for BlancoDbDynamicParameter.");
+            cgMethod.getVirtualParameterList().add(cgVirtualParameter);
+//            cgMethod.setVirtualParameterDefinition("<T>");
 
             /* メソッド本文 */
             final List<String> listLine = cgMethod.getLineList();
