@@ -407,7 +407,6 @@ public class BlancoDbUtilClassJava {
             /* 戻り値 */
             cgMethod.setReturn(fCgFactory.createReturn("int",
                     "Tag置換後のqueryを戻します。"));
-            cgMethod.setVirtualParameterDefinition("<T>");
 
             /* 例外 */
             BlancoCgType sqlExpType = new BlancoCgType();
@@ -416,7 +415,12 @@ public class BlancoDbUtilClassJava {
             fCgSourceFile.getImportList().add("java.sql.SQLException");
             BlancoCgException sqlExp = new BlancoCgException();
             sqlExp.setType(sqlExpType);
+            sqlExp.setDescription("SQLException may be thrown.");
             cgMethod.getThrowList().add(sqlExp);
+
+            // Description for virtual parameter generics.
+            BlancoCgVirtualParameter cgVirtualParameter = fCgFactory.createVirtualParameter("typeT", "T", "Virtual parameter for BlancoDbDynamicParameter.");
+            cgMethod.getVirtualParameterList().add(cgVirtualParameter);
 
             /* メソッドの本体 */
             final List<String> listLine = cgMethod.getLineList();

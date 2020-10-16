@@ -199,8 +199,9 @@ public class BlancoDbUtil {
      * @param argStatement 動的に定義されたpreparedStatementです。
      * @param values 動的に定義されたpreparedStatementです。
      * @param startIndex パラメータの開始indexです。
+     * @param <T>  Virtual parameter for BlancoDbDynamicParameter.
      * @return Tag置換後のqueryを戻します。
-     * @throws SQLException
+     * @throws SQLException SQLException may be thrown.
      */
     public static final <T> int setInputParameter(final PreparedStatement argStatement, final List<T> values, final Integer startIndex) throws SQLException {
         int index = startIndex;
