@@ -144,7 +144,7 @@ public class SampleMySQL001Iterator {
      * @param ORDERBY 'ORDERBY'列の値
      * @throws SQLException SQL例外が発生した場合。
      */
-    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<java.lang.Double> BETWEEN01, final BlancoDbDynamicParameter<java.lang.Long> INCLAUSE01, final BlancoDbDynamicParameter<java.lang.String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY) throws SQLException {
+    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY) throws SQLException {
         /* タグを置換する */
         String query = this.getQuery();
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, BETWEEN01, query, "BETWEEN01");

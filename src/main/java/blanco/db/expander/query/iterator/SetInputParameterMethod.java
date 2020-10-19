@@ -260,9 +260,9 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
                 "'" + conditionStructure.getTag() + "'列の値");
         cgMethod.getParameterList().add(param);
         if ("ORDERBY".equals(conditionStructure.getCondition())) {
-            param.getType().setGenerics("<BlancoDbDynamicOrderBy>");
+            param.getType().setGenerics("BlancoDbDynamicOrderBy");
         } else {
-            param.getType().setGenerics("<" + conditionStructure.getType() + ">");
+            param.getType().setGenerics(conditionStructure.getType());
         }
         /*
          * 動的条件句は当面の間BINARY系の型には対応しません。

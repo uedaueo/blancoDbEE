@@ -241,7 +241,7 @@ public class BlancoDbUtilClassJava {
             /* 第一引数：動的条件式定義のMapクラス */
             BlancoCgParameter paramMap = fCgFactory.createParameter("argMapClause", "java.util.Map", "動的条件式定義のMapを指定します。");
             cgMethod.getParameterList().add(paramMap);
-            paramMap.getType().setGenerics("<String, BlancoDbDynamicClause>");
+            paramMap.getType().setGenerics("String, BlancoDbDynamicClause");
             /* BlancoDbDynamicClause は BlancoDbUtil と同じパッケージに置かれる前提だが、念のため import リストに入れておく。 */
             fCgSourceFile.getImportList().add(fCgSourceFile.getPackage() + ".BlancoDbDynamicClause");
             paramMap.setFinal(true);
@@ -250,7 +250,7 @@ public class BlancoDbUtilClassJava {
             String dynParam = fCgSourceFile.getPackage() + ".BlancoDbDynamicParameter";
             BlancoCgParameter paramParam = fCgFactory.createParameter("argParameter", dynParam, "動的条件式を選択するためのパラメータを指定します。");
             cgMethod.getParameterList().add(paramParam);
-            paramParam.getType().setGenerics("<T>");
+            paramParam.getType().setGenerics("T");
             /* BlancoDbDynamicParameter は BlancoDbUtil と同じパッケージに置かれる前提だが、念のため import リストに入れておく。 */
             fCgSourceFile.getImportList().add(dynParam);
             paramParam.setFinal(true);
@@ -396,7 +396,7 @@ public class BlancoDbUtilClassJava {
             /* 第二引数： パラメータのリスト */
             BlancoCgParameter paramList = fCgFactory.createParameter("values", "java.util.List", "動的に定義されたpreparedStatementです。");
             cgMethod.getParameterList().add(paramList);
-            paramList.getType().setGenerics("<T>");
+            paramList.getType().setGenerics("T");
             paramList.setFinal(true);
 
             /* 第三引数： startIndex */

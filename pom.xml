@@ -47,7 +47,7 @@
 		<repository>
 			<id>blancofw</id>
 			<name>blancofw maven repos</name>
-			<url>https://raw.github.com/uedaueo/blancofw-maven2/gh-pages${git.branchName}/</url>
+			<url>https://raw.github.com/uedaueo/blancofw-maven2/${git.branchName}/</url>
 		</repository>
 	</repositories>
 

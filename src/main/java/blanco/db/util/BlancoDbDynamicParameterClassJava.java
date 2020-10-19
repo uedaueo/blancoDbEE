@@ -79,7 +79,7 @@ public class BlancoDbDynamicParameterClassJava {
                     buildField("logicalOperator", "COMPARE動的条件句タイプを繰り返す際に接続に用いる論理演算子", "java.lang.String", null, "OR")
             );
             cgClass.getFieldList().add(
-                    buildField("values", "PreparedStatement のプレースホルダに適用する値", "java.util.List", "<T>", null)
+                    buildField("values", "PreparedStatement のプレースホルダに適用する値", "java.util.List", "T", null)
             );
         }
 
@@ -100,10 +100,10 @@ public class BlancoDbDynamicParameterClassJava {
             );
 
             cgClass.getMethodList().add(
-                    buildMethodSet("values", "PreparedStatement のプレースホルダに適用する値", "java.util.List", "<T>")
+                    buildMethodSet("values", "PreparedStatement のプレースホルダに適用する値", "java.util.List", "T")
             );
             cgClass.getMethodList().add(
-                    buildMethodGet("values", "PreparedStatement のプレースホルダに適用する値", "java.util.List", "<T>")
+                    buildMethodGet("values", "PreparedStatement のプレースホルダに適用する値", "java.util.List", "T")
             );
         }
 

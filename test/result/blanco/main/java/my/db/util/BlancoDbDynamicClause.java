@@ -26,7 +26,7 @@ public class BlancoDbDynamicClause {
     /**
      * 対象Items
      */
-    private List<java.lang.String> items = null;
+    private List<String> items = null;
 
     /**
      * 比較演算子
@@ -139,7 +139,7 @@ public class BlancoDbDynamicClause {
      *
      * @param argItems 対象Item
      */
-    public void setItems(final List<java.lang.String> argItems) {
+    public void setItems(final List<String> argItems) {
         this.items = argItems;
     }
 
@@ -148,7 +148,7 @@ public class BlancoDbDynamicClause {
      *
      * @return 対象Item
      */
-    public List<java.lang.String> getItems() {
+    public List<String> getItems() {
         return this.items;
     }
 
@@ -212,7 +212,7 @@ public class BlancoDbDynamicClause {
      * @param argItem 対象itemsに入力されたカンマ区切りのitemのリストです。
      * @return itemのListです。
      */
-    public List<java.lang.String> parseItems(final String argItem) {
+    public List<String> parseItems(final String argItem) {
         java.util.List<java.lang.String> items = new java.util.ArrayList<>();
         if (argItem != null && argItem.length() > 0) {
             java.lang.String [] itemArray = argItem.split(",");

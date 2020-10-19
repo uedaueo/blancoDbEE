@@ -272,7 +272,7 @@ public class BlancoDbDynamicClauseClassJava {
         final BlancoCgField cgField = fCgFactory.createField(name, type, desc);
         cgField.setAccess("private");
         if (generic != null && generic.length() > 0) {
-            cgField.getType().setGenerics("<" + generic + ">");
+            cgField.getType().setGenerics(generic);
         }
         cgField.setDefault(defaultValud);
         return cgField;
@@ -289,7 +289,7 @@ public class BlancoDbDynamicClauseClassJava {
 
         BlancoCgParameter parameter = fCgFactory.createParameter("arg" + BlancoNameAdjuster.toClassName(name), type, desc);
         if (generic != null && generic.length() > 0) {
-            parameter.getType().setGenerics("<" + generic + ">");
+            parameter.getType().setGenerics(generic);
         }
         cgMethod.getParameterList().add(parameter);
 
@@ -311,7 +311,7 @@ public class BlancoDbDynamicClauseClassJava {
 
         cgMethod.setReturn(fCgFactory.createReturn(type, desc));
         if (generic != null && generic.length() > 0) {
-            cgMethod.getReturn().getType().setGenerics("<" + generic + ">");
+            cgMethod.getReturn().getType().setGenerics(generic);
         }
 
         // メソッドの実装
@@ -331,7 +331,7 @@ public class BlancoDbDynamicClauseClassJava {
         cgMethod.setReturn(
                 fCgFactory.createReturn("java.util.List", "itemのListです。")
         );
-        cgMethod.getReturn().getType().setGenerics("<java.lang.String>");
+        cgMethod.getReturn().getType().setGenerics("java.lang.String");
 
         List<String> lineList = cgMethod.getLineList();
         lineList.add("java.util.List<java.lang.String> items = new java.util.ArrayList<>();");
