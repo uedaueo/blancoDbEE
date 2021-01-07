@@ -301,7 +301,7 @@ public class BlancoDbUtilClassJava {
             listLine.add("}");
             listLine.add("String column = dynamicClause.getItem(orderBy.getColumn());");
             listLine.add("if (column == null) {");
-            listLine.add("throw new SQLException(\"入力に指定された[ \" + orderBy.getColumn() + \" ]は定義書で未定義です。\");");
+            listLine.add("throw new SQLException(\"入力に指定された[ \" + orderBy.getColumn() + \" ]は定義書で未定義です。\", \"42S22\", 9999);");
             listLine.add("}");
             listLine.add("sb.append(column);");
             listLine.add("if (!\"ASC\".equals(orderBy.getOrder())) {");

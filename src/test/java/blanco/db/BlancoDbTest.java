@@ -14,6 +14,7 @@ import blanco.db.task.valueobject.BlancoDbProcessInput;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Kotlin言語用の生成試験。

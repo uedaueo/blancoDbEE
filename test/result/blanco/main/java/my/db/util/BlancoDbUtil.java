@@ -118,7 +118,7 @@ public class BlancoDbUtil {
                                 }
                                 String column = dynamicClause.getItem(orderBy.getColumn());
                                 if (column == null) {
-                                    throw new SQLException("入力に指定された[ " + orderBy.getColumn() + " ]は定義書で未定義です。");
+                                    throw new SQLException("入力に指定された[ " + orderBy.getColumn() + " ]は定義書で未定義です。", "42S22", 9999);
                                 }
                                 sb.append(column);
                                 if (!"ASC".equals(orderBy.getOrder())) {
