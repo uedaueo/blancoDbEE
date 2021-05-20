@@ -244,6 +244,9 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
         transformer.transform(adjust(new BlancoDbDynamicOrderByClassJava(cgFactory,
                 BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util",
                 fDbSetting).expand()), fileBlancoMain);
+        transformer.transform(adjust(new BlancoDbDynamicLiteralClassJava(cgFactory,
+                BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util",
+                fDbSetting).expand()), fileBlancoMain);
 
         // iterator, invoker, caller
         for (int index = 0; index < definition.size(); index++) {

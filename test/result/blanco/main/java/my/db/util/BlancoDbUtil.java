@@ -107,7 +107,23 @@ public class BlancoDbUtil {
                     String tag = dynamicClause.getTag();
                     String condition = dynamicClause.getCondition();
 
-                    if ("ORDERBY".equals(condition)) {
+                    if ("LITERAL".equals(condition)) {
+                        if (values != null && values.size() == 1) {
+                            BlancoDbDynamicLiteral literal = (BlancoDbDynamicLiteral) values.get(0);
+                            if (literal != null && !literal.getInvalid() && dynamicClause.getItems() != null) {
+                                sb.append(" ");
+                                int count = 0;
+                                for (String item : dynamicClause.getItems()) {
+                                    if (count > 0) {
+                                        sb.append(",");
+                                    }
+                                    sb.append(item);
+                                    count++;
+                                }
+                                sb.append(" ");
+                            }
+                        }
+                    } else if ("ORDERBY".equals(condition)) {
                         if (values != null && values.size() > 0) {
                             sb.append("ORDER BY ");
                             int count = 0;

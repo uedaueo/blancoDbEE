@@ -69,11 +69,13 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         String dynamicClauseClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicClause";
         String dynamicParameterClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicParameter";
         String dynamicOrderByClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicOrderBy";
+        String dynamicLiteralClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicLiteral";
 
         fCgSourceFile.getImportList().add(dbUtilClass);
         fCgSourceFile.getImportList().add(dynamicClauseClass);
         fCgSourceFile.getImportList().add(dynamicParameterClass);
         fCgSourceFile.getImportList().add(dynamicOrderByClass);
+        fCgSourceFile.getImportList().add(dynamicLiteralClass);
 
         /*
          * 次に動的条件句定義の順にパラメータを作ります。
@@ -205,7 +207,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
                 this.createStaticInput(listLine, columnStructure);
             } else {
                 // 動的条件句パラメータです。
-                if ((inputDone.get(conditionStructure.getTag()) == null || !inputDone.get(conditionStructure.getTag())) && !"ORDERBY".equals(conditionStructure.getCondition())) {
+                if ((inputDone.get(conditionStructure.getTag()) == null || !inputDone.get(conditionStructure.getTag())) && !"ORDERBY".equals(conditionStructure.getCondition()) && !"LITERAL".equals(conditionStructure.getCondition())) {
                     this.createDynamicInput(listLine, conditionStructure);
                     inputDone.put(conditionStructure.getTag(), true);
                 }
@@ -259,7 +261,9 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
                 dynamicParameterClass,
                 "'" + conditionStructure.getTag() + "'列の値");
         cgMethod.getParameterList().add(param);
-        if ("ORDERBY".equals(conditionStructure.getCondition())) {
+        if ("LITERAL".equals(conditionStructure.getCondition())) {
+            param.getType().setGenerics("BlancoDbDynamicLiteral");
+        } else if ("ORDERBY".equals(conditionStructure.getCondition())) {
             param.getType().setGenerics("BlancoDbDynamicOrderBy");
         } else {
             param.getType().setGenerics(conditionStructure.getType());

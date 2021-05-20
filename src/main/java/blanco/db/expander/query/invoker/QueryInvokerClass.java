@@ -84,6 +84,9 @@ public class QueryInvokerClass extends BlancoDbAbstractClass {
             fCgSourceFile.getImportList().add(
                     BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicOrderBy"
             );
+            fCgSourceFile.getImportList().add(
+                    BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicLiteral"
+            );
         }
 
         new MapDynamicClauseField(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile, fCgClass).expand();
