@@ -94,15 +94,15 @@ public class PrepareCallMethod2 extends BlancoDbAbstractMethod {
             final BlancoDbMetaDataColumnStructure columnStructure = (BlancoDbMetaDataColumnStructure) fSqlInfo
                     .getOutParameterList().get(indexParameter);
 
-            final int[] listCol = query.getSqlParameters(columnStructure
+            final List<Integer> listCol = query.getSqlParameters(columnStructure
                     .getName());
             if (listCol == null) {
                 System.out.println("[" + fSqlInfo.getName() + "]の SQL出力パラメータ["
                         + columnStructure.getName() + "]が結びついていません.");
                 continue;
             }
-            for (int iteSame = 0; iteSame < listCol.length; iteSame++) {
-                final int index = listCol[iteSame];
+            for (int iteSame = 0; iteSame < listCol.size(); iteSame++) {
+                final int index = listCol.get(iteSame);
 
                 String stmtLine = "fStatement.registerOutParameter("
                         + index

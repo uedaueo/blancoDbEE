@@ -78,15 +78,15 @@ public class GetCallerOutputParameterMethod extends BlancoDbAbstractMethod {
         final BlancoDbQueryParserUtil query = new BlancoDbQueryParserUtil(
                 fSqlInfo);
 
-        final int[] listCol = query
+        final List<Integer> listCol = query
                 .getSqlParameters(fColumnStructure.getName());
         if (listCol == null) {
             throw new IllegalArgumentException("SQL定義ID[" + fSqlInfo.getName()
                     + "]の SQL出力パラメータ[" + fColumnStructure.getName()
                     + "]が結びついていません.");
         }
-        for (int iteSame = 0; iteSame < listCol.length; iteSame++) {
-            final int index = listCol[iteSame];
+        for (int iteSame = 0; iteSame < listCol.size(); iteSame++) {
+            final int index = listCol.get(iteSame);
             final String type = BlancoDbMappingUtilJava
                     .getGetterMethodNameForResultSet(fColumnStructure);
             if (BlancoDbMappingUtilJava

@@ -123,6 +123,12 @@ public class BlancoDbUtil {
                                 sb.append(" ");
                             }
                         }
+                    } else if ("FUNCTION".equals(condition)) {
+                        if (values != null && values.size() == 1) {
+                            sb.append(" ");
+                            sb.append(dynamicClause.getItems().get(0));
+                            sb.append(" ");
+                        }
                     } else if ("ORDERBY".equals(condition)) {
                         if (values != null && values.size() > 0) {
                             sb.append("ORDER BY ");

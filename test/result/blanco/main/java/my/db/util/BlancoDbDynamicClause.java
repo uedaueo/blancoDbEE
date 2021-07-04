@@ -3,6 +3,7 @@
  */
 package my.db.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,6 +61,17 @@ public class BlancoDbDynamicClause {
         this.tag = argTag;
         this.condition = argCondition;
         this.items = this.parseItems(argItem);
+    }
+
+    public BlancoDbDynamicClause(final String argTag, final String argCondition, final String argItem, final Boolean rawItem) {
+        this.tag = argTag;
+        this.condition = argCondition;
+        if (rawItem) {
+            this.items = new ArrayList<>();
+            items.add(argItem);
+        } else {
+            this.items = this.parseItems(argItem);
+        }
     }
 
     /**

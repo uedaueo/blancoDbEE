@@ -194,7 +194,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
             /*
              * パラメータが結びついていることを確認します。
              */
-            final int[] listCol = parserUtil.getSqlParameters(columnStructure.getName());
+            final List<Integer> listCol = parserUtil.getSqlParameters(columnStructure.getName());
             if (listCol == null) {
                 throw new IllegalArgumentException("SQL定義ID["
                         + fSqlInfo.getName() + "]の SQL入力パラメータ["
