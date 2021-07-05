@@ -20,10 +20,13 @@ import blanco.db.common.IBlancoDbProgress;
 import blanco.db.common.stringgroup.BlancoDbDriverNameStringGroup;
 import blanco.db.common.stringgroup.BlancoDbSqlInfoTypeStringGroup;
 import blanco.db.common.util.BlancoDbUtil;
+import blanco.db.common.valueobject.BlancoDbDynamicConditionFunctionStructure;
+import blanco.db.common.valueobject.BlancoDbDynamicConditionStructure;
 import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.expander.exception.*;
 import blanco.db.expander.query.caller.QueryCallerClass;
+import blanco.db.expander.query.input.FunctionLiteralInputClass;
 import blanco.db.expander.query.invoker.QueryInvokerClass;
 import blanco.db.expander.query.iterator.QueryIteratorClass;
 import blanco.db.util.*;
@@ -41,6 +44,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 中間XMLファイルからソースコードを生成します。
@@ -248,9 +252,20 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
                 BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util",
                 fDbSetting).expand()), fileBlancoMain);
 
-        // iterator, invoker, caller
+        // iterator, invoker, caller, functionLiteralInput
         for (int index = 0; index < definition.size(); index++) {
             final BlancoDbSqlInfoStructure sqlInfo = definition.get(index);
+            // 動的条件句関数入力クラス
+            for (BlancoDbDynamicConditionStructure conditionStructure : sqlInfo.getDynamicConditionList()) {
+                if (conditionStructure.getFunction() != null) {
+                    transformer.transform(adjust(new FunctionLiteralInputClass(
+                            fDbSetting,
+                            sqlInfo,
+                            conditionStructure,
+                            cgFactory).expand()), fileBlancoMain);
+                }
+            }
+
             switch (sqlInfo.getType()) {
             case BlancoDbSqlInfoTypeStringGroup.ITERATOR:
                 createRowObjectClass(

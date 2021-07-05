@@ -14,10 +14,12 @@ import blanco.cg.valueobject.BlancoCgClass;
 import blanco.cg.valueobject.BlancoCgMethod;
 import blanco.cg.valueobject.BlancoCgParameter;
 import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.commons.util.BlancoNameAdjuster;
 import blanco.db.common.expander.BlancoDbAbstractMethod;
 import blanco.db.common.stringgroup.BlancoDbLoggingModeStringGroup;
 import blanco.db.common.util.BlancoDbQueryParserUtil;
 import blanco.db.common.util.BlancoDbUtil;
+import blanco.db.common.valueobject.BlancoDbDynamicConditionFunctionStructure;
 import blanco.db.common.valueobject.BlancoDbDynamicConditionStructure;
 import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
@@ -26,6 +28,8 @@ import blanco.db.util.BlancoDbMappingUtilJava;
 import blanco.dbmetadata.BlancoDbMetaDataUtil;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -187,7 +191,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
          * パラメータをセットしていきます。
          * 動的条件句はタグが重複定義されている場合があるので、
          * それをチェックして省きます。
-         * また ITEMONLY はパラメータを渡しません。
+         * また ORDERBY と LITERAL はパラメータを渡しません。
          */
         Map<String, Boolean> inputDone = new HashMap<>();
         for (BlancoDbMetaDataColumnStructure columnStructure : parameterList) {
@@ -263,6 +267,9 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         cgMethod.getParameterList().add(param);
         if ("LITERAL".equals(conditionStructure.getCondition())) {
             param.getType().setGenerics("BlancoDbDynamicLiteral");
+        } else if ("FUNCTION".equals(conditionStructure.getCondition())) {
+            String inputClass = BlancoNameAdjuster.toClassName(fSqlInfo.getName()) + BlancoNameAdjuster.toClassName(conditionStructure.getTag()) + "Input";
+            param.getType().setGenerics(inputClass);
         } else if ("ORDERBY".equals(conditionStructure.getCondition())) {
             param.getType().setGenerics("BlancoDbDynamicOrderBy");
         } else {
@@ -271,14 +278,25 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         /*
          * 動的条件句は当面の間BINARY系の型には対応しません。
          */
-        switch (columnStructure.getDataType()) {
-            case Types.BINARY:
-            case Types.VARBINARY:
-            case Types.LONGVARBINARY:
-            case Types.BLOB:
-            case Types.LONGVARCHAR:
-            case Types.CLOB:
-                throw new IllegalArgumentException("動的条件句は当面の間BINARY系の型には対応しません");
+        int loop = 1;
+        BlancoDbDynamicConditionFunctionStructure functionStructure = conditionStructure.getFunction();
+        if ("FUNCTION".equals(conditionStructure.getCondition())) {
+            loop = functionStructure.getParamNum();
+        }
+        for (int i = 0; i < loop; i++) {
+            int dataType = columnStructure.getDataType();
+            if ("FUNCTION".equals(conditionStructure.getCondition())) {
+                dataType = functionStructure.getDbColumnList().get(i).getDataType();
+            }
+            switch (dataType) {
+                case Types.BINARY:
+                case Types.VARBINARY:
+                case Types.LONGVARBINARY:
+                case Types.BLOB:
+                case Types.LONGVARCHAR:
+                case Types.CLOB:
+                    throw new IllegalArgumentException("動的条件句は当面の間BINARY系の型には対応しません");
+            }
         }
     }
 
@@ -375,11 +393,33 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
             final List<String> listLine,
             final BlancoDbDynamicConditionStructure conditionStructure
     ) {
+        Boolean isFunctionLiteral = "FUNCTION".equals(conditionStructure.getCondition());
         String tag = conditionStructure.getTag();
         String type = conditionStructure.getType();
         listLine.add("if (" + tag + " != null) {");
-        listLine.add("java.util.List<" + type + "> values = " + tag + ".getValues();");
-        listLine.add("index = BlancoDbUtil.setInputParameter(fStatement, values, index);");
+        if (!isFunctionLiteral) {
+            listLine.add("java.util.List<" + type + "> values = " + tag + ".getValues();");
+            listLine.add("index = BlancoDbUtil.setInputParameter(fStatement, values, index);");
+        } else {
+            BlancoDbDynamicConditionFunctionStructure functionStructure = conditionStructure.getFunction();
+            String inputClass = BlancoNameAdjuster.toClassName(fSqlInfo.getName()) + BlancoNameAdjuster.toClassName(conditionStructure.getTag()) + "Input";
+            listLine.add(inputClass + " input = " + tag + ".getValues().get(0);");
+            Class<? extends BlancoDbDynamicConditionFunctionStructure> clazz = functionStructure.getClass();
+            for (int i = 1; i <= functionStructure.getParamNum(); i++) {
+                String tagParamType = String.format("paramType%02d", i);
+                String strMethod = "get" + BlancoNameAdjuster.toClassName(tagParamType);
+                try {
+                    Method method = clazz.getMethod(strMethod);
+                    type = (String) method.invoke(functionStructure);
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    throw new IllegalArgumentException("Fail to get " + tagParamType, e);
+                }
+                String tagParam = String.format("param%02d", i);
+                listLine.add("java.util.List<" + type + "> " + tagParam + " = new ArrayList<>();");
+                listLine.add(tagParam + ".add((" + type + ") input.getParam(" + i + "));");
+                listLine.add("index = BlancoDbUtil.setInputParameter(fStatement, " + tagParam + ", index);");
+            }
+        }
         listLine.add("}");
 
         listLine.add("");

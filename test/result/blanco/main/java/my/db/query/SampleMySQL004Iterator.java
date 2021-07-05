@@ -38,6 +38,7 @@ public class SampleMySQL004Iterator {
             put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ORDERBY", "ID,TEXT,MyNUMERIC"));
             put("joinLiteral", new BlancoDbDynamicClause("JOIN_LITERAL", "LITERAL", "LEFT OUTER JOIN TEST_BLANCODB2 test2 \n    ON test1.COL_ID = test2.COL_ID\n  AND test2.COL_ID=2"));
             put("funcLiteral", new BlancoDbDynamicClause("FUNC_LITERAL", "FUNCTION", "OR test1.COL_DATE < FROM_UNIXTIME( ? , ? )", true));
+            put("funcLiteral2", new BlancoDbDynamicClause("FUNC_LITERAL2", "FUNCTION", "OR test1.COL_DATE < FROM_UNIXTIME( ?  )", true));
         }
     };
 
@@ -104,7 +105,7 @@ public class SampleMySQL004Iterator {
      * @return JDBCドライバに与えて実行可能な状態のSQL文。
      */
     public String getQuery() {
-        return "SELECT test1.COL_ID ID, test1.COL_TEXT TEXT, test1.COL_NUMERIC MyNUMERIC from\n   TEST_BLANCODB test1\n${JOIN_LITERAL}\nwhere\n   test1.COL_TEXT like ?\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND test1.COL_NUMERIC = ?\n   ${FUNC_LITERAL}\n${ORDERBY}";
+        return "SELECT test1.COL_ID ID, test1.COL_TEXT TEXT, test1.COL_NUMERIC MyNUMERIC from\n   TEST_BLANCODB test1\n${JOIN_LITERAL}\nwhere\n   test1.COL_TEXT like ?\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND test1.COL_NUMERIC = ?\n   ${FUNC_LITERAL}\n   ${FUNC_LITERAL2}\n${ORDERBY}";
     }
 
     /**
@@ -147,9 +148,10 @@ public class SampleMySQL004Iterator {
      * @param ORDERBY 'ORDERBY'列の値
      * @param JOIN_LITERAL 'JOIN_LITERAL'列の値
      * @param FUNC_LITERAL 'FUNC_LITERAL'列の値
+     * @param FUNC_LITERAL2 'FUNC_LITERAL2'列の値
      * @throws SQLException SQL例外が発生した場合。
      */
-    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY, final BlancoDbDynamicParameter<BlancoDbDynamicLiteral> JOIN_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteralInput> FUNC_LITERAL) throws SQLException {
+    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY, final BlancoDbDynamicParameter<BlancoDbDynamicLiteral> JOIN_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteralInput> FUNC_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteral2Input> FUNC_LITERAL2) throws SQLException {
         /* タグを置換する */
         String query = this.getQuery();
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, BETWEEN01, query, "BETWEEN01");
@@ -158,8 +160,7 @@ public class SampleMySQL004Iterator {
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, ORDERBY, query, "ORDERBY");
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, JOIN_LITERAL, query, "JOIN_LITERAL");
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, FUNC_LITERAL, query, "FUNC_LITERAL");
-
-        System.out.println("query = " + query);
+        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, FUNC_LITERAL2, query, "FUNC_LITERAL2");
 
         /* 必ず statement を作り直す */
         prepareStatement(query);
@@ -191,18 +192,22 @@ public class SampleMySQL004Iterator {
         index++;
 
         if (FUNC_LITERAL != null) {
-            java.util.List<SampleMySQL004FuncLiteralInput> values = FUNC_LITERAL.getValues();
-            SampleMySQL004FuncLiteralInput input = null;
-            if (values != null && values.size() == 1) {
-                input = values.get(0);
-                List<Long> param01 = new ArrayList<>();
-                param01.add((Long) input.getParam(1));
-                index = BlancoDbUtil.setInputParameter(fStatement, param01, index);
-                List<String> param02 = new ArrayList<>();
-                param02.add((String) input.getParam(2));
-                index = BlancoDbUtil.setInputParameter(fStatement, param02, index);
-            }
+            SampleMySQL004FuncLiteralInput input = FUNC_LITERAL.getValues().get(0);
+            java.util.List<java.lang.Long> param01 = new ArrayList<>();
+            param01.add((java.lang.Long) input.getParam(1));
+            index = BlancoDbUtil.setInputParameter(fStatement, param01, index);
+            java.util.List<java.lang.String> param02 = new ArrayList<>();
+            param02.add((java.lang.String) input.getParam(2));
+            index = BlancoDbUtil.setInputParameter(fStatement, param02, index);
         }
+
+        if (FUNC_LITERAL2 != null) {
+            SampleMySQL004FuncLiteral2Input input = FUNC_LITERAL2.getValues().get(0);
+            java.util.List<java.lang.Long> param01 = new ArrayList<>();
+            param01.add((java.lang.Long) input.getParam(1));
+            index = BlancoDbUtil.setInputParameter(fStatement, param01, index);
+        }
+
     }
 
     /**

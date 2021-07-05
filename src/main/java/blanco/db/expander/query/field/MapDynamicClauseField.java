@@ -14,6 +14,7 @@ import blanco.cg.valueobject.BlancoCgClass;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.commons.util.BlancoJavaSourceUtil;
 import blanco.db.common.expander.BlancoDbAbstractField;
+import blanco.db.common.valueobject.BlancoDbDynamicConditionFunctionStructure;
 import blanco.db.common.valueobject.BlancoDbDynamicConditionStructure;
 import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
@@ -66,22 +67,34 @@ public class MapDynamicClauseField extends BlancoDbAbstractField {
          * conditionStructure の整合性は parse 時にチェック済み
          */
         for (BlancoDbDynamicConditionStructure conditionStructure : conditions) {
+            String strCondition = conditionStructure.getCondition();
+            String strItem = conditionStructure.getItem();
+            if ("FUNCTION".equals(strCondition)) {
+                /* Always set true to doTest flag because of making inputParameters */
+                BlancoDbDynamicConditionFunctionStructure functionStructure = conditionStructure.getFunction();
+                functionStructure.setDoTest(true);
+                /* Replace function tag with function literal */
+                strItem = functionStructure.getFunction();
+            }
             StringBuffer sb = new StringBuffer();
             sb.append("put(\"" +
                     conditionStructure.getKey() +
                     "\", new BlancoDbDynamicClause(\"" +
                     conditionStructure.getTag() +
-                    "\", \"" + conditionStructure.getCondition() + "\"");
+                    "\", \"" + strCondition + "\"");
             sb.append(", \"" +
-                    BlancoJavaSourceUtil.escapeStringAsJavaSource(conditionStructure.getItem()) +
+                    BlancoJavaSourceUtil.escapeStringAsJavaSource(strItem) +
                     "\"");
-            if (!"ORDERBY".equals(conditionStructure.getCondition()) && !"LITERAL".equals(conditionStructure.getCondition())) {
+            if (!"ORDERBY".equals(strCondition) && !"LITERAL".equals(strCondition) && !"FUNCTION".equals(strCondition)) {
                 sb.append(", \"" + conditionStructure.getLogical() + "\"");
                 sb.append(", \"" + conditionStructure.getType() + "\"");
                 fCgSourceFile.getImportList().add(conditionStructure.getType());
             }
-            if ("COMPARE".equals(conditionStructure.getCondition())) {
+            if ("COMPARE".equals(strCondition)) {
                 sb.append(", \"" + conditionStructure.getComparison() + "\"");
+            }
+            if ("FUNCTION".equals(strCondition)) {
+                sb.append(", true");
             }
             sb.append("));");
             plainTextList.add(sb.toString());

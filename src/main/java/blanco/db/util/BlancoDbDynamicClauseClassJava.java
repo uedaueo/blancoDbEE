@@ -107,6 +107,9 @@ public class BlancoDbDynamicClauseClassJava {
             cgClass.getMethodList().add(
                     buildConstructor("COMPARE")
             );
+            cgClass.getMethodList().add(
+                    buildConstructor("LITERAL")
+            );
         }
 
         {
@@ -205,6 +208,18 @@ public class BlancoDbDynamicClauseClassJava {
         cgMethod.getParameterList().add(
                 fCgFactory.createParameter("argItem", "java.lang.String", "対象Item"));
         lineList.add("this.items = this.parseItems(argItem);");
+
+        if ("LITERAL".equals(type)) {
+            cgMethod.getParameterList().add(
+                    fCgFactory.createParameter("argRawItem", "java.lang.Boolean", "true の場合、対象Itemをカンマ区切りでparseしない"));
+            lineList.add("if (argRawItem) {");
+            lineList.add("this.items = new java.util.ArrayList<>();");
+            lineList.add("items.add(argItem);");
+            lineList.add("} else {");
+            lineList.add("this.items = this.parseItems(argItem);");
+            lineList.add("}");
+            return cgMethod;
+        }
 
         if ("ORDERBY".equals(type)) {
             return cgMethod;

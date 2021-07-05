@@ -2,6 +2,7 @@ package my.db.row;
 
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * SQL定義書(blancoDb)から作成された行クラス。
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
  * (1) 'COL_ID'列 型:int
  * (2) 'COL_TEXT'列 型:java.io.Reader
  * (3) 'COL_NUMERIC'列 型:java.math.BigDecimal
+ * (4) 'COL_DATE'列 型:java.util.Date
  */
 public class SampleSQLite001Row {
     /**
@@ -32,6 +34,13 @@ public class SampleSQLite001Row {
      * フィールド: [COL_NUMERIC]。
      */
     private BigDecimal fColNumeric;
+
+    /**
+     * フィールド[COL_DATE]です。
+     *
+     * フィールド: [COL_DATE]。
+     */
+    private Date fColDate;
 
     /**
      * フィールド [COL_ID] の値を設定します。
@@ -100,6 +109,28 @@ public class SampleSQLite001Row {
     }
 
     /**
+     * フィールド [COL_DATE] の値を設定します。
+     *
+     * フィールドの説明: [フィールド[COL_DATE]です。]。
+     *
+     * @param argColDate フィールド[COL_DATE]に設定する値。
+     */
+    public void setColDate(final Date argColDate) {
+        fColDate = argColDate;
+    }
+
+    /**
+     * フィールド [COL_DATE] の値を取得します。
+     *
+     * フィールドの説明: [フィールド[COL_DATE]です。]。
+     *
+     * @return フィールド[COL_DATE]から取得した値。
+     */
+    public Date getColDate() {
+        return fColDate;
+    }
+
+    /**
      * このバリューオブジェクトの文字列表現を取得します。
      *
      * <P>使用上の注意</P>
@@ -117,6 +148,7 @@ public class SampleSQLite001Row {
         buf.append("COL_ID=" + fColId);
         buf.append(",COL_TEXT=" + fColText);
         buf.append(",COL_NUMERIC=" + fColNumeric);
+        buf.append(",COL_DATE=" + fColDate);
         buf.append("]");
         return buf.toString();
     }
@@ -148,5 +180,8 @@ public class SampleSQLite001Row {
         // Name: fColNumeric
         // Type: java.math.BigDecimal
         target.fColNumeric = this.fColNumeric;
+        // Name: fColDate
+        // Type: java.util.Date
+        target.fColDate = (this.fColDate == null ? null : new Date(this.fColDate.getTime()));
     }
 }

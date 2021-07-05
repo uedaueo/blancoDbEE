@@ -99,6 +99,26 @@ public class BlancoDbDynamicClause {
     }
 
     /**
+     * コンストラクタ
+     *
+     * @param argTag タグ名
+     * @param argCondition 条件句タイプ
+     * @param argItem 対象Item
+     * @param argRawItem true の場合、対象Itemをカンマ区切りでparseしない
+     */
+    public BlancoDbDynamicClause(final String argTag, final String argCondition, final String argItem, final Boolean argRawItem) {
+        this.tag = argTag;
+        this.condition = argCondition;
+        this.items = this.parseItems(argItem);
+        if (argRawItem) {
+            this.items = new java.util.ArrayList<>();
+            items.add(argItem);
+        } else {
+            this.items = this.parseItems(argItem);
+        }
+    }
+
+    /**
      * タグ名
      *
      * @param argTag タグ名

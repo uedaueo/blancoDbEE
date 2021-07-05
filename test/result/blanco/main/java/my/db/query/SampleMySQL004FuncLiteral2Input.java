@@ -8,11 +8,11 @@ package my.db.query;
  *
  * 動的条件句関数定義用の入力のためのオブジェクトを提供します。<br>
  */
-public class SampleMySQL004FuncLiteralInput {
+public class SampleMySQL004FuncLiteral2Input {
     /**
      * この入力用クラスが期待するパラメータの数
      */
-    private Integer paramNum = 2;
+    private Integer paramNum = 1;
 
     /**
      * 1番目のパラメータ
@@ -20,19 +20,12 @@ public class SampleMySQL004FuncLiteralInput {
     private Long param01;
 
     /**
-     * 2番目のパラメータ
-     */
-    private String param02;
-
-    /**
      * コンストラクタ
      *
      * @param argParam01 1番目のパラメータ
-     * @param argParam02 2番目のパラメータ
      */
-    public SampleMySQL004FuncLiteralInput(final Long argParam01, final String argParam02) {
+    public SampleMySQL004FuncLiteral2Input(final Long argParam01) {
         this.param01 = argParam01;
-        this.param02 = argParam02;
     }
 
     /**
@@ -44,9 +37,6 @@ public class SampleMySQL004FuncLiteralInput {
     public Object getParam(final Integer param) {
         if (param == 1) {
             return this.param01;
-        }
-        if (param == 2) {
-            return this.param02;
         }
         throw new IllegalArgumentException("Maxmum parameter number for this function is " + this.paramNum + " (start from 1).");
     }

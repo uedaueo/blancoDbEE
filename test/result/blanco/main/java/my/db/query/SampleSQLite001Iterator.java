@@ -199,6 +199,10 @@ public class SampleSQLite001Iterator {
         result.setColId(fResultSet.getInt(1));
         result.setColText(fResultSet.getCharacterStream(2));
         result.setColNumeric(fResultSet.getBigDecimal(3));
+        result.setColDate(BlancoDbUtil.convertTimestampToDate(fResultSet.getTimestamp(4)));
+        if (fResultSet.wasNull()) {
+            result.setColDate(null);
+        }
 
         return result;
     }

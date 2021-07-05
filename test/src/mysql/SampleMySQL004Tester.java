@@ -1,5 +1,6 @@
 package mysql;
 
+import my.db.query.SampleMySQL004FuncLiteral2Input;
 import my.db.query.SampleMySQL004FuncLiteralInput;
 import my.db.query.SampleMySQL004Iterator;
 import my.db.row.SampleMySQL004Row;
@@ -74,6 +75,13 @@ public class SampleMySQL004Tester {
         List<SampleMySQL004FuncLiteralInput> f = funcLiteral.getValues();
         f.add(new SampleMySQL004FuncLiteralInput(1196440219L, "%Y %D %M %h:%i:%s %x"));
 
+        // FUNC_LITERAL2
+        BlancoDbDynamicParameter<SampleMySQL004FuncLiteral2Input> funcLiteral2 = new BlancoDbDynamicParameter<>();
+        funcLiteral2.setKey("funcLiteral2");
+        funcLiteral2.setValues(new ArrayList<>());
+        List<SampleMySQL004FuncLiteral2Input> f2 = funcLiteral2.getValues();
+        f2.add(new SampleMySQL004FuncLiteral2Input(1196440219L));
+
 //        ite.setInputParameter(
 //                "%",
 //                12.0,
@@ -91,7 +99,8 @@ public class SampleMySQL004Tester {
                 compText,
                 orderbyColumns,
                 joinLiteral,
-                funcLiteral
+                funcLiteral,
+                funcLiteral2
         );
 
         ite.executeQuery();

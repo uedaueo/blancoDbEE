@@ -306,6 +306,12 @@ public class BlancoDbUtilClassJava {
             listLine.add("sb.append(\" \");");
             listLine.add("}");
             listLine.add("}");
+            listLine.add("} else if (\"FUNCTION\".equals(condition)) {");
+            listLine.add("if (values != null && values.size() == 1) {");
+            listLine.add("sb.append(\" \");");
+            listLine.add("sb.append(dynamicClause.getItems().get(0));");
+            listLine.add("sb.append(\" \");");
+            listLine.add("}");
             listLine.add("} else if (\"ORDERBY\".equals(condition)) {");
             listLine.add("if (values != null && values.size() > 0) {");
             listLine.add("sb.append(\"ORDER BY \");");
