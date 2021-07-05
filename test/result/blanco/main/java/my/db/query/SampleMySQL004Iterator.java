@@ -193,17 +193,17 @@ public class SampleMySQL004Iterator {
 
         if (FUNC_LITERAL != null) {
             SampleMySQL004FuncLiteralInput input = FUNC_LITERAL.getValues().get(0);
-            java.util.List<java.lang.Long> param01 = new ArrayList<>();
+            java.util.List<java.lang.Long> param01 = new java.util.ArrayList<>();
             param01.add((java.lang.Long) input.getParam(1));
             index = BlancoDbUtil.setInputParameter(fStatement, param01, index);
-            java.util.List<java.lang.String> param02 = new ArrayList<>();
+            java.util.List<java.lang.String> param02 = new java.util.ArrayList<>();
             param02.add((java.lang.String) input.getParam(2));
             index = BlancoDbUtil.setInputParameter(fStatement, param02, index);
         }
 
         if (FUNC_LITERAL2 != null) {
             SampleMySQL004FuncLiteral2Input input = FUNC_LITERAL2.getValues().get(0);
-            java.util.List<java.lang.Long> param01 = new ArrayList<>();
+            java.util.List<java.lang.Long> param01 = new java.util.ArrayList<>();
             param01.add((java.lang.Long) input.getParam(1));
             index = BlancoDbUtil.setInputParameter(fStatement, param01, index);
         }

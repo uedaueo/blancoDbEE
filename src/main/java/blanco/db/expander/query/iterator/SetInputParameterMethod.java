@@ -415,7 +415,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
                     throw new IllegalArgumentException("Fail to get " + tagParamType, e);
                 }
                 String tagParam = String.format("param%02d", i);
-                listLine.add("java.util.List<" + type + "> " + tagParam + " = new ArrayList<>();");
+                listLine.add("java.util.List<" + type + "> " + tagParam + " = new java.util.ArrayList<>();");
                 listLine.add(tagParam + ".add((" + type + ") input.getParam(" + i + "));");
                 listLine.add("index = BlancoDbUtil.setInputParameter(fStatement, " + tagParam + ", index);");
             }
