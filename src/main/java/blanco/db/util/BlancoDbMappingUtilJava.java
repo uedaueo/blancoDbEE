@@ -16,15 +16,15 @@ import blanco.dbmetadata.BlancoDbMetaDataUtil;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
- * blancoDbの型マッピングに関するメソッドを集めたクラス。
+ * A class that collects methods related to type mapping of blancoDb.
  *
  * @author ToshikiIga
  */
 public final class BlancoDbMappingUtilJava {
     /**
-     * 列構造体からJava言語におけるフルクラス名を取得します。
+     * Gets the full class name in Java from the column structure.
      *
-     * この処理は、プログラミング言語ごとに異なるものです。 Typesを Java言語の何の型にマッピングするのか、という重要な処理にあたります。
+     * This process is different for each programming language. This is the important process of mapping Types to what types in Java.
      *
      * @param columnStructure
      * @return
@@ -86,9 +86,9 @@ public final class BlancoDbMappingUtilJava {
         case Types.NVARCHAR:
             return "java.lang.String";
         case Types.DATE:
-            // 仮で TIMESTAMPと同じ動きをさせています。
+            // It works the same way as TIMESTAMP tentatively.
         case Types.TIME:
-            // 仮で TIMESTAMPと同じ動きをさせています。
+            // It works the same way as TIMESTAMP tentatively.
         case Types.TIMESTAMP:
             return "java.util.Date";
         case Types.BINARY:
@@ -110,28 +110,28 @@ public final class BlancoDbMappingUtilJava {
         case Types.REF:
         case Types.DATALINK:
         case -101:
-            // Oracle の SYSTIMESTAMP 型のための、workaround
+            // workaround for Oracle's SYSTIMESTAMP type
             if("SYSTIMESTAMP".equals(columnStructure.getName())){
                 return "java.util.Date";
             }
         default:
-            throw new IllegalArgumentException("BlancoDbTableMeta2Xml: 列パラメータ["
+            throw new IllegalArgumentException("BlancoDbTableMeta2Xml: Binding of column parameter ["
                     + columnStructure.getName()
                     + "]("
                     + BlancoDbMetaDataUtil
                             .convertJdbcDataTypeToString(columnStructure
                                     .getDataType())
-                    + ")のバインド: 処理できないSQL型("
+                    + "): An SQL type ("
                     + columnStructure.getDataType()
                     + "/"
                     + BlancoDbMetaDataUtil
                             .convertJdbcDataTypeToString(columnStructure
-                                    .getDataType()) + ")が指定されました。");
+                                    .getDataType()) + ") that cannot be processed was specified.");
         }
     }
 
     /**
-     * 列構造体からJava言語におけるクラス名を取得します。
+     * Gets the class name in Java from the column structure.
      *
      * @param columnStructure
      * @return
@@ -143,9 +143,9 @@ public final class BlancoDbMappingUtilJava {
     }
 
     /**
-     * プリミティブでしかもNULLをサポートすべきものかどうかを判断します。
+     * Determines if it is a primitive and should support null.
      *
-     * プリミティブ型ではnullが表現できない型がありますので、その型に該当するかどうか判定をおこないます。
+     * There are some primitive types that do not support null, so it will determine if the type is one of them.
      *
      * @param columnStructure
      * @return
@@ -206,11 +206,11 @@ public final class BlancoDbMappingUtilJava {
         case Types.VARCHAR:
             return false;
         case Types.DATE:
-            // TIMESTAMPと同じ動きをさせています。
+            // It has the same behavior as TIMESTAMP.
         case Types.TIME:
-            // TIMESTAMPと同じ動きをさせています。
+            // It has the same behavior as TIMESTAMP.
         case Types.TIMESTAMP:
-            // 特別な動き。DATE, TIME, TIMESTAMP については、プリミティブ型 + NULL許容の際と同じ挙動をさせています。
+            // Special behavior: for DATE, TIME, and TIMESTAMP, the behavior is the same as for primitive types + null tolerance. 
             return true;
         case Types.BINARY:
         case Types.VARBINARY:
@@ -234,7 +234,7 @@ public final class BlancoDbMappingUtilJava {
     }
 
     /**
-     * 列情報をもとに、PreparedStatementに対するセッターメソッド名を取得します。
+     * Gets the name of the setter method for PreparedStatement based on the column information.
      *
      * @param columnStructure
      * @return
@@ -245,7 +245,7 @@ public final class BlancoDbMappingUtilJava {
     }
 
     /**
-     * 列情報をもとに、ResultSetに対するゲッターメソッド名を取得します。
+     * Gets the name of the getter method for ResultSet based on the column information.
      *
      * @param columnStructure
      * @return
@@ -256,7 +256,7 @@ public final class BlancoDbMappingUtilJava {
     }
 
     /**
-     * 列情報をもとに、ResultSetに対するupdateメソッド名を取得します。
+     * Gets the name of the update method for ResultSet based on the column information.
      *
      * @param columnStructure
      * @return
@@ -267,7 +267,7 @@ public final class BlancoDbMappingUtilJava {
     }
 
     /**
-     * ゲッターセッターメソッド名のベース名称を取得します。
+     * Gets the base name of the getter setter method name.
      *
      * @param columnStructure
      * @return
@@ -300,9 +300,9 @@ public final class BlancoDbMappingUtilJava {
         case Types.NVARCHAR:
             return "String";
         case Types.DATE:
-            // 仮で TIMESTAMPと同じ動きをさせています。
+            // It works the same way as TIMESTAMP tentatively.
         case Types.TIME:
-            // 仮で TIMESTAMPと同じ動きをさせています。
+            // It works the same way as TIMESTAMP tentatively.
         case Types.TIMESTAMP:
             return "Timestamp";
         case Types.BINARY:
@@ -324,26 +324,25 @@ public final class BlancoDbMappingUtilJava {
         case Types.REF:
         case Types.DATALINK:
         case -101:
-            // Oracle の SYSTIMESTAMP 型のための、workaround
+            // workaround for Oracle's SYSTIMESTAMP type
             if("SYSTIMESTAMP".equals(columnStructure.getName())){
                 return "Timestamp";
             }
         default:
-            throw new IllegalArgumentException("ゲッターおよびセッターを取得する処理で、型["
+            throw new IllegalArgumentException("Failed to parse the method name corresponding to type ["
                     + columnStructure.getDataType()
                     + "/"
                     + BlancoDbMetaDataUtil
                             .convertJdbcDataTypeToString(columnStructure
-                                    .getDataType()) + "]に対応するメソッド名の解析に失敗しました。");
+                                    .getDataType()) + "] in the process of getting the getter and setter.");
         }
     }
 
     /**
-     * 必要な場合のみ、プリミティブ型などに対してラッパークラスをラッピングします。
+     * Wrapping primitive types, etc. with wrapper class only when necessary.
      *
-     * プリミティブ型をラッパークラスのオブジェクトへと置き換える処理をおこないます。<br>
-     * 加えて、java.sql.Dateやjava.sql.Timestampなどから
-     * java.util.Dateへの置き換えもここでおこなわれています。
+     * Replaces the primitive type with an object of the wrapper class.<br>
+     * In addition, the replacement of java.sql.Date, java.sql.Timestamp, etc. with java.util.Date.
      *
      * @param columnStructure
      * @param originalLine
@@ -403,7 +402,7 @@ public final class BlancoDbMappingUtilJava {
         case Types.DATE:
         case Types.TIME:
         case Types.TIMESTAMP:
-            // Dateの場合には ResultSetからはTimestampが渡ってきます。
+            // In the case of Date, the ResultSet will return Timestamp.
             converter1 = "BlancoDbUtil.convertTimestampToDate(";
             converter2 = ")";
             break;
@@ -413,9 +412,9 @@ public final class BlancoDbMappingUtilJava {
     }
 
     /**
-     * ラッパークラスをプリミティブに変換します。<br>
-     * ラッパークラスのオブジェクトをプリミティブ型へと置き換える処理をおこないます。<br>
-     * 加えて、java.util.Dateから java.sql.Timestampへの置き換えもここでおこなわれています。
+     * Converts a wrapper class to a primitive.<br>
+     * Replaces the wrapper class object with a primitive type.<br>
+     * In addition, replaces java.util.Date with java.sql.Timestamp.
      *
      * @param columnStructure
      * @param originalLine

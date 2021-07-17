@@ -1,51 +1,41 @@
 package my.db.row;
 
-import java.io.Reader;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
- * SQL定義書(blancoDb)から作成された行クラス。
+ * A row class created from SQL definition (blancoDb).
  *
- * 'SampleSQLite001Row'行を表現します。
- * (1) 'COL_ID'列 型:int
- * (2) 'COL_TEXT'列 型:java.io.Reader
- * (3) 'COL_NUMERIC'列 型:java.math.BigDecimal
- * (4) 'COL_DATE'列 型:java.util.Date
+ * 'SampleSQLite001Row' row is represented.
+ * (1) 'COL_ID' column type:int
+ * (2) 'COL_TEXT' column type:java.lang.String
+ * (3) 'COL_NUMERIC' column type:java.math.BigDecimal
  */
 public class SampleSQLite001Row {
     /**
-     * フィールド[COL_ID]です。
+     * Field [COL_ID].
      *
      * フィールド: [COL_ID]。
      */
     private int fColId;
 
     /**
-     * フィールド[COL_TEXT]です。
+     * Field [COL_TEXT].
      *
      * フィールド: [COL_TEXT]。
      */
-    private Reader fColText;
+    private String fColText;
 
     /**
-     * フィールド[COL_NUMERIC]です。
+     * Field [COL_NUMERIC].
      *
      * フィールド: [COL_NUMERIC]。
      */
     private BigDecimal fColNumeric;
 
     /**
-     * フィールド[COL_DATE]です。
-     *
-     * フィールド: [COL_DATE]。
-     */
-    private Date fColDate;
-
-    /**
      * フィールド [COL_ID] の値を設定します。
      *
-     * フィールドの説明: [フィールド[COL_ID]です。]。
+     * フィールドの説明: [Field [COL_ID].]。
      *
      * @param argColId フィールド[COL_ID]に設定する値。
      */
@@ -56,7 +46,7 @@ public class SampleSQLite001Row {
     /**
      * フィールド [COL_ID] の値を取得します。
      *
-     * フィールドの説明: [フィールド[COL_ID]です。]。
+     * フィールドの説明: [Field [COL_ID].]。
      *
      * @return フィールド[COL_ID]から取得した値。
      */
@@ -67,29 +57,29 @@ public class SampleSQLite001Row {
     /**
      * フィールド [COL_TEXT] の値を設定します。
      *
-     * フィールドの説明: [フィールド[COL_TEXT]です。]。
+     * フィールドの説明: [Field [COL_TEXT].]。
      *
      * @param argColText フィールド[COL_TEXT]に設定する値。
      */
-    public void setColText(final Reader argColText) {
+    public void setColText(final String argColText) {
         fColText = argColText;
     }
 
     /**
      * フィールド [COL_TEXT] の値を取得します。
      *
-     * フィールドの説明: [フィールド[COL_TEXT]です。]。
+     * フィールドの説明: [Field [COL_TEXT].]。
      *
      * @return フィールド[COL_TEXT]から取得した値。
      */
-    public Reader getColText() {
+    public String getColText() {
         return fColText;
     }
 
     /**
      * フィールド [COL_NUMERIC] の値を設定します。
      *
-     * フィールドの説明: [フィールド[COL_NUMERIC]です。]。
+     * フィールドの説明: [Field [COL_NUMERIC].]。
      *
      * @param argColNumeric フィールド[COL_NUMERIC]に設定する値。
      */
@@ -100,34 +90,12 @@ public class SampleSQLite001Row {
     /**
      * フィールド [COL_NUMERIC] の値を取得します。
      *
-     * フィールドの説明: [フィールド[COL_NUMERIC]です。]。
+     * フィールドの説明: [Field [COL_NUMERIC].]。
      *
      * @return フィールド[COL_NUMERIC]から取得した値。
      */
     public BigDecimal getColNumeric() {
         return fColNumeric;
-    }
-
-    /**
-     * フィールド [COL_DATE] の値を設定します。
-     *
-     * フィールドの説明: [フィールド[COL_DATE]です。]。
-     *
-     * @param argColDate フィールド[COL_DATE]に設定する値。
-     */
-    public void setColDate(final Date argColDate) {
-        fColDate = argColDate;
-    }
-
-    /**
-     * フィールド [COL_DATE] の値を取得します。
-     *
-     * フィールドの説明: [フィールド[COL_DATE]です。]。
-     *
-     * @return フィールド[COL_DATE]から取得した値。
-     */
-    public Date getColDate() {
-        return fColDate;
     }
 
     /**
@@ -148,7 +116,6 @@ public class SampleSQLite001Row {
         buf.append("COL_ID=" + fColId);
         buf.append(",COL_TEXT=" + fColText);
         buf.append(",COL_NUMERIC=" + fColNumeric);
-        buf.append(",COL_DATE=" + fColDate);
         buf.append("]");
         return buf.toString();
     }
@@ -175,13 +142,10 @@ public class SampleSQLite001Row {
         // Type: int
         target.fColId = this.fColId;
         // Name: fColText
-        // Type: java.io.Reader
-        // フィールド[fColText]はサポート外の型[java.io.Reader]です。
+        // Type: java.lang.String
+        target.fColText = this.fColText;
         // Name: fColNumeric
         // Type: java.math.BigDecimal
         target.fColNumeric = this.fColNumeric;
-        // Name: fColDate
-        // Type: java.util.Date
-        target.fColDate = (this.fColDate == null ? null : new Date(this.fColDate.getTime()));
     }
 }

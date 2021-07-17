@@ -6,8 +6,7 @@ import blanco.commons.util.BlancoNameAdjuster;
 /**
  * @author iga
  * 
- * TODO この生成された型コメントのテンプレートを変更するには次へジャンプ: ウィンドウ - 設定 - Java - コード・スタイル -
- * コード・テンプレート
+ * TODO To change the template of this generated type comment, jump to: Window - Settings - Java - Code Style - Code Template.
  */
 public class NameAdjusterTest extends TestCase {
 
@@ -56,7 +55,7 @@ public class NameAdjusterTest extends TestCase {
         assertEquals("MyName", BlancoNameAdjuster.toClassName("MyName"));
         assertEquals("MyName", BlancoNameAdjuster.toClassName("My_Name"));
 
-        // こっちの方は適切に処理される。
+        // This one will be handled appropriately.
         assertEquals("AB", BlancoNameAdjuster.toClassName("a__b"));
         assertEquals("AbCd", BlancoNameAdjuster.toClassName("ab__cd"));
     }

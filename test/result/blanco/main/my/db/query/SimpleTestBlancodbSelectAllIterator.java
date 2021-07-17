@@ -47,30 +47,30 @@ public class SimpleTestBlancodbSelectAllIterator {
     protected ResultSet fResultSet;
 
     /**
-     * SimpleTestBlancodbSelectAllIteratorクラスのコンストラクタ。
+     * SimpleTestBlancodbSelectAllIteratorConstructor for the class.
      *
-     * データベースコネクションオブジェクトを引数としてクエリクラスを作成します。<br>
-     * このクラスの利用後は、必ず close()メソッドを呼び出す必要があります。<br>
+     * Creates a query class with a database connection object as an argument.<br>
+     * After using this class, you must call the close() method.<br>
      *
-     * @param conn データベース接続
+     * @param conn Database connection
      */
     public SimpleTestBlancodbSelectAllIterator(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SimpleTestBlancodbSelectAllIteratorクラスのコンストラクタ。
+     * SimpleTestBlancodbSelectAllIteratorConstructor for the class.
      *
-     * データベースコネクションオブジェクトを与えずにクエリクラスを作成します。<br>
+     * Creates a query class without giving a database connection object.<br>
      */
     @Deprecated
     public SimpleTestBlancodbSelectAllIterator() {
     }
 
     /**
-     * SimpleTestBlancodbSelectAllIteratorクラスにデータベース接続を設定。
+     * SimpleTestBlancodbSelectAllIteratorSets a database connection to the class.
      *
-     * @param conn データベース接続
+     * @param conn Database connection
      */
     @Deprecated
     public void setConnection(final Connection conn) {
@@ -78,22 +78,22 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * SQL定義書で与えられたSQL文を取得します。
+     * Gets the SQL statement given in the SQL definition document.
      *
-     * SQL入力パラメータとして #キーワードによる指定がある場合には、該当箇所を ? に置き換えた後の SQL文が取得できます。
+     * If the # keyword is specified as the SQL input parameter, the SQL statement after replacing the corresponding part with ? can be obtained.
      *
-     * @return JDBCドライバに与えて実行可能な状態のSQL文。
+     * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
         return "\n        SELECT COL_ID, COL_TEXT, COL_NUMERIC\n  FROM TEST_BLANCODB\n ORDER BY COL_ID\n      ";
     }
 
     /**
-     * SQL定義書から与えられたSQL文をもちいてプリコンパイルを実施します。
+     * Precompiles with the SQL statement given from the SQL definition document.
      *
-     * 内部的にConnection.prepareStatementを呼び出します。<br>
+     * Internally calls Connection.prepareStatement.<br>
      *
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public void prepareStatement() throws SQLException {
         close();
@@ -101,15 +101,15 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * 与えられたSQL文をもちいてプリコンパイルを実施(動的SQL)します。
+     * Precompiles with the given SQL statement (dynamic SQL).
      *
-     * このメソッドは、動的に内容が変化するような SQL を実行する必要がある場合にのみ利用します。<br>
-     * 動的 SQL を利用する必要がある場合には、SQL 定義書で「動的SQL」を「使用する」に変更してください。変更後は外部から利用可能になります。<br>
-     * 内部的に JDBC ドライバの Connection.prepareStatement を呼び出します。<br>
-     * スクロール属性: insensitive
+     * This method should only be used when you need to execute SQL that dynamically changes its contents.<br>
+     * If you need to use dynamic SQL, please change "Dynamic SQL" to "Use" in the SQL definition document. After the change, it will be available externally.<br>
+     * Internally calls the JDBC driver's Connection.prepareStatement.<br>
+     * scroll attribute: insensitive
      *
-     * @param query プリコンパイルを実施させたいSQL文。動的SQLの場合には、この引数には加工された後の実行可能なSQL文を与えます。
-     * @throws SQLException SQL例外が発生した場合。
+     * @param query The SQL statement that you want to have precompiled. In the case of dynamic SQL, this argument is the executable SQL statement after it has been processed.
+     * @throws SQLException If an SQL exception occurs.
      */
     protected void prepareStatement(final String query) throws SQLException {
         close();
@@ -119,9 +119,9 @@ public class SimpleTestBlancodbSelectAllIterator {
     /**
      * 検索型クエリを実行します。<br>
      *
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public void executeQuery() throws DeadlockException, TimeoutException, SQLException {
         if (fStatement == null) {
@@ -145,9 +145,9 @@ public class SimpleTestBlancodbSelectAllIterator {
      * カーソルを現在の位置から1行次へ移動します。
      *
      * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public boolean next() throws DeadlockException, TimeoutException, SQLException {
         if (fResultSet == null) {
@@ -165,9 +165,9 @@ public class SimpleTestBlancodbSelectAllIterator {
      * カーソルを現在の位置から1行前へ移動します。
      *
      * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public boolean previous() throws DeadlockException, TimeoutException, SQLException {
         if (fResultSet == null) {
@@ -185,9 +185,9 @@ public class SimpleTestBlancodbSelectAllIterator {
      * カーソルを結果セットの先頭行へ移動します。
      *
      * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public boolean first() throws DeadlockException, TimeoutException, SQLException {
         if (fResultSet == null) {
@@ -205,9 +205,9 @@ public class SimpleTestBlancodbSelectAllIterator {
      * カーソルを結果セットの最終行へ移動します。
      *
      * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public boolean last() throws DeadlockException, TimeoutException, SQLException {
         if (fResultSet == null) {
@@ -229,9 +229,9 @@ public class SimpleTestBlancodbSelectAllIterator {
      *
      * @param rows カーソルの移動先の行番号を指定します。正の番号の場合には結果セットの先頭からカウントします。負の番号の場合は結果セットの終端からカウントします。
      * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public boolean absolute(final int rows) throws DeadlockException, TimeoutException, SQLException {
         if (fResultSet == null) {
@@ -252,9 +252,9 @@ public class SimpleTestBlancodbSelectAllIterator {
      *
      * @param rows 現在の行から移動する相対行数を指定します。正の数ではカーソルを順方向に移動し、負の数ではカーソルを逆方向に移動します。
      * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public boolean relative(final int rows) throws DeadlockException, TimeoutException, SQLException {
         if (fResultSet == null) {
@@ -274,7 +274,7 @@ public class SimpleTestBlancodbSelectAllIterator {
      * このメソッドを呼び出す前に、next()などのカーソルを操作するメソッドを呼び出す必要があります。
      *
      * @return 行オブジェクト。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public SimpleTestBlancodbSelectAllRow getRow() throws SQLException {
         SimpleTestBlancodbSelectAllRow result = new SimpleTestBlancodbSelectAllRow();
@@ -286,10 +286,10 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * ステートメント (java.sql.PreparedStatement) を取得します。
-     * @deprecated 基本的にStatementは外部から直接利用する必要はありません。
+     * Gets the statement (java.sql.PreparedStatement).
+     * @deprecated Basically, Statement does not need to be used directly from the outside.
      *
-     * @return 内部的に利用されている java.sql.PreparedStatementオブジェクト
+     * @return The java.sql.PreparedStatement object used internally
      */
     public PreparedStatement getStatement() {
         return fStatement;
@@ -316,7 +316,7 @@ public class SimpleTestBlancodbSelectAllIterator {
      * @param absoluteStartPoint 読み出しを開始する行。最初の行から読み出したい場合には 1 を指定します。
      * @param size 読み出しを行う行数。
      * @return SimpleTestBlancodbSelectAllクラスのList。検索結果が0件の場合には空のリストが戻ります。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public List<SimpleTestBlancodbSelectAllRow> getList(final int absoluteStartPoint, final int size) throws SQLException {
         List<SimpleTestBlancodbSelectAllRow> result = new ArrayList<SimpleTestBlancodbSelectAllRow>(8192);
@@ -340,7 +340,7 @@ public class SimpleTestBlancodbSelectAllIterator {
      * 内部的に生成していたJDBCリソースのオブジェクトに対して close()メソッドの呼び出しをおこないます。<br>
      * クラスの利用が終わったら、必ずこのメソッドを呼び出すようにします。
      *
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public void close() throws SQLException {
         try {
@@ -357,16 +357,16 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * finalizeメソッド。
+     * finalize method.
      *
-     * このクラスが内部的に生成したオブジェクトのなかで、close()呼び出し忘れバグが存在するかどうかチェックします。<br>
+     * Checks if there is a close() call forgetting bug in the object generated internally by this class.<br>
      *
-     * @throws Throwable finalize処理の中で発生した例外。
+     * @throws Throwable Exception raised in the finalize process.
      */
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SimpleTestBlancodbSelectAllIterator : close()メソッドによるリソースの開放が行われていません。";
+            final String message = "SimpleTestBlancodbSelectAllIterator : The resource has not been released by the close() method.";
             System.out.println(message);
         }
     }

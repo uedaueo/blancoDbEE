@@ -22,7 +22,7 @@ import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  *
  * @author Yasuo Nakanishi
  */
@@ -38,26 +38,26 @@ public class GetQueryMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("getQuery",
-                "SQL定義書で与えられたSQL文を取得します。");
+                "Gets the SQL statement given in the SQL definition document.");
         fCgClass.getMethodList().add(cgMethod);
 
         cgMethod.setReturn(fCgFactory.createReturn("java.lang.String",
-                "JDBCドライバに与えて実行可能な状態のSQL文。"));
+                "SQL statement in the state that can be given to the JDBC driver and executed."));
 
         cgMethod
                 .getLangDoc()
                 .getDescriptionList()
                 .add(
-                        "SQL入力パラメータとして #キーワードによる指定がある場合には、該当箇所を ? に置き換えた後の SQL文が取得できます。");
+                        "If the # keyword is specified as the SQL input parameter, the SQL statement after replacing the corresponding part with ? can be obtained.");
 
         final List<String> listLine = cgMethod.getLineList();
 
-        // 2005.04.15 t.iga 改行は改行として出力するように変更。
-        // 2005.10.12 t.iga blancoCommonsの変換ユーティリティを利用するように変更。
+        // 2005.04.15 t.iga Changed to output newlines as newlines.
+        // 2005.10.12 t.iga Changed to use the blancoCommons conversion utility.
         final String escapedQuery = BlancoJavaSourceUtil
                 .escapeStringAsJavaSource(fSqlInfo.getQuery());
 
-        // クエリの #パラメータの?への変換
+        // Conversion of "#" parameter of query to "?".
         final String actualSql = new BlancoDbQueryParserUtil(fSqlInfo)
                 .getNaturalSqlStringOnlyStatic(escapedQuery);
 

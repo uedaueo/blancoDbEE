@@ -47,13 +47,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 中間XMLファイルからソースコードを生成します。
+ * Generates source code from intermediate XML files.
  */
 public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
     private BlancoDbSetting fDbSetting = null;
 
     /**
-     * XMLファイルからソースコードを生成します。
+     * Generates source code from XML files.
      *
      * @param argDbSetting
      * @param blancoSqlDirectory
@@ -69,7 +69,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
             IOException, ParserConfigurationException, ClassNotFoundException,
             TransformerException {
         System.out.println(BlancoDbConstants.PRODUCT_NAME + " ("
-                + BlancoDbConstants.VERSION + ") ソースコード生成: 開始.");
+                + BlancoDbConstants.VERSION + ") Source code generation: start..");
 
         fDbSetting = argDbSetting;
 
@@ -84,16 +84,16 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
             BlancoDbUtil.getDatabaseVersionInfo(conn, fDbSetting);
 
             if (blancoSqlDirectory != null) {
-                // 指定がある場合にのみ SQL定義書ファイル格納ディレクトリを処理します。
+                // Processes the directory containing the SQL definition file only if specified.
 
-                // ValueObject情報を格納するディレクトリを作成します。
+                // Creates a directory to store the ValueObject information.
                 new File(blancoSqlDirectory.getAbsolutePath() + "/valueobject")
                         .mkdirs();
 
                 final File[] fileSettingXml = blancoSqlDirectory.listFiles();
                 for (int index = 0; index < fileSettingXml.length; index++) {
                     if (fileSettingXml[index].getName().endsWith(".xml") == false) {
-                        // ファイルの拡張子が xml であるもののみ処理します。
+                        // Only files with xml extension will be processed.
                         continue;
                     }
                     if (progress(index + 1, fileSettingXml.length,
@@ -102,17 +102,17 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
                     }
 
                     try {
-                        // 生成はファイル毎に行います。
+                        // Generation is done on a file-by-file basis.
                         processEveryFile(conn, fileSettingXml[index], new File(
                                 blancoSqlDirectory.getAbsolutePath()
                                         + "/valueobject"));
                     } catch (IllegalArgumentException ex) {
                         if (argDbSetting.getFailonerror()) {
-                            // SQL 定義書の処理において例外が発生したので処理中断します。
+                            // Aborts processing because an exception occurred in the processing of the SQL definition document.
                             throw ex;
                         } else {
-                            // 標準エラー出力にエラー表示の上処理続行します。
-                            System.err.println("SQL 定義書例外: " + ex.getMessage());
+                            // Displays the error message on the stderr and continues processing.
+                            System.err.println("SQL definition document exception: " + ex.getMessage());
                             ex.printStackTrace();
                         }
                     }
@@ -122,12 +122,12 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
         } finally {
             BlancoDbUtil.close(conn);
             conn = null;
-            System.out.println("ソースコード生成: 終了.");
+            System.out.println("Source code generation: finish.");
         }
     }
 
     /**
-     * 個別のXMLファイルを処理します。
+     * Processes individual XML files.
      *
      * @param conn
      * @param fileSqlForm
@@ -143,7 +143,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
             throws IOException, SAXException, TransformerException,
             SQLException, ParserConfigurationException {
 
-        System.out.println("ファイル[" + fileSqlForm.getAbsolutePath() + "]を処理します");
+        System.out.println("Processes the file [" + fileSqlForm.getAbsolutePath() + "].");
 
         final BlancoDbXml2SqlInfo collector = new BlancoDbXml2SqlInfo();
         final List<BlancoDbSqlInfoStructure> definition = collector.process(
@@ -153,7 +153,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
                 .getRuntimePackage(fDbSetting) + ".exception";
 
         /*
-         * 改行コードを決定します。
+         * Determines the newline code.
          */
         String LF = "\n";
         String CR = "\r";
@@ -172,20 +172,20 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
         }
 
         /*
-         * targetdir, targetStyleの処理。
-         * 生成されたコードの保管場所を設定する。
+         * Processes targetdir and targetStyle.
+         * Sets the storage location for the generated code.
          * targetstyle = blanco:
-         *  targetdirの下に main ディレクトリを作成
+         *  Creates a main directory under targetdir.
          * targetstyle = maven:
-         *  targetdirの下に main/java ディレクトリを作成
+         *  Creates a main/java directory under targetdir.
          * targetstyle = free:
-         *  targetdirをそのまま使用してディレクトリを作成。
-         *  ただしtargetdirがからの場合はデフォルト文字列(blanco)使用する。
+         *  Creates a directory using targetdir as is.
+         *  However, the default string (blanco) is used if targetdir is empty.
          * by tueda, 2019/08/30
          */
         String strTarget = fDbSetting.getTargetDir();
         String style = fDbSetting.getTargetStyle();
-        // ここを通ったら常にtrue
+        // Always true when passing through here.
         boolean isTargetStyleAdvanced = true;
         if (style != null && BlancoDbConstants.TARGET_STYLE_MAVEN.equals(style)) {
             strTarget = strTarget + "/" + BlancoDbConstants.TARGET_DIR_SUFFIX_MAVEN;
@@ -193,7 +193,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
                 !BlancoDbConstants.TARGET_STYLE_FREE.equals(style)) {
             strTarget = strTarget + "/" + BlancoDbConstants.TARGET_DIR_SUFFIX_BLANCO;
         }
-        /* style が free だったらtargetdirをそのまま使う */
+        /* Uses targetdir as is if style is free. */
         System.out.println("/* tueda */ TARGETDIR = " + strTarget);
 
         final File fileBlancoMain = new File(strTarget);
@@ -204,7 +204,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
         final BlancoCgTransformer transformer = BlancoCgTransformerFactory
                 .getJavaSourceTransformer();
 
-        // exception系
+        // about exception 
         transformer.transform(adjust(new DeadlockExceptionClass(cgFactory,
                 packageNameException).expand()), fileBlancoMain);
         transformer.transform(adjust(new IntegrityConstraintExceptionClass(
@@ -225,7 +225,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
         switch (fDbSetting.getDriverName()) {
         case BlancoDbDriverNameStringGroup.SQLSERVER_2000:
         case BlancoDbDriverNameStringGroup.SQLSERVER_2005:
-            // SQL Server 2000/2005の場合にのみ、LockTimeoutExceptionクラスを生成します。
+            // Generates the LockTimeoutException class only for SQL Server 2000/2005.
             transformer.transform(adjust(new LockTimeoutExceptionClass(
                     cgFactory, packageNameException).expand()), fileBlancoMain);
             break;
@@ -233,12 +233,12 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
             break;
         }
 
-        // util系
+        // about util
         transformer.transform(adjust(new  BlancoDbUtilClassJava(cgFactory,
                 BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util",
                 fDbSetting).expand()), fileBlancoMain);
 
-        // 動的SQL系
+        // about dynamic SQL
         transformer.transform(adjust(new BlancoDbDynamicClauseClassJava(cgFactory,
                 BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util",
                 fDbSetting).expand()), fileBlancoMain);
@@ -255,7 +255,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
         // iterator, invoker, caller, functionLiteralInput
         for (int index = 0; index < definition.size(); index++) {
             final BlancoDbSqlInfoStructure sqlInfo = definition.get(index);
-            // 動的条件句関数入力クラス
+            // Dynamic condition function input class
             for (BlancoDbDynamicConditionStructure conditionStructure : sqlInfo.getDynamicConditionList()) {
                 if (conditionStructure.getFunction() != null) {
                     transformer.transform(adjust(new FunctionLiteralInputClass(
@@ -285,13 +285,13 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
                 break;
             default:
                 throw new IllegalArgumentException(
-                        "想定外のエラー。不明なクエリオブジェクトが与えられました。" + sqlInfo.toString());
+                        "Unexpected error. Unknown query object was given." + sqlInfo.toString());
             }
         }
     }
 
     /**
-     * 行オブジェクトを作成します。
+     * Creates a row object.
      *
      * @param rootPackage
      * @param sqlInfo
@@ -320,10 +320,10 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
                         BlancoDbMappingUtilJava
                                 .getFullClassName(columnStructure) });
             } catch (IllegalArgumentException ex) {
-                throw new IllegalArgumentException("SQL定義[" + sqlInfo.getName()
-                        + "] 項目名[" + columnStructure.getName()
-                        + "] データソース依存の型名[" + columnStructure.getTypeName()
-                        + "] が処理できません。:" + ex.toString(), ex);
+                throw new IllegalArgumentException("Cannot process SQL definition [" + sqlInfo.getName()
+                        + "] item name [" + columnStructure.getName()
+                        + "] data source dependent type name [" + columnStructure.getTypeName()
+                        + "].:" + ex.toString(), ex);
             }
         }
 
@@ -331,8 +331,8 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
 
         voClass.setName(className);
         voClass.setPackage(packageName);
-        voClass.setDescription("SQL定義書(blancoDb)から作成された行クラス。");
-        voClass.getDescriptionList().add("'" + className + "'行を表現します。");
+        voClass.setDescription("A row class created from SQL definition (blancoDb).");
+        voClass.getDescriptionList().add("'" + className + "' row is represented.");
         for (int index = 0; index < listFieldTypes.size(); index++) {
             final String[] columnTypes = listFieldTypes.get(index);
             final String columnName = columnTypes[0];
@@ -340,7 +340,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
 
             voClass.getDescriptionList().add(
                     "(" + String.valueOf(index + 1) + ") '" + columnName
-                            + "'列 型:" + columnType);
+                            + "' column type:" + columnType);
         }
 
         for (int index = 0; index < listFieldTypes.size(); index++) {
@@ -351,7 +351,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
             final BlancoValueObjectFieldStructure voField = new BlancoValueObjectFieldStructure();
             voField.setName(columnName);
             voField.setType(columnType);
-            voField.setDescription("フィールド[" + columnName + "]です。");
+            voField.setDescription("Field [" + columnName + "].");
             voClass.getFieldList().add(voField);
         }
 
@@ -360,16 +360,16 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
         xml2javaclass.setTargetStyleAdvanced(true);
         if (dbSetting.getTargetDir() == null) {
             throw new IllegalArgumentException(
-                    "BlancoDbGenerator: blanco出力先フォルダが未設定(null)です。");
+                    "BlancoDbGenerator: The blanco output destination folder is not set (null).");
         }
         xml2javaclass.structure2Source(voClass, fileBlancoMain);
     }
 
     /**
-     * ソース・オブジェクトの内容を調整。
+     * Adjusts the contents of the source object.
      *
      * <UL>
-     * <LI>ソースコードのエンコーディングを設定。
+     * <LI>Sets the encoding of the source code.
      * </UL>
      *
      * @param arg

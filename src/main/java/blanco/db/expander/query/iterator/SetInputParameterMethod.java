@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  *
  * @author Tosiki Iga
  */
@@ -55,20 +55,20 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod(
-                "setInputParameter", "SQL文に与えるSQL入力パラメータをセットします。");
+                "setInputParameter", "Sets the SQL input parameters to be given to the SQL statement.");
         fCgClass.getMethodList().add(cgMethod);
 
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
 
         /*
-         * まず静的インプットパラメータの定義順にパラメータを作ります。
+         * First, creates the parameters in the order in which the static input parameters are defined.
          */
         for (BlancoDbMetaDataColumnStructure columnStructure : fSqlInfo.getInParameterList()) {
             this.createStaticParameter(cgMethod, columnStructure);
         }
 
-        // util 類は無条件にimport しておきます。
+        // Imports utilities unconditionally.
         String dbUtilClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbUtil";
         String dynamicClauseClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicClause";
         String dynamicParameterClass = BlancoDbUtil.getRuntimePackage(fDbSetting) + ".util.BlancoDbDynamicParameter";
@@ -82,8 +82,8 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         fCgSourceFile.getImportList().add(dynamicLiteralClass);
 
         /*
-         * 次に動的条件句定義の順にパラメータを作ります。
-         * タグの重複はありえるので、チェックして省きます。
+         * Next, creates the parameters in the order of the dynamic conditional clause definition.
+         * There can be duplicate tags, so checks and omits them.
          */
         Map<String, Boolean> paramDone = new HashMap<>();
         for (BlancoDbDynamicConditionStructure conditionStructure : fSqlInfo.getDynamicConditionList()) {
@@ -95,10 +95,10 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
 
         if (fIsCallableStatement == false) {
             cgMethod.getLangDoc().getDescriptionList().add(
-                    "内部的には PreparedStatementにSQL入力パラメータをセットします。");
+                    "Internally, the PreparedStatement is set with SQL input parameters.");
         } else {
             cgMethod.getLangDoc().getDescriptionList().add(
-                    "内部的には CallableStatementにSQL入力パラメータをセットします。");
+                    "Internally, the CallableStatement is set with SQL input parameters.");
         }
 
         final List<String> listLine = cgMethod.getLineList();
@@ -134,15 +134,15 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         }
 
         /*
-         * 動的条件句が設定されている場合はタグの置換コードを挿入します。
+         * If the dynamic conditional clause is set, inserts the tag replacement code.
          */
         if (this.fSqlInfo.getDynamicConditionList().size() > 0) {
             this.createTagConversion(listLine, this.fSqlInfo.getDynamicConditionList());
             listLine.add("");
-            listLine.add("/* 必ず statement を作り直す */");
+            listLine.add("/* Always recreates the statement. */");
             listLine.add("prepareStatement(query);");
         } else {
-            // statementが未確保であるばあい、強制的にprepareStatementを呼び出します。
+            // If statement is not yet allocated, it will forcibly call prepareStatement.
             listLine.add("if (fStatement == null) {");
             if (fIsCallableStatement == false) {
                 listLine.add("prepareStatement();");
@@ -156,7 +156,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         listLine.add("int index = 1;");
 
 		if (fDbSetting.getLoggingsql()) {
-			// ポイント: prepareStatement(); や prepareCall(); のあとで記憶しないのと消え去ってしまいます。そのためここに配置しています。
+			// Point: If you don't remember it after prepareStatement() or prepareCall(), it will disappear. That's why we put them here.
 			String strLine = "fLogSqlInParam = \"";
 			boolean isFirst = true;
 			for (int index = 0; index < fSqlInfo.getInParameterList().size(); index++) {
@@ -178,39 +178,38 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
 		}
 
         /*
-         * ユーティリティを作成します。
+         * Creates a utility.
          */
         final BlancoDbQueryParserUtil parserUtil = new BlancoDbQueryParserUtil(fSqlInfo);
 
         /*
-         * SQL 内のパラメータを順序通りに並べたリストを取得します。
+         * Gets an ordered list of parameters in SQL.
          */
         List<BlancoDbMetaDataColumnStructure> parameterList = parserUtil.convertSqlInParameter2NativeParameter(fSqlInfo);
 
         /*
-         * パラメータをセットしていきます。
-         * 動的条件句はタグが重複定義されている場合があるので、
-         * それをチェックして省きます。
-         * また ORDERBY と LITERAL はパラメータを渡しません。
+         * It will set the parameters.
+         * Dynamic conditional clauses may have duplicate tag definitions, so checks and omits them.
+         * ORDERBY and LITERAL do not pass any parameters.
          */
         Map<String, Boolean> inputDone = new HashMap<>();
         for (BlancoDbMetaDataColumnStructure columnStructure : parameterList) {
             /*
-             * パラメータが結びついていることを確認します。
+             * Make sure that the parameters are tied together.
              */
             final List<Integer> listCol = parserUtil.getSqlParameters(columnStructure.getName());
             if (listCol == null) {
-                throw new IllegalArgumentException("SQL定義ID["
-                        + fSqlInfo.getName() + "]の SQL入力パラメータ["
-                        + columnStructure.getName() + "]が結びついていせん.");
+                throw new IllegalArgumentException("SQL inpute parameter ["
+                        + columnStructure.getName() +"] of SQL definition ID ["
+                        + fSqlInfo.getName() + "] is not connected.");
             }
 
             BlancoDbDynamicConditionStructure conditionStructure = parserUtil.getConditionStructureByTag(columnStructure.getName());
             if (conditionStructure == null) {
-                // 静的入力パラメータです。
+                // Static input parameters.
                 this.createStaticInput(listLine, columnStructure);
             } else {
-                // 動的条件句パラメータです。
+                // Dynamic conditional clause parameters.
                 if ((inputDone.get(conditionStructure.getTag()) == null || !inputDone.get(conditionStructure.getTag())) && !"ORDERBY".equals(conditionStructure.getCondition()) && !"LITERAL".equals(conditionStructure.getCondition())) {
                     this.createDynamicInput(listLine, conditionStructure);
                     inputDone.put(conditionStructure.getTag(), true);
@@ -220,7 +219,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
     }
 
     /**
-     * 静的パラメータを生成します。
+     * Generates static parameters.
      * @param cgMethod
      * @param columnStructure
      */
@@ -232,8 +231,8 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         cgMethod.getParameterList().add(
                 fCgFactory.createParameter(columnStructure.getName(),
                         BlancoDbMappingUtilJava
-                                .getFullClassName(columnStructure), "'"
-                                + columnStructure.getName() + "'列の値"));
+                                .getFullClassName(columnStructure), "Value in '"
+                                + columnStructure.getName() + "' column"));
 
         switch (columnStructure.getDataType()) {
             case Types.BINARY:
@@ -250,7 +249,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
     }
 
     /**
-     * 動的条件句に対応するパラメータを生成します。
+     * Generates parameters corresponding to dynamic conditional clauses.
      * @param cgMethod
      * @param conditionStructure
      */
@@ -263,7 +262,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         BlancoCgParameter param = fCgFactory.createParameter(
                 conditionStructure.getTag(),
                 dynamicParameterClass,
-                "'" + conditionStructure.getTag() + "'列の値");
+                "Value in '" + conditionStructure.getTag() + "' column");
         cgMethod.getParameterList().add(param);
         if ("LITERAL".equals(conditionStructure.getCondition())) {
             param.getType().setGenerics("BlancoDbDynamicLiteral");
@@ -276,7 +275,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
             param.getType().setGenerics(conditionStructure.getType());
         }
         /*
-         * 動的条件句は当面の間BINARY系の型には対応しません。
+         * The dynamic conditional clause does not support BINARY types for the time being.
          */
         int loop = 1;
         BlancoDbDynamicConditionFunctionStructure functionStructure = conditionStructure.getFunction();
@@ -295,13 +294,13 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
                 case Types.BLOB:
                 case Types.LONGVARCHAR:
                 case Types.CLOB:
-                    throw new IllegalArgumentException("動的条件句は当面の間BINARY系の型には対応しません");
+                    throw new IllegalArgumentException("Dynamic conditional clauses will not support BINARY types for the time being");
             }
         }
     }
 
     /**
-     * 動的条件句のTagを動的に変換するルーチンを生成します。
+     * Generates a routine to dynamically transform Tag in dynamic conditional clauses.
      * @param listLine
      * @param conditionStructureList
      */
@@ -309,7 +308,7 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
             final List<String> listLine,
             final List<BlancoDbDynamicConditionStructure> conditionStructureList
     ) {
-        listLine.add("/* タグを置換する */");
+        listLine.add("/* Replace tags  */");
         listLine.add("String query = this.getQuery();");
         Map<String, Boolean> convDone = new HashMap<>();
         for (BlancoDbDynamicConditionStructure conditionStructure : conditionStructureList) {
@@ -329,8 +328,8 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
             listLine.add("if (" + columnStructure.getName()
                     + " == null) {");
 
-            // 以前、ここに過去のバージョン (1.6.4) のバグをエミュレートするためのコードがありました。
-            // 現在は、この過去バグエミュレート機能は破棄されています。
+            // Previously, there was code here to emulate a bug in a previous version (1.6.4).
+            // This feature has been abandoned.
             final int jdbcDataType = columnStructure.getDataType();
 
             listLine.add("fStatement.setNull(index"
@@ -379,10 +378,10 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
 
         switch (fDbSetting.getLoggingMode()) {
             case BlancoDbLoggingModeStringGroup.PERFORMANCE:
-                // SQL入力パラメータ値を番号つきでログ出力。
-                // 番号は 1折人とします。
+                // Log output of SQL input parameter values with numbers.
+                // The number is one quire for each.
                 String strLineInfo = "fLog.info(\"" + fSqlInfo.getName() +
-                        ": SQL入力パラメータ \" + index + \": [\" + " +
+                        ": SQL input parameters \" + index + \": [\" + " +
                         columnStructure.getName() + " + \"]\");";
                 listLine.add(strLineInfo);
                 break;
@@ -426,10 +425,10 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
 
         switch (fDbSetting.getLoggingMode()) {
             case BlancoDbLoggingModeStringGroup.PERFORMANCE:
-                // SQL入力パラメータ値を番号つきでログ出力。
-                // 番号は 1折人とします。
+                // Log output of SQL input parameter values with numbers.
+                // The number is one quire for each.
                 String strLineInfo = "fLog.info(\"" + fSqlInfo.getName() +
-                        ": SQL入力パラメータ \" + index + \": [\" + " +
+                        ": SQL input parameters \" + index + \": [\" + " +
                         conditionStructure.getTag() + " + \"]\");";
                 listLine.add(strLineInfo);
                 break;

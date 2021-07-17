@@ -18,13 +18,13 @@ import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
- * QueryクラスのfConnectionフィールドです。
+ * The fConnection field of the Query class.
  * 
  * @author IGA Tosiki
  */
 public class ConnectionField extends BlancoDbAbstractField {
     /**
-     * QueryクラスのfConnectionフィールドのコンストラクタです。
+     * A constructor for fConnection field of Query class.
      * 
      * @author IGA Tosiki
      */
@@ -39,16 +39,16 @@ public class ConnectionField extends BlancoDbAbstractField {
 
     public void expand() {
         final BlancoCgField cgField = fCgFactory.createField("fConnection",
-                "java.sql.Connection", "このクラスが内部的に利用するデータベース接続オブジェクト。");
+                "java.sql.Connection", "Database connection object used internally by this class.");
         fCgClass.getFieldList().add(cgField);
 
         cgField.getLangDoc().getDescriptionList().add(
-                "データベース接続オブジェクトはコンストラクタの引数として外部から与えられます。<br>");
+                "Database connection object is given externally as arguments to the constructor.<br>");
         cgField.getLangDoc().getDescriptionList().add(
-                "トランザクションのコミットやロールバックは、このクラスの内部では実行しません。");
+                "Transaction commit and rollback are not performed inside this class.");
 
         /*
-         * ジェネレーションギャップデザインパターンが利用可能になる目的で、スコープはprotectedとします。
+         * For the purpose of making the generation gap design pattern available, the scope is set to protected.
          */
         cgField.setAccess("protected");
     }

@@ -22,7 +22,7 @@ import blanco.db.expander.query.iterator.SetInputParameterMethod;
 import blanco.db.resourcebundle.BlancoDbResourceBundle;
 
 /**
- * 個別のクラスを展開するためのクラス。
+ * A class for expanding individual methods.
  *
  * @author Yasuo Nakanishi
  */
@@ -47,32 +47,32 @@ public class QueryInvokerClass extends BlancoDbAbstractClass {
         fCgSourceFile.getClassList().add(fCgClass);
 
         if (fDbSetting.getUseRuntime()) {
-            // (2013/01/08 一旦登録解除) fCgClass.getExtendClassList().add(fCgFactory.createType("java.io.Closeable"));
+            // (2013/01/08 Unregisters once) fCgClass.getExtendClassList().add(fCgFactory.createType("java.io.Closeable"));
             fCgClass.getImplementInterfaceList().add(fCgFactory.createType("blanco.db.runtime.BlancoDbQuery"));
 
-            // アノテーションを付与します。
+            // Adds annotations.
             fCgClass.getAnnotationList().add("BlancoGeneratedBy(name = \"blancoDb\")");
             fCgSourceFile.getImportList().add("blanco.fw.BlancoGeneratedBy");
         }
 
         fCgClass.getLangDoc().getDescriptionList()
-                .add("実行型SQL文をラッピングして各種アクセサを提供します。<br>");
+                .add("Wraps an executable SQL statement and provides various accessors.<br>");
         if (fSqlInfo.getSingle()) {
             fCgClass.getLangDoc().getDescriptionList()
-                    .add("シングル属性: 有効 (期待する処理件数は1件)<br>");
+                    .add("Single attribute: Enabled (expected number of processes is 1)<br>");
         }
 
         fCgSourceFile.getImportList().add(
                 BlancoDbUtil.getRuntimePackage(fDbSetting)
                         + ".exception.IntegrityConstraintException");
 
-        // BlancoDbUtilは常にインポートします。
+        // Always imports BlancoDbUtil.
         fCgSourceFile.getImportList().add(
                 BlancoDbUtil.getRuntimePackage(fDbSetting)
                         + ".util.BlancoDbUtil");
 
         /*
-         * DynamicClauseが定義されている場合はインポートします。
+         * If DynamicClause has been defined, imports it.
          */
         if (fSqlInfo.getDynamicConditionList().size() > 0) {
             fCgSourceFile.getImportList().add(
@@ -106,7 +106,7 @@ public class QueryInvokerClass extends BlancoDbAbstractClass {
         new PrepareStatementMethod2(fDbSetting, fSqlInfo, fCgFactory,
                 fCgSourceFile, fCgClass).expand();
 
-        // 入力パラメータがある場合にのみbindします。
+        // Binds only if input parameters are present.
         if (fSqlInfo.getInParameterList().size() > 0 ||
                 fSqlInfo.getDynamicConditionList().size() > 0) {
             new SetInputParameterMethod(fDbSetting, fSqlInfo, fCgFactory,
@@ -120,7 +120,7 @@ public class QueryInvokerClass extends BlancoDbAbstractClass {
         }
 
         if (fBundle.getExpanderDisableGetStatement().equals("true") == false) {
-            // 1.6.8以前と互換性を持たせる必要がある場合にのみ getStatementを生成しません。
+            // It does not generate getStatement only if you need to make it compatible with 1.6.8 or earlier.
             new GetStatementMethod(fDbSetting, fSqlInfo, fCgFactory,
                     fCgSourceFile, fCgClass, false).expand();
         }
@@ -132,7 +132,7 @@ public class QueryInvokerClass extends BlancoDbAbstractClass {
                 .expand();
 
 		if (fDbSetting.getLoggingsql()) {
-			// 標準出力に出力。
+			// Outputs to stdout.
 			new LogSqlInParamField(fDbSetting, fSqlInfo, fCgFactory,
 					fCgSourceFile, fCgClass).expand();
 			if (fSqlInfo.getDynamicSql()) {

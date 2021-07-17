@@ -20,7 +20,7 @@ import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Yasuo Nakanishi
  */
@@ -36,27 +36,27 @@ public class Finalize extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("finalize",
-                "finalizeメソッド。");
+                "finalize method.");
         fCgClass.getMethodList().add(cgMethod);
 
         cgMethod.setAccess("protected");
 
         cgMethod.getThrowList().add(
                 fCgFactory.createException("java.lang.Throwable",
-                        "finalize処理の中で発生した例外。"));
+                        "Exception raised in the finalize process."));
 
         cgMethod
                 .getLangDoc()
                 .getDescriptionList()
                 .add(
-                        "このクラスが内部的に生成したオブジェクトのなかで、close()呼び出し忘れバグが存在するかどうかチェックします。<br>");
+                        "Checks if there is a close() call forgetting bug in the object generated internally by this class.<br>");
 
         final List<String> listLine = cgMethod.getLineList();
 
         listLine.add("super.finalize();");
         listLine.add("if (fStatement != null) {");
         listLine.add("final String message = \"" + fCgClass.getName()
-                + " : close()メソッドによるリソースの開放が行われていません。\";");
+                + " : The resource has not been released by the close() method.\";");
         listLine.add("System.out.println(message);");
 
         if (fDbSetting.getLogging()) {

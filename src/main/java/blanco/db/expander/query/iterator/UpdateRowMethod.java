@@ -22,7 +22,7 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Tosiki Iga
  */
@@ -37,10 +37,9 @@ public class UpdateRowMethod extends BlancoDbAbstractMethod {
     }
 
     /**
-     * コメント <br>
+     * Comment <br>
      * 
-     * PostgreSQLにおいて FOR UPDATEカーソルでupdateRowを呼び出した際に 制約違反の際には、SQLState[23505],
-     * ErrorCode [0] が発生します。 <br>
+     * In PostgreSQL, when calling updateRow with a FOR UPDATE cursor, if the constraint is violated, SQLState[23505], ErrorCode[0] will be generated. <br>
      * java.sql.SQLException: ERROR: duplicate key violates unique constraint
      * "ract007_ketsugo_model_pkey" at
      * org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse
@@ -48,7 +47,7 @@ public class UpdateRowMethod extends BlancoDbAbstractMethod {
      */
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("updateRow",
-                "更新後の現在の行の値をもちいてデータベースを更新します。");
+                "Updates the database with the value of the current row after the update.");
         fCgClass.getMethodList().add(cgMethod);
 
         BlancoDbCgUtilJava.addExceptionToMethodIntegrityConstraintException(
@@ -59,7 +58,7 @@ public class UpdateRowMethod extends BlancoDbAbstractMethod {
                 cgMethod);
 
         cgMethod.getLangDoc().getDescriptionList().add(
-                "更新可能属性が有効となっているので生成されます。<br>");
+                "It is generated because the updatable attribute is enabled.<br>");
 
         final List<String> listLine = cgMethod.getLineList();
 
@@ -70,14 +69,14 @@ public class UpdateRowMethod extends BlancoDbAbstractMethod {
             }
         }
 
-        // べったりと展開します。
+        // Expands thickly.
         listLine.add("try{");
         listLine.add("fResultSet.updateRow();");
         listLine.add("} catch (SQLException ex) {");
         listLine
                 .add("if (ex.getSQLState() != null && ex.getSQLState().startsWith(\"23\")) {");
         listLine
-                .add("final IntegrityConstraintException exBlanco = new IntegrityConstraintException(\"制約違反により変更に失敗しました。:\" + ex.toString(), ex.getSQLState(), ex.getErrorCode());");
+                .add("final IntegrityConstraintException exBlanco = new IntegrityConstraintException(\"Change failed due to constraint violation.:\" + ex.toString(), ex.getSQLState(), ex.getErrorCode());");
         listLine.add("exBlanco.initCause(ex);");
         listLine.add("throw exBlanco;");
         listLine.add("}");

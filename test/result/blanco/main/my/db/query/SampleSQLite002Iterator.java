@@ -64,30 +64,30 @@ public class SampleSQLite002Iterator {
     protected ResultSet fResultSet;
 
     /**
-     * SampleSQLite002Iteratorクラスのコンストラクタ。
+     * SampleSQLite002IteratorConstructor for the class.
      *
-     * データベースコネクションオブジェクトを引数としてクエリクラスを作成します。<br>
-     * このクラスの利用後は、必ず close()メソッドを呼び出す必要があります。<br>
+     * Creates a query class with a database connection object as an argument.<br>
+     * After using this class, you must call the close() method.<br>
      *
-     * @param conn データベース接続
+     * @param conn Database connection
      */
     public SampleSQLite002Iterator(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SampleSQLite002Iteratorクラスのコンストラクタ。
+     * SampleSQLite002IteratorConstructor for the class.
      *
-     * データベースコネクションオブジェクトを与えずにクエリクラスを作成します。<br>
+     * Creates a query class without giving a database connection object.<br>
      */
     @Deprecated
     public SampleSQLite002Iterator() {
     }
 
     /**
-     * SampleSQLite002Iteratorクラスにデータベース接続を設定。
+     * SampleSQLite002IteratorSets a database connection to the class.
      *
-     * @param conn データベース接続
+     * @param conn Database connection
      */
     @Deprecated
     public void setConnection(final Connection conn) {
@@ -95,22 +95,22 @@ public class SampleSQLite002Iterator {
     }
 
     /**
-     * SQL定義書で与えられたSQL文を取得します。
+     * Gets the SQL statement given in the SQL definition document.
      *
-     * SQL入力パラメータとして #キーワードによる指定がある場合には、該当箇所を ? に置き換えた後の SQL文が取得できます。
+     * If the # keyword is specified as the SQL input parameter, the SQL statement after replacing the corresponding part with ? can be obtained.
      *
-     * @return JDBCドライバに与えて実行可能な状態のSQL文。
+     * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
         return "select COL_ID, COL_TEXT, COL_NUMERIC from\n   TEST_BLANCODB\nwhere\n   COL_TEXT like ?\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND COL_NUMERIC = ?\n${ORDERBY}";
     }
 
     /**
-     * SQL定義書から与えられたSQL文をもちいてプリコンパイルを実施します。
+     * Precompiles with the SQL statement given from the SQL definition document.
      *
-     * 内部的にConnection.prepareStatementを呼び出します。<br>
+     * Internally calls Connection.prepareStatement.<br>
      *
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public void prepareStatement() throws SQLException {
         close();
@@ -118,14 +118,14 @@ public class SampleSQLite002Iterator {
     }
 
     /**
-     * 与えられたSQL文をもちいてプリコンパイルを実施(動的SQL)します。
+     * Precompiles with the given SQL statement (dynamic SQL).
      *
-     * このメソッドは、動的に内容が変化するような SQL を実行する必要がある場合にのみ利用します。<br>
-     * SQL 定義書で「動的SQL」が「使用する」に設定されています。<br>
-     * 内部的に JDBC ドライバの Connection.prepareStatement を呼び出します。<br>
+     * This method should only be used when you need to execute SQL that dynamically changes its contents.<br>
+     * "Dynamic SQL" is set to "Use" in the SQL definition document.<br>
+     * Internally calls the JDBC driver's Connection.prepareStatement.<br>
      *
-     * @param query プリコンパイルを実施させたいSQL文。動的SQLの場合には、この引数には加工された後の実行可能なSQL文を与えます。
-     * @throws SQLException SQL例外が発生した場合。
+     * @param query The SQL statement that you want to have precompiled. In the case of dynamic SQL, this argument is the executable SQL statement after it has been processed.
+     * @throws SQLException If an SQL exception occurs.
      */
     public void prepareStatement(final String query) throws SQLException {
         close();
@@ -143,7 +143,7 @@ public class SampleSQLite002Iterator {
      * @param INCLAUSE01 'INCLAUSE01'列の値
      * @param COMPARE01 'COMPARE01'列の値
      * @param ORDERBY 'ORDERBY'列の値
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY) throws SQLException {
         /* タグを置換する */
@@ -187,9 +187,9 @@ public class SampleSQLite002Iterator {
     /**
      * 検索型クエリを実行します。<br>
      *
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public void executeQuery() throws DeadlockException, TimeoutException, SQLException {
         if (fStatement == null) {
@@ -213,9 +213,9 @@ public class SampleSQLite002Iterator {
      * カーソルを現在の位置から1行次へ移動します。
      *
      * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public boolean next() throws DeadlockException, TimeoutException, SQLException {
         if (fResultSet == null) {
@@ -235,7 +235,7 @@ public class SampleSQLite002Iterator {
      * このメソッドを呼び出す前に、next()などのカーソルを操作するメソッドを呼び出す必要があります。
      *
      * @return 行オブジェクト。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public SampleSQLite002Row getRow() throws SQLException {
         SampleSQLite002Row result = new SampleSQLite002Row();
@@ -247,10 +247,10 @@ public class SampleSQLite002Iterator {
     }
 
     /**
-     * ステートメント (java.sql.PreparedStatement) を取得します。
-     * @deprecated 基本的にStatementは外部から直接利用する必要はありません。
+     * Gets the statement (java.sql.PreparedStatement).
+     * @deprecated Basically, Statement does not need to be used directly from the outside.
      *
-     * @return 内部的に利用されている java.sql.PreparedStatementオブジェクト
+     * @return The java.sql.PreparedStatement object used internally
      */
     public PreparedStatement getStatement() {
         return fStatement;
@@ -277,7 +277,7 @@ public class SampleSQLite002Iterator {
      *
      * @param size 読み出しを行う行数。
      * @return SampleSQLite002クラスのList。検索結果が0件の場合には空のリストが戻ります。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public List<SampleSQLite002Row> getList(final int size) throws SQLException {
         List<SampleSQLite002Row> result = new ArrayList<SampleSQLite002Row>(8192);
@@ -296,7 +296,7 @@ public class SampleSQLite002Iterator {
      * 内部的に生成していたJDBCリソースのオブジェクトに対して close()メソッドの呼び出しをおこないます。<br>
      * クラスの利用が終わったら、必ずこのメソッドを呼び出すようにします。
      *
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public void close() throws SQLException {
         try {
@@ -313,16 +313,16 @@ public class SampleSQLite002Iterator {
     }
 
     /**
-     * finalizeメソッド。
+     * finalize method.
      *
-     * このクラスが内部的に生成したオブジェクトのなかで、close()呼び出し忘れバグが存在するかどうかチェックします。<br>
+     * Checks if there is a close() call forgetting bug in the object generated internally by this class.<br>
      *
-     * @throws Throwable finalize処理の中で発生した例外。
+     * @throws Throwable Exception raised in the finalize process.
      */
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SampleSQLite002Iterator : close()メソッドによるリソースの開放が行われていません。";
+            final String message = "SampleSQLite002Iterator : The resource has not been released by the close() method.";
             System.out.println(message);
         }
     }

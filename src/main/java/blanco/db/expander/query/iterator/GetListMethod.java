@@ -23,7 +23,7 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Tosiki Iga
  */
@@ -39,16 +39,16 @@ public class GetListMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("getList",
-                "検索結果をリストの形式で取得します。");
+                "Gets the search results in the form of a list.");
         fCgClass.getMethodList().add(cgMethod);
 
-        // 行オブジェクトの型名を取得します。
+        // Gets the type name of a row object.
         final String rowObjectType = BlancoNameAdjuster.toClassName(fSqlInfo
                 .getName()) + "Row";
 
         cgMethod.setReturn(fCgFactory.createReturn("java.util.List<"
                 + rowObjectType + ">", fSqlInfo.getName()
-                + "クラスのList。検索結果が0件の場合には空のリストが戻ります。"));
+                + "Class List, which will return an empty list if the search results are zero."));
 
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
@@ -57,19 +57,19 @@ public class GetListMethod extends BlancoDbAbstractMethod {
 
         final List<String> listDesc = cgMethod.getLangDoc()
                 .getDescriptionList();
-        listDesc.add("リストには " + fSqlInfo.getName() + "クラスが格納されます。<br>");
-        listDesc.add("検索結果の件数があらかじめわかっていて、且つ件数が少ない場合に利用することができます。<br>");
-        listDesc.add("検索結果の件数が多い場合には、このメソッドは利用せず、代わりに next()メソッドを利用することをお勧めします。<br>");
+        listDesc.add("The list will contain the " + fSqlInfo.getName() + " class.<br>");
+        listDesc.add("This can be used when the number of search results is known in advance and the number is small.<br>");
+        listDesc.add("If you have a large number of search results, it is recommended that you do not use this method, but use the next() method instead.<br>");
         if (fSqlInfo.getScroll() == BlancoDbSqlInfoScrollStringGroup.TYPE_FORWARD_ONLY) {
-            listDesc.add("このQueryIteratorは FORWARD_ONLY(順方向カーソル)です。大量のデータを扱うことがわかっている場合には、このgetListメソッドの利用は極力避けるか、あるいは スクロールカーソルとしてソースコードを再生成してください。");
+            listDesc.add("This QueryIterator is FORWARD_ONLY (forward cursor). If you know that you will be working with a large amount of data, avoid using this getList method as much as possible or regenerate the source code as a scrolling cursor.");
         } else {
             cgMethod.getParameterList().add(
                     fCgFactory.createParameter("absoluteStartPoint", "int",
-                            "読み出しを開始する行。最初の行から読み出したい場合には 1 を指定します。"));
+                            "The line to start reading. Specify 1 if you want to read from the first line."));
         }
 
         cgMethod.getParameterList().add(
-                fCgFactory.createParameter("size", "int", "読み出しを行う行数。"));
+                fCgFactory.createParameter("size", "int", "The number of lines to read."));
 
         final List<String> listLine = cgMethod.getLineList();
 

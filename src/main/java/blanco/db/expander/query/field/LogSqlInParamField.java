@@ -18,16 +18,16 @@ import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
- * QueryクラスのfLogフィールドです。
+ * The fLog field of the Query class.
  * 
  * @author IGA Tosiki
  */
 public class LogSqlInParamField extends BlancoDbAbstractField {
     /**
-     * QueryクラスのfLogフィールドのコンストラクタです。
+     * A constructor for fLog field of Query class.
      * 
      * @param bindClassName
-     *            ログオブジェクトとして結びつける先のクラス名。
+     *            The class name to be bound as a log object.
      * @author IGA Tosiki
      */
     public LogSqlInParamField(final BlancoDbSetting argDbSetting,
@@ -42,14 +42,14 @@ public class LogSqlInParamField extends BlancoDbAbstractField {
     public void expand() {
         final BlancoCgField cgField = fCgFactory.createField("fLogSqlInParam",
                 "java.lang.String",
-                "このクラスが内部的に利用するロギングのためのSQL入力文字列。");
+                "SQL input string for logging used internally by this class.");
         fCgClass.getFieldList().add(cgField);
 
         cgField.getLangDoc().getDescriptionList().add(
-                "SQL入力パラメータを蓄えます。");
+                "Stores SQL input parameters.");
 
         /*
-         * ジェネレーションギャップデザインパターンが利用可能になる目的で、スコープはprotectedとします。
+         * For the purpose of making the generation gap design pattern available, the scope is set to protected.
          */
         cgField.setAccess("protected");
         cgField.setDefault("\"\"");

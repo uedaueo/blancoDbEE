@@ -20,7 +20,7 @@ import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author tosiki iga
  */
@@ -48,13 +48,13 @@ public class GetStatementMethod extends BlancoDbAbstractMethod {
             resultType = "java.sql.CallableStatement";
         }
 
-        cgMethod.setReturn(fCgFactory.createReturn(resultType, "内部的に利用されている "
-                + resultType + "オブジェクト"));
+        cgMethod.setReturn(fCgFactory.createReturn(resultType, "The "
+                + resultType + " object used internally"));
 
         cgMethod.getLangDoc().getDescriptionList().add(
-                "ステートメント (" + resultType + ") を取得します。");
+                "Gets the statement (" + resultType + ").");
         cgMethod.getLangDoc().getDescriptionList().add(
-                "@deprecated 基本的にStatementは外部から直接利用する必要はありません。");
+                "@deprecated Basically, Statement does not need to be used directly from the outside.");
 
         final List<String> listLine = cgMethod.getLineList();
 

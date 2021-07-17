@@ -25,7 +25,7 @@ import blanco.db.expander.exception.TooManyRowsModifiedExceptionClass;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Tosiki Iga
  */
@@ -41,20 +41,20 @@ public class ExecuteSingleUpdateMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod(
-                "executeSingleUpdate", "SQL文を実行します。");
+                "executeSingleUpdate", "Executes the SQL statement.");
         fCgClass.getMethodList().add(cgMethod);
 
         cgMethod.getThrowList().add(
                 fCgFactory.createException(BlancoDbUtil
                         .getRuntimePackage(fDbSetting)
                         + ".exception.NoRowModifiedException",
-                        "データベースの処理の結果、1行もデータが変更されなかった場合。"));
+                        "If not a single row of data has been changed as a result of the database processing."));
 
         cgMethod.getThrowList().add(
                 fCgFactory.createException(BlancoDbUtil
                         .getRuntimePackage(fDbSetting)
                         + ".exception.TooManyRowsModifiedException",
-                        "データベースの処理の結果、1行を超えるデータが変更されてしまった場合。"));
+                        "If more than one row of data has been changed as a result of database processing."));
 
         BlancoDbCgUtilJava.addExceptionToMethodIntegrityConstraintException(
                 fCgFactory, cgMethod, fDbSetting);
@@ -64,9 +64,9 @@ public class ExecuteSingleUpdateMethod extends BlancoDbAbstractMethod {
                 cgMethod);
 
         cgMethod.getLangDoc().getDescriptionList().add(
-                "SQL文の実行結果が1行であることを確認します。実行結果が1行以外である場合には例外を発生させます。<br>");
+                "Verifies that the result of the SQL statement execution is a single row. If the result is not a single row, it will raise an exception.<br>");
         cgMethod.getLangDoc().getDescriptionList().add(
-                "シングル属性が有効となっているので生成されます。<br>");
+                "Generated since the single attribute is enabled.<br>");
 
         final List<String> listLine = cgMethod.getLineList();
 
@@ -90,10 +90,10 @@ public class ExecuteSingleUpdateMethod extends BlancoDbAbstractMethod {
 
         listLine.add("if (result == 0) {");
         listLine.add("throw new " + NoRowModifiedExceptionClass.CLASS_NAME
-                + "(\"データベースの処理の結果、1行もデータが変更されませんでした。\");");
+                + "(\"Not a single row of data has been changed as a result of the database processing.\");");
         listLine.add("} else if (result > 1) {");
         listLine
-                .add("String message = \"データベースの処理の結果、1行を超えるデータが変更されました。変更件数:\" + result;");
+                .add("String message = \"More than one row of data has been changed as a result of database processing. The number of changes:\" + result;");
         listLine.add("throw new "
                 + TooManyRowsModifiedExceptionClass.CLASS_NAME + "(message);");
         listLine.add("}");

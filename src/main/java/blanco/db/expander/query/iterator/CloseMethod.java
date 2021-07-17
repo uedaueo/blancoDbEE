@@ -22,7 +22,7 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Yasuo Nakanishi
  */
@@ -38,16 +38,16 @@ public class CloseMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("close",
-                "このクラスのクローズ処理をおこないます。");
+                "Closes this class.");
         fCgClass.getMethodList().add(cgMethod);
 
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
 
         cgMethod.getLangDoc().getDescriptionList().add(
-                "内部的に生成していたJDBCリソースのオブジェクトに対して close()メソッドの呼び出しをおこないます。<br>");
+                "Calls the close() method on the JDBC resource object that was created internally.<br>");
         cgMethod.getLangDoc().getDescriptionList().add(
-                "クラスの利用が終わったら、必ずこのメソッドを呼び出すようにします。");
+                "Make sure to call this method after using the class.");
 
         final List<String> listLine = cgMethod.getLineList();
 

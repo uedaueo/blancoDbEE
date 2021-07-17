@@ -22,9 +22,9 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
- * カーソル属性がtrueの場合に、このメソッドは作成されます。
+ * This method will be created when the cursor attribute is true.
  * 
  * @author Tosiki Iga
  */
@@ -44,14 +44,14 @@ public class RelativeMethod extends BlancoDbAbstractMethod {
         fCgClass.getMethodList().add(cgMethod);
 
         /*
-         * シングル属性が有効である場合には protectedとします。
+         * If the single attribute is valid, it is protected.
          */
         if (fSqlInfo.getSingle()) {
             cgMethod.setAccess("protected");
         }
 
         cgMethod.setReturn(fCgFactory.createReturn("boolean",
-                "新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。"));
+                "True if the new current row is valid, false if there are no more rows."));
 
         BlancoDbCgUtilJava.addExceptionToMethodDeadlockTimeoutException(
                 fCgFactory, cgMethod, fDbSetting);
@@ -63,20 +63,20 @@ public class RelativeMethod extends BlancoDbAbstractMethod {
                 .add(
                         fCgFactory
                                 .createParameter("rows", "int",
-                                        "現在の行から移動する相対行数を指定します。正の数ではカーソルを順方向に移動し、負の数ではカーソルを逆方向に移動します。"));
+                                        "Specifies the number of relative rows to move from the current row. A positive number moves the cursor forward, a negative number moves the cursor backward."));
 
         cgMethod.getLangDoc().getDescriptionList().add(
-                "カーソルを結果セットの相対行数だけ移動します。");
+                "Moves the cursor by the relative number of rows in the result set.");
         cgMethod.getLangDoc().getDescriptionList().add("");
         if (fSqlInfo.getSingle()) {
             cgMethod.getLangDoc().getDescriptionList().add(
-                    "シングル属性が有効なのでスコープをprotectedとします。<br>");
+                    "Since the single attribute is valid, the scope is set to protected.<br>");
         }
 
         cgMethod.getLangDoc().getDescriptionList().add(
-                "relative(1)はnext()を呼び出すのと同じです。<br>");
+                "relative(1) is the same as calling next().<br>");
         cgMethod.getLangDoc().getDescriptionList().add(
-                "relative(-1)はprevious()を呼び出すのと同じです。<br>");
+                "relative(-1) is the same as calling previous().<br>");
 
         final List<String> listLine = cgMethod.getLineList();
 
@@ -91,7 +91,7 @@ public class RelativeMethod extends BlancoDbAbstractMethod {
             }
         }
 
-        // resultSetが未確保であるばあい、強制的にexecuteQueryを呼び出します。
+        // If the resultSet is not allocated, it will force an executeQuery call.
         listLine.add("if (fResultSet == null) {");
         listLine.add("executeQuery();");
         listLine.add("}");

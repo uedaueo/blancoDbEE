@@ -17,15 +17,15 @@ import blanco.db.common.util.BlancoDbUtil;
 import blanco.db.common.valueobject.BlancoDbSetting;
 
 /**
- * blancoDbにおいて blancoCgに関するユーティリティを集めたクラス。
+ * In blancoDb, a class that collects utilities related to blancoCg.
  * 
- * 特に良くある組み合わせについて、この場所で一括して処理します。
+ * Particularly common combinations are handled in bulk here.
  * 
  * @author ToshikiIga
  */
 public class BlancoDbCgUtilJava {
     /**
-     * メソッドに SQL例外のスローを追加します。
+     * Adds an SQL exception throw to the method.
      * 
      * @param cgFactory
      * @param cgMethod
@@ -34,11 +34,11 @@ public class BlancoDbCgUtilJava {
             final BlancoCgObjectFactory cgFactory, final BlancoCgMethod cgMethod) {
         cgMethod.getThrowList().add(
                 cgFactory.createException("java.sql.SQLException",
-                        "SQL例外が発生した場合。"));
+                        "If an SQL exception occurs."));
     }
 
     /**
-     * メソッドに デッドロックとタイムアウトのスローを追加します。
+     * Adds deadlock and timeout throw to the method.
      * 
      * @param cgFactory
      * @param cgMethod
@@ -51,17 +51,17 @@ public class BlancoDbCgUtilJava {
                 cgFactory.createException(BlancoDbUtil
                         .getRuntimePackage(storage)
                         + ".exception.DeadlockException",
-                        "データベースデッドロックが発生した場合。"));
+                        "If a database deadlock occurs."));
         cgMethod.getThrowList().add(
                 cgFactory
                         .createException(BlancoDbUtil
                                 .getRuntimePackage(storage)
                                 + ".exception.TimeoutException",
-                                "データベースタイムアウトが発生した場合。"));
+                                "If a database timeout occurs."));
     }
 
     /**
-     * メソッドに IntegrityConstraintExceptionのスローを追加します。
+     * Adds IntegrityConstraintException throw to the method.
      * 
      * @param cgFactory
      * @param cgMethod
@@ -74,13 +74,13 @@ public class BlancoDbCgUtilJava {
                 cgFactory.createException(BlancoDbUtil
                         .getRuntimePackage(storage)
                         + ".exception.IntegrityConstraintException",
-                        "データベース制約違反が発生した場合。"));
+                        "If a database constarint violation occurs."));
     }
 
     /**
-     * メソッドにメソッド開始の典型的なロギングを追加します。
+     * Adds typical logging of method start to the method.
      * 
-     * 典型的ではないログについては、このメソッドは利用せずに個別に実装してください。
+     * For logs that are not typical, do not use this method, but implement it separately.
      * 
      * @param cgMethod
      */

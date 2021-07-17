@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * QueryクラスのfMapDynamicClauseフィールドです。
+ * The fMapDynamicClause field of the Query class.
  *
  * @author tueda
  */
 public class MapDynamicClauseField extends BlancoDbAbstractField {
     /**
-     * QueryクラスのfMapDynamicClauseフィールドのコンストラクタです。
+     * A constructor for fMapDynamicClause field of Query class.
      *
      * @author IGA Tosiki
      */
@@ -58,13 +58,13 @@ public class MapDynamicClauseField extends BlancoDbAbstractField {
         }
 
         List<String> plainTextList = new ArrayList<>();
-        plainTextList.add(""); // とりあえず１行あけておく。
+        plainTextList.add(""); // It will leave one line open for now.
         plainTextList.add("protected Map<String, BlancoDbDynamicClause> fMapDynamicClause = new HashMap<String, BlancoDbDynamicClause>() ");
         plainTextList.add("{");
         plainTextList.add("{");
 
         /*
-         * conditionStructure の整合性は parse 時にチェック済み
+         * The consistency of conditionStructure has been checked at parse time.
          */
         for (BlancoDbDynamicConditionStructure conditionStructure : conditions) {
             String strCondition = conditionStructure.getCondition();

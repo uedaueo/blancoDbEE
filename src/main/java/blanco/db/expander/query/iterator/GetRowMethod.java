@@ -28,7 +28,7 @@ import blanco.db.util.BlancoDbMappingUtilJava;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Tosiki Iga
  */
@@ -44,24 +44,24 @@ public class GetRowMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("getRow",
-                "現在の行のデータをオブジェクトとして取得します。");
+                "Gets the data of the current row as an object.");
         fCgClass.getMethodList().add(cgMethod);
 
         /*
-         * シングル属性が有効である場合には protectedとします。
+         * If the single attribute is valid, it is protected.
          */
         if (fSqlInfo.getSingle()) {
             cgMethod.setAccess("protected");
         }
 
-        // 行オブジェクトの型名を取得します。
+        // Gets the type name of a row object.
         final String rowObjectType = BlancoDbUtil.getBasePackage(fSqlInfo,
                 fDbSetting)
                 + ".row."
                 + BlancoNameAdjuster.toClassName(fSqlInfo.getName())
                 + "Row";
 
-        cgMethod.setReturn(fCgFactory.createReturn(rowObjectType, "行オブジェクト。"));
+        cgMethod.setReturn(fCgFactory.createReturn(rowObjectType, "Row object."));
 
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
@@ -70,10 +70,10 @@ public class GetRowMethod extends BlancoDbAbstractMethod {
                 .getDescriptionList();
 
         if (fSqlInfo.getSingle()) {
-            listDesc.add("シングル属性が有効なのでスコープをprotectedとします。<br>");
-            listDesc.add("このメソッドの代わりに getSingleRowメソッドを利用してください。<br>");
+            listDesc.add("Since the single attribute is valid, the scope is set to protected.<br>");
+            listDesc.add("Uses the getSingleRow method instead of this method.<br>");
         } else {
-            listDesc.add("このメソッドを呼び出す前に、next()などのカーソルを操作するメソッドを呼び出す必要があります。");
+            listDesc.add("Before calling this method, you need to call a method that manipulates the cursor, such as next().");
         }
 
         final List<String> listLine = cgMethod.getLineList();

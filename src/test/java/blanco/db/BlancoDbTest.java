@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- * Kotlin言語用の生成試験。
+ * Generation test for Kotlin.
  *
  * @author IGA Tosiki
  * @author tueda
@@ -42,7 +42,7 @@ public class BlancoDbTest {
         input.setEncoding("UTF-8");
         input.setLineSeparator("LF");
         input.setTargetStyle("maven");
-//        input.setExecutesql("none"); // TODO interator の場合に動的SQLの置換がちゃんとできるようにする。
+//        input.setExecutesql("none"); // TODO: Ensures that dynamic SQL replacement is correctly performed in the case of interator.
 
         BlancoDbProcessImpl imple = new BlancoDbProcessImpl();
         try {
@@ -68,7 +68,7 @@ public class BlancoDbTest {
         input.setEncoding("UTF-8");
         input.setLineSeparator("LF");
         input.setTargetStyle("maven");
-//        input.setExecutesql("none"); // TODO interator の場合に動的SQLの置換がちゃんとできるようにする。
+//        input.setExecutesql("none"); // TODO: Ensures that dynamic SQL replacement is correctly performed in the case of interator.
 
         BlancoDbProcessImpl imple = new BlancoDbProcessImpl();
         try {

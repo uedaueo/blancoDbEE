@@ -20,7 +20,7 @@ import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Yasuo Nakanishi
  */
@@ -37,17 +37,17 @@ public class QueryConstructor extends BlancoDbAbstractMethod {
     public void expand() {
         {
             final BlancoCgMethod cgMethod = fCgFactory.createMethod(
-                    fCgClass.getName(), fCgClass.getName() + "クラスのコンストラクタ。");
+                    fCgClass.getName(), fCgClass.getName() + "Constructor for the class.");
             fCgClass.getMethodList().add(cgMethod);
 
             cgMethod.getParameterList().add(
                     fCgFactory.createParameter("conn",
-                            "java.sql.Connection", "データベース接続"));
+                            "java.sql.Connection", "Database connection"));
 
             cgMethod.getLangDoc().getDescriptionList()
-                    .add("データベースコネクションオブジェクトを引数としてクエリクラスを作成します。<br>");
+                    .add("Creates a query class with a database connection object as an argument.<br>");
             cgMethod.getLangDoc().getDescriptionList()
-                    .add("このクラスの利用後は、必ず close()メソッドを呼び出す必要があります。<br>");
+                    .add("After using this class, you must call the close() method.<br>");
 
             cgMethod.setConstructor(true);
 
@@ -57,23 +57,23 @@ public class QueryConstructor extends BlancoDbAbstractMethod {
 
         {
             final BlancoCgMethod cgMethod = fCgFactory.createMethod(
-                    fCgClass.getName(), fCgClass.getName() + "クラスのコンストラクタ。");
+                    fCgClass.getName(), fCgClass.getName() + "Constructor for the class.");
             fCgClass.getMethodList().add(cgMethod);
 
             cgMethod.getLangDoc().getDescriptionList()
-                    .add("データベースコネクションオブジェクトを与えずにクエリクラスを作成します。<br>");
+                    .add("Creates a query class without giving a database connection object.<br>");
             cgMethod.getAnnotationList().add("Deprecated");
 
             cgMethod.setConstructor(true);
         }
         {
             final BlancoCgMethod cgMethod = fCgFactory.createMethod(
-                    "setConnection", fCgClass.getName() + "クラスにデータベース接続を設定。");
+                    "setConnection", fCgClass.getName() + "Sets a database connection to the class.");
             fCgClass.getMethodList().add(cgMethod);
 
             cgMethod.getParameterList().add(
                     fCgFactory.createParameter("conn",
-                            "java.sql.Connection", "データベース接続"));
+                            "java.sql.Connection", "Database connection"));
 
             cgMethod.getAnnotationList().add("Deprecated");
 

@@ -21,8 +21,8 @@ import my.db.util.BlancoDbUtil;
 /**
  * [SimpleTestBlancodbInsertNoNulls]  (QueryInvoker)
  *
- * 実行型SQL文をラッピングして各種アクセサを提供します。<br>
- * シングル属性: 有効 (期待する処理件数は1件)<br>
+ * Wraps an executable SQL statement and provides various accessors.<br>
+ * Single attribute: Enabled (expected number of processes is 1)<br>
  */
 public class SimpleTestBlancodbInsertNoNullsInvoker {
     /**
@@ -42,30 +42,30 @@ public class SimpleTestBlancodbInsertNoNullsInvoker {
     protected PreparedStatement fStatement;
 
     /**
-     * SimpleTestBlancodbInsertNoNullsInvokerクラスのコンストラクタ。
+     * SimpleTestBlancodbInsertNoNullsInvokerConstructor for the class.
      *
-     * データベースコネクションオブジェクトを引数としてクエリクラスを作成します。<br>
-     * このクラスの利用後は、必ず close()メソッドを呼び出す必要があります。<br>
+     * Creates a query class with a database connection object as an argument.<br>
+     * After using this class, you must call the close() method.<br>
      *
-     * @param conn データベース接続
+     * @param conn Database connection
      */
     public SimpleTestBlancodbInsertNoNullsInvoker(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SimpleTestBlancodbInsertNoNullsInvokerクラスのコンストラクタ。
+     * SimpleTestBlancodbInsertNoNullsInvokerConstructor for the class.
      *
-     * データベースコネクションオブジェクトを与えずにクエリクラスを作成します。<br>
+     * Creates a query class without giving a database connection object.<br>
      */
     @Deprecated
     public SimpleTestBlancodbInsertNoNullsInvoker() {
     }
 
     /**
-     * SimpleTestBlancodbInsertNoNullsInvokerクラスにデータベース接続を設定。
+     * SimpleTestBlancodbInsertNoNullsInvokerSets a database connection to the class.
      *
-     * @param conn データベース接続
+     * @param conn Database connection
      */
     @Deprecated
     public void setConnection(final Connection conn) {
@@ -73,22 +73,22 @@ public class SimpleTestBlancodbInsertNoNullsInvoker {
     }
 
     /**
-     * SQL定義書で与えられたSQL文を取得します。
+     * Gets the SQL statement given in the SQL definition document.
      *
-     * SQL入力パラメータとして #キーワードによる指定がある場合には、該当箇所を ? に置き換えた後の SQL文が取得できます。
+     * If the # keyword is specified as the SQL input parameter, the SQL statement after replacing the corresponding part with ? can be obtained.
      *
-     * @return JDBCドライバに与えて実行可能な状態のSQL文。
+     * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
         return "\n        INSERT\n  INTO TEST_BLANCODB\n       (COL_ID)\nVALUES\n       (?)\n      ";
     }
 
     /**
-     * SQL定義書から与えられたSQL文をもちいてプリコンパイルを実施します。
+     * Precompiles with the SQL statement given from the SQL definition document.
      *
-     * 内部的にConnection.prepareStatementを呼び出します。<br>
+     * Internally calls Connection.prepareStatement.<br>
      *
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public void prepareStatement() throws SQLException {
         close();
@@ -96,14 +96,14 @@ public class SimpleTestBlancodbInsertNoNullsInvoker {
     }
 
     /**
-     * 与えられたSQL文をもちいてプリコンパイルを実施(動的SQL)します。
+     * Precompiles with the given SQL statement (dynamic SQL).
      *
-     * このメソッドは、動的に内容が変化するような SQL を実行する必要がある場合にのみ利用します。<br>
-     * 動的 SQL を利用する必要がある場合には、SQL 定義書で「動的SQL」を「使用する」に変更してください。変更後は外部から利用可能になります。<br>
-     * 内部的に JDBC ドライバの Connection.prepareStatement を呼び出します。<br>
+     * This method should only be used when you need to execute SQL that dynamically changes its contents.<br>
+     * If you need to use dynamic SQL, please change "Dynamic SQL" to "Use" in the SQL definition document. After the change, it will be available externally.<br>
+     * Internally calls the JDBC driver's Connection.prepareStatement.<br>
      *
-     * @param query プリコンパイルを実施させたいSQL文。動的SQLの場合には、この引数には加工された後の実行可能なSQL文を与えます。
-     * @throws SQLException SQL例外が発生した場合。
+     * @param query The SQL statement that you want to have precompiled. In the case of dynamic SQL, this argument is the executable SQL statement after it has been processed.
+     * @throws SQLException If an SQL exception occurs.
      */
     protected void prepareStatement(final String query) throws SQLException {
         close();
@@ -116,7 +116,7 @@ public class SimpleTestBlancodbInsertNoNullsInvoker {
      * 内部的には PreparedStatementにSQL入力パラメータをセットします。
      *
      * @param colId 'colId'列の値
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public void setInputParameter(final int colId) throws SQLException {
         if (fStatement == null) {
@@ -130,20 +130,20 @@ public class SimpleTestBlancodbInsertNoNullsInvoker {
     }
 
     /**
-     * SQL文を実行します。
+     * Executes the SQL statement.
      *
-     * シングル属性が有効なのでスコープをprotectedとします。<br>
-     * このメソッドの代わりに executeSingleUpdateメソッドを利用してください。<br>
+     * Since the single attribute is valid, the scope is set to protected.<br>
+     * Use the executeSingleUpdate method instead of this method.<br>
      *
-     * @return 処理された行数
-     * @throws IntegrityConstraintException データベース制約違反が発生した場合。
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @return The number of processed lines
+     * @throws IntegrityConstraintException If a database constarint violation occurs.
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     protected int executeUpdate() throws IntegrityConstraintException, DeadlockException, TimeoutException, SQLException {
         if (fStatement == null) {
-            // PreparedStatementが未取得の状態なので、PreparedStatement.executeUpdate()実行に先立ちprepareStatement()メソッドを呼び出して取得します。
+            // Since PreparedStatement has not been obtained yet, obtains by calling prepareStatement() method prior to executing PreparedStatement.executeUpdate().
             prepareStatement();
         }
 
@@ -155,47 +155,47 @@ public class SimpleTestBlancodbInsertNoNullsInvoker {
     }
 
     /**
-     * SQL文を実行します。
+     * Executes the SQL statement.
      *
-     * SQL文の実行結果が1行であることを確認します。実行結果が1行以外である場合には例外を発生させます。<br>
-     * シングル属性が有効となっているので生成されます。<br>
+     * Verifies that the result of the SQL statement execution is a single row. If the result is not a single row, it will raise an exception.<br>
+     * Generated since the single attribute is enabled.<br>
      *
-     * @throws NoRowModifiedException データベースの処理の結果、1行もデータが変更されなかった場合。
-     * @throws TooManyRowsModifiedException データベースの処理の結果、1行を超えるデータが変更されてしまった場合。
-     * @throws IntegrityConstraintException データベース制約違反が発生した場合。
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws NoRowModifiedException If not a single row of data has been changed as a result of the database processing.
+     * @throws TooManyRowsModifiedException If more than one row of data has been changed as a result of database processing.
+     * @throws IntegrityConstraintException If a database constarint violation occurs.
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public void executeSingleUpdate() throws NoRowModifiedException, TooManyRowsModifiedException, IntegrityConstraintException, DeadlockException, TimeoutException, SQLException {
         int result = 0;
         result = executeUpdate();
 
         if (result == 0) {
-            throw new NoRowModifiedException("データベースの処理の結果、1行もデータが変更されませんでした。");
+            throw new NoRowModifiedException("Not a single row of data has been changed as a result of the database processing.");
         } else if (result > 1) {
-            String message = "データベースの処理の結果、1行を超えるデータが変更されました。変更件数:" + result;
+            String message = "More than one row of data has been changed as a result of database processing. The number of changes:" + result;
             throw new TooManyRowsModifiedException(message);
         }
     }
 
     /**
-     * ステートメント (java.sql.PreparedStatement) を取得します。
-     * @deprecated 基本的にStatementは外部から直接利用する必要はありません。
+     * Gets the statement (java.sql.PreparedStatement).
+     * @deprecated Basically, Statement does not need to be used directly from the outside.
      *
-     * @return 内部的に利用されている java.sql.PreparedStatementオブジェクト
+     * @return The java.sql.PreparedStatement object used internally
      */
     public PreparedStatement getStatement() {
         return fStatement;
     }
 
     /**
-     * このクラスのクローズ処理をおこないます。
+     * Closes this class.
      *
-     * 内部的に生成していたJDBCリソースのオブジェクトに対して close()メソッドの呼び出しをおこないます。<br>
-     * クラスの利用が終わったら、必ずこのメソッドを呼び出すようにします。
+     * Calls the close() method on the JDBC resource object that was created internally.<br>
+     * Make sure to call this method when you are done using the class.
      *
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public void close() throws SQLException {
         if (fStatement != null) {
@@ -205,16 +205,16 @@ public class SimpleTestBlancodbInsertNoNullsInvoker {
     }
 
     /**
-     * finalizeメソッド。
+     * finalize method.
      *
-     * このクラスが内部的に生成したオブジェクトのなかで、close()呼び出し忘れバグが存在するかどうかチェックします。<br>
+     * Checks if there is a close() call forgetting bug in the object generated internally by this class.<br>
      *
-     * @throws Throwable finalize処理の中で発生した例外。
+     * @throws Throwable Exception raised in the finalize process.
      */
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SimpleTestBlancodbInsertNoNullsInvoker : close()メソッドによるリソースの開放が行われていません。";
+            final String message = "SimpleTestBlancodbInsertNoNullsInvoker : The resource has not been released by the close() method.";
             System.out.println(message);
         }
     }

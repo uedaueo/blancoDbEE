@@ -22,7 +22,7 @@ public class BlancoPerfomanceCommonUtil {
         {
             final BlancoCgField cgField = cgFactory.createField(
                     "fPerfomanceNumberFormat", "java.text.NumberFormat",
-                    "パフォーマンス計測時にのみ利用する数値フォーマッタ。");
+                    "A numeric formatter used only for performance measurements.");
             cgClass.getFieldList().add(cgField);
             cgField.setFinal(true);
             cgField.setStatic(true);
@@ -31,26 +31,26 @@ public class BlancoPerfomanceCommonUtil {
 
         {
             final BlancoCgMethod cgMethod = cgFactory.createMethod(
-                    "getUsedMemory", "パフォーマンス計測時にのみ利用する消費メモリ取得メソッド。");
+                    "getUsedMemory", "Method to get memory consumption used only for performance measurements.");
             cgClass.getMethodList().add(cgMethod);
             cgMethod.setStatic(true);
             cgMethod.getParameterList().add(
                     cgFactory.createParameter("runtime", "java.lang.Runtime",
-                            "ランタイムのインスタンス。"));
-            cgMethod.setReturn(cgFactory.createReturn("long", "メモリ消費量。"));
+                            "An instance of runtime."));
+            cgMethod.setReturn(cgFactory.createReturn("long", "Memory consumption."));
             cgMethod.getLineList().add(
                     "return runtime.totalMemory() - runtime.freeMemory();");
         }
 
         {
             final BlancoCgMethod cgMethod = cgFactory.createMethod(
-                    "getMemorySizeString", "パフォーマンス計測時にのみ利用するメモリサイズ文字列取得メソッド。");
+                    "getMemorySizeString", "Method to get memory size string used only for performance measurements.");
             cgClass.getMethodList().add(cgMethod);
             cgMethod.setStatic(true);
             cgMethod.getParameterList().add(
-                    cgFactory.createParameter("memorySize", "long", "メモリサイズ。"));
+                    cgFactory.createParameter("memorySize", "long", "Memory size."));
             cgMethod.setReturn(cgFactory.createReturn("java.lang.String",
-                    "メモリサイズの文字列表現。"));
+                    "String representation of memory size."));
             cgMethod.getLineList().add(
                     "final StringBuffer result = new StringBuffer();");
             cgMethod.getLineList().add(
@@ -66,13 +66,13 @@ public class BlancoPerfomanceCommonUtil {
 
         {
             final BlancoCgMethod cgMethod = cgFactory.createMethod(
-                    "getTimeString", "パフォーマンス計測時にのみ利用する消費ミリ秒文字列取得メソッド。");
+                    "getTimeString", "Method to get the consumption millisecond string used only for performance measurements.");
             cgClass.getMethodList().add(cgMethod);
             cgMethod.setStatic(true);
             cgMethod.getParameterList().add(
-                    cgFactory.createParameter("time", "long", "消費ミリ秒。"));
+                    cgFactory.createParameter("time", "long", "Consumption milliseconds."));
             cgMethod.setReturn(cgFactory.createReturn("java.lang.String",
-                    "消費ミリ秒の文字列表現。"));
+                    "String representation of consumption milliseconds."));
             cgMethod.getLineList().add(
                     "final StringBuffer result = new StringBuffer();");
             cgMethod.getLineList().add("result.append(time);");

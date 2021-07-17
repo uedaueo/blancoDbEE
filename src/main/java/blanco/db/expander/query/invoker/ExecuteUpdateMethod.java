@@ -24,7 +24,7 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Yasuo Nakanishi
  */
@@ -40,18 +40,18 @@ public class ExecuteUpdateMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod(
-                "executeUpdate", "SQL文を実行します。");
+                "executeUpdate", "Executes the SQL statement.");
         fCgClass.getMethodList().add(cgMethod);
 
-        cgMethod.setReturn(fCgFactory.createReturn("int", "処理された行数"));
+        cgMethod.setReturn(fCgFactory.createReturn("int", "The number of processed lines"));
 
         /*
-         * シングル属性が有効である場合には protectedとします。
+         * If the single attribute is valid, it is protected.
          */
         if (fSqlInfo.getSingle()) {
             cgMethod.setAccess("protected");
         } else {
-            // publicのままです。
+            // It remains public.
         }
 
         BlancoDbCgUtilJava.addExceptionToMethodIntegrityConstraintException(
@@ -63,9 +63,9 @@ public class ExecuteUpdateMethod extends BlancoDbAbstractMethod {
 
         if (fSqlInfo.getSingle()) {
             cgMethod.getLangDoc().getDescriptionList().add(
-                    "シングル属性が有効なのでスコープをprotectedとします。<br>");
+                    "Since the single attribute is valid, the scope is set to protected.<br>");
             cgMethod.getLangDoc().getDescriptionList().add(
-                    "このメソッドの代わりに executeSingleUpdateメソッドを利用してください。<br>");
+                    "Use the executeSingleUpdate method instead of this method.<br>");
         }
 
         final List<String> listLine = cgMethod.getLineList();
@@ -77,17 +77,17 @@ public class ExecuteUpdateMethod extends BlancoDbAbstractMethod {
             }
         }
 
-        // statementが未確保であるばあい、強制的にprepareStatementを呼び出します。
+        // If statement is not yet allocated, it will forcibly call prepareStatement.
         listLine.add("if (fStatement == null) {");
         listLine
-                .add("// PreparedStatementが未取得の状態なので、PreparedStatement.executeUpdate()実行に先立ちprepareStatement()メソッドを呼び出して取得します。");
+                .add("// Since PreparedStatement has not been obtained yet, obtains by calling prepareStatement() method prior to executing PreparedStatement.executeUpdate().");
         listLine.add("prepareStatement();");
         listLine.add("}");
 
         listLine.add("");
 
         if(fDbSetting.getLoggingsql()) {
-        	// 標準出力に出力。 
+        	// Outputs to stdout.
 			listLine.add("System.out.println(\"SQL: ["
 					+ fSqlInfo.getName()
 					+ "](Invoker) "
@@ -108,13 +108,13 @@ public class ExecuteUpdateMethod extends BlancoDbAbstractMethod {
                         .add("final long usedMemoryStart = BlancoDbUtil.getUsedMemory(runtime);");
                 listLine
                         .add("final long startTime = System.currentTimeMillis();");
-                listLine.add("fLog.info(\"" + fSqlInfo.getName() + "開始\");");
+                listLine.add("fLog.info(\"" + fSqlInfo.getName() + "start\");");
                 break;
             }
             listLine.add("");
         }
 
-        // 例外処理を含めて展開します。
+        // Expands including exception handling.
         listLine.add("try {");
         listLine.add("return fStatement.executeUpdate();");
         listLine.add("} catch (SQLException ex) {");
@@ -132,7 +132,7 @@ public class ExecuteUpdateMethod extends BlancoDbAbstractMethod {
                 listLine
                         .add("fLog.info(\""
                                 + fSqlInfo.getName()
-                                + "終了 所要時間：\" + BlancoDbUtil.getTimeString(endTime - startTime) + \" 終了時使用メモリ：\" + BlancoDbUtil.getMemorySizeString(usedMemoryEnd) + \" 使用メモリ差分：\" + BlancoDbUtil.getMemorySizeString(usedMemoryEnd - usedMemoryStart));");
+                                + "End Required time: \" + BlancoDbUtil.getTimeString(endTime - startTime) + \" memory used at end: \" + BlancoDbUtil.getMemorySizeString(usedMemoryEnd) + \" Difference in memory used: \" + BlancoDbUtil.getMemorySizeString(usedMemoryEnd - usedMemoryStart));");
                 break;
             }
         }

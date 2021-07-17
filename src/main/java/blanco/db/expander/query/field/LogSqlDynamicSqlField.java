@@ -18,16 +18,16 @@ import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
- * QueryクラスのfLogフィールドです。
+ * The fLog field of the Query class.
  * 
  * @author IGA Tosiki
  */
 public class LogSqlDynamicSqlField extends BlancoDbAbstractField {
     /**
-     * Queryクラスの 動的 SQL 用のフィールド
+     * The field for dynamic SQL in Query class.
      * 
      * @param bindClassName
-     *            ログオブジェクトとして結びつける先のクラス名。
+     *            The class name to be bound as a log object.
      * @author IGA Tosiki
      */
     public LogSqlDynamicSqlField(final BlancoDbSetting argDbSetting,
@@ -42,14 +42,14 @@ public class LogSqlDynamicSqlField extends BlancoDbAbstractField {
     public void expand() {
         final BlancoCgField cgField = fCgFactory.createField("fLogSqlDynamicSql",
                 "java.lang.String",
-                "このクラスが内部的に利用するロギングのためのSQL文字列。動的SQLの場合のみ生成。");
+                "SQL string for logging used internally by this class. Generated only for dynamic SQL.");
         fCgClass.getFieldList().add(cgField);
 
         cgField.getLangDoc().getDescriptionList().add(
-                "動的SQLを蓄えます。");
+                "Stores dynamic SQL.");
 
         /*
-         * ジェネレーションギャップデザインパターンが利用可能になる目的で、スコープはprotectedとします。
+         * For the purpose of making the generation gap design pattern available, the scope is set to protected.
          */
         cgField.setAccess("protected");
         cgField.setDefault("\"\"");

@@ -18,7 +18,7 @@ import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
- * QueryクラスのfStatementフィールドです。
+ * The fStatement field of the Query class.
  * 
  * @author IGA Tosiki
  */
@@ -26,11 +26,10 @@ public class StatementField extends BlancoDbAbstractField {
     private boolean fIsCallableStatement = false;
 
     /**
-     * QueryクラスのfStatementフィールドのコンストラクタです。
+     * A constructor for the fStatement field of the Query class.
      * 
      * @param className
-     *            ステートメントの実際のクラス名。java.sql.PreparedStatementクラスの場合と
-     *            java.sql.CallableStatementクラスの場合があります。
+     *            The actual class name of the statement. It may be java.sql.PreparedStatement class or java.sql.CallableStatement class.
      * @author IGA Tosiki
      */
     public StatementField(final BlancoDbSetting argDbSetting,
@@ -50,16 +49,16 @@ public class StatementField extends BlancoDbAbstractField {
         }
 
         final BlancoCgField cgField = fCgFactory.createField("fStatement",
-                statementClassName, "このクラスが内部的に利用するステートメントオブジェクト。");
+                statementClassName, "Statement object used internally by this class.");
         fCgClass.getFieldList().add(cgField);
 
         cgField.getLangDoc().getDescriptionList().add(
-                "このオブジェクトはデータベース接続オブジェクトから生成されて内部的に利用されます。<br>");
+                "This object is generated from the database connection object and used internally.<br>");
         cgField.getLangDoc().getDescriptionList().add(
-                "closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。");
+                "Closes this object when the close method is called.");
 
         /*
-         * ジェネレーションギャップデザインパターンが利用可能になる目的で、スコープはprotectedとします。
+         * For the purpose of making the generation gap design pattern available, the scope is set to protected.
          */
         cgField.setAccess("protected");
     }

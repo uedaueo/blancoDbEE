@@ -18,13 +18,13 @@ import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
- * QueryクラスのfResultSetフィールドです。
+ * The fResultSet field of the Query class.
  * 
  * @author IGA Tosiki
  */
 public class ResultSetField extends BlancoDbAbstractField {
     /**
-     * QueryクラスのfResultSetフィールドのコンストラクタです。
+     * A constructor for fResultSet field of Query class.
      * 
      * @author IGA Tosiki
      */
@@ -39,16 +39,16 @@ public class ResultSetField extends BlancoDbAbstractField {
 
     public void expand() {
         final BlancoCgField cgField = fCgFactory.createField("fResultSet",
-                "java.sql.ResultSet", "このクラスが内部的に利用する結果セットオブジェクト。");
+                "java.sql.ResultSet", "The result set object used internally by this class.");
         fCgClass.getFieldList().add(cgField);
 
         cgField.getLangDoc().getDescriptionList().add(
-                "このオブジェクトはデータベースステートメントオブジェクトから生成されて内部的に利用されます。<br>");
+                "This object is created from the database statement object and used internally.<br>");
         cgField.getLangDoc().getDescriptionList().add(
-                "closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。");
+                "Closes this object when the close method is called.");
 
         /*
-         * ジェネレーションギャップデザインパターンが利用可能になる目的で、スコープはprotectedとします。
+         * For the purpose of making the generation gap design pattern available, the scope is set to protected.
          */
         cgField.setAccess("protected");
     }

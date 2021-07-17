@@ -24,7 +24,7 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author tosiki iga
  */
@@ -40,18 +40,18 @@ public class PrepareStatementMethod2 extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod(
-                "prepareStatement", "与えられたSQL文をもちいてプリコンパイルを実施(動的SQL)します。");
+                "prepareStatement", "Precompiles with the given SQL statement (dynamic SQL).");
         fCgClass.getMethodList().add(cgMethod);
 
         if (fSqlInfo.getDynamicSql() == false) {
-            // 動的 SQL 利用フラグが OFF の場合、動的 SQL のためのこのメソッドは protected 化します。
+            // If the dynamic SQL usage flag is OFF, this method for dynamic SQL will be protected.
             cgMethod.setAccess("protected");
         }
 
         cgMethod.getParameterList()
                 .add(fCgFactory
                         .createParameter("query", "java.lang.String",
-                                "プリコンパイルを実施させたいSQL文。動的SQLの場合には、この引数には加工された後の実行可能なSQL文を与えます。"));
+                                "The SQL statement that you want to have precompiled. In the case of dynamic SQL, this argument is the executable SQL statement after it has been processed."));
 
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
@@ -59,30 +59,29 @@ public class PrepareStatementMethod2 extends BlancoDbAbstractMethod {
         final List<String> listDesc = cgMethod.getLangDoc()
                 .getDescriptionList();
 
-        listDesc.add("このメソッドは、動的に内容が変化するような SQL を実行する必要がある場合にのみ利用します。<br>");
+        listDesc.add("This method should only be used when you need to execute SQL that dynamically changes its contents.<br>");
         if (fSqlInfo.getDynamicSql() == false) {
-            listDesc.add("動的 SQL を利用する必要がある場合には、SQL 定義書で「動的SQL」を「使用する」に変更してください。変更後は外部から利用可能になります。<br>");
+            listDesc.add("If you need to use dynamic SQL, please change \"Dynamic SQL\" to \"Use\" in the SQL definition document. After the change, it will be available externally.<br>");
         } else {
-            listDesc.add("SQL 定義書で「動的SQL」が「使用する」に設定されています。<br>");
+            listDesc.add("\"Dynamic SQL\" is set to \"Use\" in the SQL definition document.<br>");
         }
-        listDesc.add("内部的に JDBC ドライバの Connection.prepareStatement を呼び出します。<br>");
+        listDesc.add("Internally calls the JDBC driver's Connection.prepareStatement.<br>");
 
         if (fSqlInfo.getType() == BlancoDbSqlInfoTypeStringGroup.ITERATOR) {
-            // 検索型の場合にのみ出力します。
+            // Outputs only for search type.
 
-            // TODO
-            // BlancoDbSqlInfoScrollStringGroup.NOT_DEFINEDの場合には何も出力すべきではないのだが、1.6.4との互換性確保のため
-            // スクロール方向をLangDocに出力しています。
+            // TODO: 
+            // In the case of BlancoDbSqlInfoScrollStringGroup.NOT_DEFINED, nothing should be output, but for compatibility with 1.6.4, the scroll direction is output to LangDoc.
 
             if (fSqlInfo.getScroll() == BlancoDbSqlInfoScrollStringGroup.TYPE_FORWARD_ONLY
                     && fSqlInfo.getUpdatable() == false) {
-                // 順方向カーソルで且つ更新可能属性がOFFの場合には、何もLangDocに出力しません。
+                // If the cursor is in the forward direction and the updatable attribute is OFF, nothing will be output to LangDoc.
             } else {
-                listDesc.add("スクロール属性: "
+                listDesc.add("scroll attribute: "
                         + new BlancoDbSqlInfoScrollStringGroup()
                                 .convertToString(fSqlInfo.getScroll()));
                 if (fSqlInfo.getUpdatable()) {
-                    listDesc.add("更新可能属性: 有効");
+                    listDesc.add("Update possible properties: Effective");
                 }
             }
         }
@@ -90,7 +89,7 @@ public class PrepareStatementMethod2 extends BlancoDbAbstractMethod {
         final List<String> listLine = cgMethod.getLineList();
 
         if(fDbSetting.getLoggingsql()) {
-        	// 標準出力に出力。 
+        	// Output to stdout.
 			listLine.add("fLogSqlInParam = \"\";");
 
 			if (fSqlInfo.getDynamicSql()) {
@@ -108,7 +107,7 @@ public class PrepareStatementMethod2 extends BlancoDbAbstractMethod {
                 break;
             case BlancoDbLoggingModeStringGroup.PERFORMANCE:
                 listLine.add("fLog.info(\"" + fSqlInfo.getName()
-                        + "実行SQL\\n\" + query);");
+                        + "execution SQL\\n\" + query);");
                 break;
             }
             listLine.add("");
@@ -116,22 +115,21 @@ public class PrepareStatementMethod2 extends BlancoDbAbstractMethod {
 
         listLine.add("close();");
 
-        // TODO スクロール方向が無指定の場合 JDBC APIもスクロール方向無しで指定しようとしたが、その仕様だと
-        // 1.6.4と動作が異なってしまいます。
-        // TODO 1.6.4との互換性を優先し、スクロール方向指定無しの場合の条件を除去します。
+        // TODO: If the scroll direction is unspecified, we also tried to specify no scroll direction about JDBC API, but with that specification, the behavior is different from 1.6.4.
+        // TODO: For compatibility with 1.6.4, removes the condition for no scroll direction specification.
 
         if (fSqlInfo.getType() == BlancoDbSqlInfoTypeStringGroup.INVOKER
                 || fSqlInfo.getType() == BlancoDbSqlInfoTypeStringGroup.CALLER) {
-            // 実行型・呼出型の場合には、単にprepareStatementを呼び出します。
+            // In the case of executable and call types, simply calls prepareStatement.
             listLine.add("fStatement = fConnection.prepareStatement(query);");
         } else if (fSqlInfo.getScroll() == BlancoDbSqlInfoScrollStringGroup.TYPE_FORWARD_ONLY
                 && fSqlInfo.getUpdatable() == false) {
-            // 検索型のうち、パラメータのバリエーションが単純な場合には、単純にprepareStatementを呼び出します。
+            // Among the search types, if the parameter variation is simple, simply calls prepareStatement.
             listLine.add("fStatement = fConnection.prepareStatement(query);");
         } else {
-            // バリエーションの内容に合わせて引数を生成します。
-            // 検索型の BlancoDbSqlInfoScrollStringGroup.NOT_DEFINED についても
-            // ここを通過する点に注意してください。これは 1.6.4との互換性のために必要です。
+            // Generates arguments according to the content of the variation.
+            // Note that the search type BlancoDbSqlInfoScrollStringGroup.NOT_DEFINED also passes through here.
+            // This is necessary for compatibility with 1.6.4.
 
             String resultSetType = "ResultSet.TYPE_FORWARD_ONLY";
             String resultSetConcurrency = "ResultSet.CONCUR_READ_ONLY";
@@ -148,7 +146,7 @@ public class PrepareStatementMethod2 extends BlancoDbAbstractMethod {
         }
 
         if (fDbSetting.getStatementTimeout() >= 0) {
-            listLine.add("// ステートメントタイムアウト値についてデフォルト値をセットします。");
+            listLine.add("// Sets the default value for the statement timeout value.");
             listLine.add("fStatement.setQueryTimeout("
                     + fDbSetting.getStatementTimeout() + ");");
         }
