@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * 個別のクラスを展開するためのクラス。
+ * A class for expanding individual classes.
  *
  * @author tueda
  */
@@ -56,40 +56,40 @@ public class FunctionLiteralInputClass extends BlancoDbAbstractClass {
         fCgSourceFile.getClassList().add(fCgClass);
 
         if (fDbSetting.getUseRuntime()) {
-            // アノテーションを付与します。
+            // Adds annotations
             fCgClass.getAnnotationList().add("BlancoGeneratedBy(name = \"blancoDb\")");
             fCgSourceFile.getImportList().add("blanco.fw.BlancoGeneratedBy");
         }
 
         fCgClass.getLangDoc().getDescriptionList()
-                .add("動的条件句関数定義用の入力のためのオブジェクトを提供します。<br>");
+                .add("Provides an object for input of dynamic conditional clause function definitions.<br>");
 
         BlancoDbDynamicConditionFunctionStructure functionStructure = fConditionStructure.getFunction();
         // fields
         int paramNum = functionStructure.getParamNum();
         fCgClass.getFieldList().add(
-                buildField("paramNum", "java.lang.Integer", "" + paramNum, "この入力用クラスが期待するパラメータの数")
+                buildField("paramNum", "java.lang.Integer", "" + paramNum, "The number of parameters expected by this input class.")
         );
 
-        // Constructor 準備
-        final BlancoCgMethod cgConstruct = fCgFactory.createMethod(className, "コンストラクタ");
+        // Preparing Constructor
+        final BlancoCgMethod cgConstruct = fCgFactory.createMethod(className, "Constructor");
         fCgClass.getMethodList().add(cgConstruct);
         cgConstruct.setConstructor(true);
         final List<String> lineListConst = cgConstruct.getLineList();
 
-        // getParam 準備
-        final BlancoCgMethod cgGetParam =  fCgFactory.createMethod("getParam", "パラメータ取得");
+        // Preparing getParam
+        final BlancoCgMethod cgGetParam =  fCgFactory.createMethod("getParam", "Get parameters");
         fCgClass.getMethodList().add(cgGetParam);
         cgGetParam.getParameterList().add(
                 fCgFactory.createParameter(
                         "param",
                         "java.lang.Integer",
-                        "1から始まるパラメータの順番です。"
+                        "The order of the parameters starting from 1."
                 )
         );
         cgGetParam.setReturn(fCgFactory.createReturn(
                 "java.lang.Object",
-                "パラメータを戻します。所定の型でCastする必要があります。"
+                "Returns a parameter. Must be cast with a given type."
         ));
         final List<String> lineListGetParam = cgGetParam.getLineList();
 
@@ -106,14 +106,14 @@ public class FunctionLiteralInputClass extends BlancoDbAbstractClass {
             }
             String tagParam = String.format("param%02d", i);
             fCgClass.getFieldList().add(
-                    buildField(tagParam, type, null, i + "番目のパラメータ")
+                    buildField(tagParam, type, null, i + "th parameter")
             );
             // Constructor
             cgConstruct.getParameterList().add(
                     fCgFactory.createParameter(
                             "arg" + BlancoNameAdjuster.toClassName(tagParam),
                             type,
-                            i + "番目のパラメータ"
+                            i + "th parameter"
                     )
             );
             lineListConst.add("this." + tagParam + " = " + "arg" + BlancoNameAdjuster.toClassName(tagParam) + ";");
