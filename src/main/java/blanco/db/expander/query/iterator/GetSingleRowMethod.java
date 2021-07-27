@@ -27,9 +27,9 @@ import blanco.db.expander.exception.TooManyRowsFoundExceptionClass;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
- * シングル属性がtrueの場合にのみ、このクラスは利用されます
+ * This class will be used only if the single attribute is true.
  * 
  * @author Tosiki Iga
  */
@@ -45,28 +45,28 @@ public class GetSingleRowMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("getSingleRow",
-                "現在の行のデータをオブジェクトとして取得します。");
+                "Gets the data of the current row as an object.");
         fCgClass.getMethodList().add(cgMethod);
 
-        // 行オブジェクトの型名を取得します。
+        // Gets the type name of a row object.
         final String rowObjectType = BlancoDbUtil.getBasePackage(fSqlInfo,
                 fDbSetting)
                 + ".row."
                 + BlancoNameAdjuster.toClassName(fSqlInfo.getName())
                 + "Row";
 
-        cgMethod.setReturn(fCgFactory.createReturn(rowObjectType, "行オブジェクト。"));
+        cgMethod.setReturn(fCgFactory.createReturn(rowObjectType, "The row object."));
 
         cgMethod.getThrowList().add(
                 fCgFactory.createException(BlancoDbUtil
                         .getRuntimePackage(fDbSetting)
                         + ".exception.NoRowFoundException",
-                        "データベースの処理の結果、1行もデータが検索されなかった場合。"));
+                        "If no rows of data were retrieved as a result of the database processing."));
         cgMethod.getThrowList().add(
                 fCgFactory.createException(BlancoDbUtil
                         .getRuntimePackage(fDbSetting)
                         + ".exception.TooManyRowsFoundException",
-                        "データベースの処理の結果、1行を超えるデータが検索されてしまった場合。"));
+                        "If more than one row of data has been retrieved as a result of database processing."));
 
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
@@ -74,8 +74,8 @@ public class GetSingleRowMethod extends BlancoDbAbstractMethod {
         final List<String> listDesc = cgMethod.getLangDoc()
                 .getDescriptionList();
 
-        listDesc.add("SQL文の実行結果が1行であることを確認します。実行結果が1行以外である場合には例外を発生させます。<br>");
-        listDesc.add("シングル属性が有効となっているので生成されます。<br>");
+        listDesc.add("Verifies that the result of the SQL statement execution is a single row. If the result is not a single row, it will raise an exception.<br>");
+        listDesc.add("Since the single attribute is valid, it will be generated.<br>");
 
         final List<String> listLine = cgMethod.getLineList();
 
@@ -92,7 +92,7 @@ public class GetSingleRowMethod extends BlancoDbAbstractMethod {
 
         listLine.add("if (next() == false) {");
         listLine
-                .add("throw new NoRowFoundException(\"データベースの処理の結果、1行もデータが検索されませんでした。\");");
+                .add("throw new NoRowFoundException(\"No rows of data were retrieved as a result of the database processing.\");");
         listLine.add("}");
         listLine.add("");
 
@@ -104,10 +104,10 @@ public class GetSingleRowMethod extends BlancoDbAbstractMethod {
                 BlancoDbUtil.getRuntimePackage(fDbSetting) + ".exception."
                         + TooManyRowsFoundExceptionClass.CLASS_NAME);
 
-        // 1行を超えて変更があったかどうかをチェック。
+        // Checks if changes were made beyond one line.
         listLine.add("if (next()) {");
         listLine
-                .add("throw new TooManyRowsFoundException(\"データベースの処理の結果、1行を超えるデータが検索されました。\");");
+                .add("throw new TooManyRowsFoundException(\"More than one row of data has been retrieved as a result of database processing.\");");
         listLine.add("}");
         listLine.add("");
 

@@ -26,7 +26,7 @@ import blanco.db.util.BlancoDbMappingUtilJava;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Tosiki Iga
  */
@@ -47,7 +47,7 @@ public class UpdateObjectMethod extends BlancoDbAbstractMethod {
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("update"
                 + BlancoNameAdjuster.toClassName(fColumnStructure.getName()),
-                "現在カーソルがある行の'" + fColumnStructure.getName() + "'列を更新します。");
+                "Updates the '" + fColumnStructure.getName() + "' column of the row where the cursor is currently located.");
         fCgClass.getMethodList().add(cgMethod);
 
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
@@ -57,9 +57,8 @@ public class UpdateObjectMethod extends BlancoDbAbstractMethod {
                 fCgFactory.createParameter("arg"
                         + BlancoNameAdjuster.toClassName(fColumnStructure
                                 .getName()), BlancoDbMappingUtilJava
-                        .getFullClassName(fColumnStructure), fColumnStructure
-                        .getName()
-                        + "列にセットする値"));
+                        .getFullClassName(fColumnStructure), "Value to be set in column " + fColumnStructure
+                        .getName()));
 
         switch (fColumnStructure.getDataType()) {
         case Types.BINARY:
@@ -74,9 +73,9 @@ public class UpdateObjectMethod extends BlancoDbAbstractMethod {
         }
 
         cgMethod.getLangDoc().getDescriptionList().add(
-                "実際の更新はupdateRowメソッドの呼び出し時におこなわれます。<br>");
+                "The actual update is done when the updateRow method is called.<br>");
         cgMethod.getLangDoc().getDescriptionList().add(
-                "更新可能属性が有効となっているので生成されます。<br>");
+                "It is generated since the updatable attribute is enabled.<br>");
 
         final List<String> listLine = cgMethod.getLineList();
 
@@ -136,7 +135,7 @@ public class UpdateObjectMethod extends BlancoDbAbstractMethod {
 
         if (BlancoDbMappingUtilJava.getClassName(fColumnStructure).equals(
                 "Date")) {
-            // BlancoDbMappingUtil.mapWrapperClassIntoPrimitiveメソッドでTimestamp型が必要です。
+            // Timestamp type is required in the BlancoDbMappingUtil.mapWrapperClassIntoPrimitive method.
             fCgSourceFile.getImportList().add("java.sql.Timestamp");
         }
 

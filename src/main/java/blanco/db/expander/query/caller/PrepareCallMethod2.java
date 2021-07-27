@@ -25,7 +25,7 @@ import blanco.dbmetadata.BlancoDbMetaDataUtil;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  *
  * @author tosiki iga
  */
@@ -41,7 +41,7 @@ public class PrepareCallMethod2 extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("prepareCall",
-                "与えられたSQL文をもちいてプリコンパイルを実施(動的SQL)します。");
+                "Precompiles with the given SQL statement (dynamic SQL).");
         fCgClass.getMethodList().add(cgMethod);
 
         cgMethod
@@ -49,19 +49,19 @@ public class PrepareCallMethod2 extends BlancoDbAbstractMethod {
                 .add(
                         fCgFactory
                                 .createParameter("query", "java.lang.String",
-                                        "プリコンパイルを実施させたいSQL文。動的SQLの場合には、この引数には加工された後の実行可能なSQL文を与えます。"));
+                                        "The SQL statement that you want to have precompiled. In the case of dynamic SQL, this argument is the executable SQL statement after it has been processed."));
 
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
 
         final List<String> listDesc = cgMethod.getLangDoc()
                 .getDescriptionList();
-        listDesc.add("動的に内容が変化するようなSQLを実行する必要がある場合にのみ、こちらのメソッドを利用します。<br>");
+        listDesc.add("Uses this method only when you need to execute SQL that dynamically changes its contents.<br>");
         listDesc
-                .add("そうではない場合には、このメソッドの利用は避けて prepareCall()メソッド (引数なし)を呼び出してください。<br>");
+                .add("If not, please avoid using this method and call the prepareCall() method (no arguments).<br>");
         listDesc
-                .add("なぜなら、このメソッドではSQL文そのものをパラメータとして与えることができて自由度が高い一方、SQLインジェクションと呼ばれるセキュリティホールが発生する可能性を引き起こしてしまうからです。<br>");
-        listDesc.add("内部的にConnection.prepareCallを呼び出します。<br>");
+                .add("This is because, while this method allows a high degree of freedom in giving the SQL statement itself as a parameter, it also causes the possibility of a security hole called SQL injection.<br>");
+        listDesc.add("Calls Connection.prepareCall internally.<br>");
 
         final List<String> listLine = cgMethod.getLineList();
 
@@ -90,15 +90,15 @@ public class PrepareCallMethod2 extends BlancoDbAbstractMethod {
 
         for (int indexParameter = 0; indexParameter < fSqlInfo
                 .getOutParameterList().size(); indexParameter++) {
-            // 現状、とりあえず与えられた順序で登場と仮定が加わっています。
+            // Currently, the assumption that they will appear in a given order has been added for now.
             final BlancoDbMetaDataColumnStructure columnStructure = (BlancoDbMetaDataColumnStructure) fSqlInfo
                     .getOutParameterList().get(indexParameter);
 
             final List<Integer> listCol = query.getSqlParameters(columnStructure
                     .getName());
             if (listCol == null) {
-                System.out.println("[" + fSqlInfo.getName() + "]の SQL出力パラメータ["
-                        + columnStructure.getName() + "]が結びついていません.");
+                System.out.println("The SQL output parameter ["
+                        + columnStructure.getName() + "] of [" + fSqlInfo.getName() + "] is not connected.");
                 continue;
             }
             for (int iteSame = 0; iteSame < listCol.size(); iteSame++) {

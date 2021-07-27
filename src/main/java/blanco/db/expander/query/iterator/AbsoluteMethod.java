@@ -22,9 +22,9 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
- * カーソル属性がtrueの場合に、このメソッドは作成されます。
+ * This method will be created when the cursor attribute is true.
  * 
  * @author Tosiki Iga
  */
@@ -40,18 +40,18 @@ public class AbsoluteMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("absolute",
-                "カーソルを結果セットの指定された行へ移動します。");
+                "Moves the cursor to the specified line of the result set.");
         fCgClass.getMethodList().add(cgMethod);
 
         /*
-         * シングル属性が有効である場合には protectedとします。
+         * If the single attribute is valid, it is protected.
          */
         if (fSqlInfo.getSingle()) {
             cgMethod.setAccess("protected");
         }
 
         cgMethod.setReturn(fCgFactory.createReturn("boolean",
-                "新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。"));
+                "True if the new current row is valid, false if there are no more rows."));
 
         BlancoDbCgUtilJava.addExceptionToMethodDeadlockTimeoutException(
                 fCgFactory, cgMethod, fDbSetting);
@@ -63,16 +63,16 @@ public class AbsoluteMethod extends BlancoDbAbstractMethod {
                 .add(
                         fCgFactory
                                 .createParameter("rows", "int",
-                                        "カーソルの移動先の行番号を指定します。正の番号の場合には結果セットの先頭からカウントします。負の番号の場合は結果セットの終端からカウントします。"));
+                                        "Specifies the line number to which the cursor will move. If it is a positive number, it counts from the beginning of the result set. If the number is negative, it counts from the end of the result set."));
 
         if (fSqlInfo.getSingle()) {
             cgMethod.getLangDoc().getDescriptionList().add(
-                    "シングル属性が有効なのでスコープをprotectedとします。<br>");
+                    "Since the single attribute is valid, the scope is set to protected.<br>");
         }
         cgMethod.getLangDoc().getDescriptionList().add(
-                "absolute(1)はfirst()を呼び出すのと同じです。<br>");
+                "absolute(1) is the same as calling first().<br>");
         cgMethod.getLangDoc().getDescriptionList().add(
-                "absolute(-1)はlast()を呼び出すのと同じです。<br>");
+                "absolute(-1) is the same as calling last().<br>");
 
         final List<String> listLine = cgMethod.getLineList();
 
@@ -88,7 +88,7 @@ public class AbsoluteMethod extends BlancoDbAbstractMethod {
             }
         }
 
-        // resultSetが未確保であるばあい、強制的にexecuteQueryを呼び出します。
+        // If the resultSet is not allocated, it will force an executeQuery call.
         listLine.add("if (fResultSet == null) {");
         listLine.add("executeQuery();");
         listLine.add("}");

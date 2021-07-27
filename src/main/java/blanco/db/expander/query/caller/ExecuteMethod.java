@@ -24,7 +24,7 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Yasuo Nakanishi
  */
@@ -50,15 +50,15 @@ public class ExecuteMethod extends BlancoDbAbstractMethod {
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
 
-        cgMethod.getLangDoc().getDescriptionList().add("ストアドプロシージャを実行します。<br>");
+        cgMethod.getLangDoc().getDescriptionList().add("Executes the stored procedure.<br>");
 
         cgMethod.setReturn(fCgFactory.createReturn("boolean",
-                "CallableStatement.executeメソッドの戻り値。"));
+                "Return value of the CallableStatement.execute method."));
 
         final List<String> listLine = cgMethod.getLineList();
 
 		if (fDbSetting.getLoggingsql()) {
-			// 標準出力に出力。
+			// Outputs to stdout.
 			listLine.add("System.out.println(\"SQL: ["
 					+ fSqlInfo.getName()
 					+ "](Caller) "
@@ -79,13 +79,13 @@ public class ExecuteMethod extends BlancoDbAbstractMethod {
 
         listLine.add("if (fStatement == null) {");
         listLine
-                .add("// CallableStatementが未取得の状態なので、CallableStatement.execute()実行に先立ちprepareCall()メソッドを呼び出して取得します。");
+                .add("// Since the CallableStatement is not yet obtained, calls the prepareCall() method to obtain it prior to executing CallableStatement.execute().");
         listLine.add("prepareCall();");
         listLine.add("}");
 
-        // 例外処理を含めて展開します。
+        // Expands including exception handling.
         listLine.add("");
-        listLine.add("// executeメソッドの実行結果については扱わないこととします。");
+        listLine.add("// The result of the execute method is not handled.");
         listLine.add("try {");
         listLine.add("return fStatement.execute();");
         listLine.add("} catch (SQLException ex) {");

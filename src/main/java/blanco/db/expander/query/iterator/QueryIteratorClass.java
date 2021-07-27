@@ -23,7 +23,7 @@ import blanco.db.resourcebundle.BlancoDbResourceBundle;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
- * 個別のクラスを展開するためのクラス。
+ * A class for expanding individual classes.
  *
  * @author Yasuo Nakanishi
  */
@@ -48,36 +48,36 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
         fCgSourceFile.getClassList().add(fCgClass);
 
         if (fDbSetting.getUseRuntime()) {
-            // (2013/01/08 一旦登録解除) fCgClass.getExtendClassList().add(fCgFactory.createType("java.io.Closeable"));
+            // (2013/01/08 Unregisters once) fCgClass.getExtendClassList().add(fCgFactory.createType("java.io.Closeable"));
             fCgClass.getImplementInterfaceList().add(fCgFactory.createType("blanco.db.runtime.BlancoDbQuery"));
 
-            // アノテーションを付与します。
+            // Adds annotations.
             fCgClass.getAnnotationList().add("BlancoGeneratedBy(name = \"blancoDb\")");
             fCgSourceFile.getImportList().add("blanco.fw.BlancoGeneratedBy");
         }
 
         fCgClass.getLangDoc().getDescriptionList()
-                .add("検索型SQL文をラッピングして各種アクセサを提供します。<br>");
+                .add("Wraps a search-type SQL statement to provide various accessors.<br>");
         if (fSqlInfo.getSingle()) {
             fCgClass.getLangDoc().getDescriptionList()
-                    .add("シングル属性: 有効 (期待する処理件数は1件)<br>");
+                    .add("Single attribute: Enabled (expected number of processes is 1)<br>");
         }
         fCgClass.getLangDoc()
                 .getDescriptionList()
-                .add("スクロール属性: "
+                .add("Scroll attribute: "
                         + new BlancoDbSqlInfoScrollStringGroup()
                                 .convertToString(fSqlInfo.getScroll()) + "<br>");
         if (fSqlInfo.getUpdatable()) {
-            fCgClass.getLangDoc().getDescriptionList().add("更新可能属性: 有効<br>");
+            fCgClass.getLangDoc().getDescriptionList().add("Update possible attribute: Enabled<br>");
         }
 
-        // BlancoDbUtilは常にインポートします。
+        // Always imports BlancoDbUtil.
         fCgSourceFile.getImportList().add(
                 BlancoDbUtil.getRuntimePackage(fDbSetting)
                         + ".util.BlancoDbUtil");
 
         /*
-         * DynamicClauseが定義されている場合はインポートします。
+         * If DynamicClause has been defined, imports it.
          */
         if (fSqlInfo.getDynamicConditionList().size() > 0) {
             fCgSourceFile.getImportList().add(
@@ -113,7 +113,7 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
         new PrepareStatementMethod2(fDbSetting, fSqlInfo, fCgFactory,
                 fCgSourceFile, fCgClass).expand();
 
-        // パラメータがある場合にのみ bindメソッドを生成します。
+        // Binds only if parameters are present.
         if (fSqlInfo.getInParameterList().size() > 0 ||
         fSqlInfo.getDynamicConditionList().size() > 0) {
             new SetInputParameterMethod(fDbSetting, fSqlInfo, fCgFactory,
@@ -126,14 +126,12 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
         new NextMethod(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile,
                 fCgClass).expand();
 
-        // カーソル属性がtrueの際には previousメソッドなどの
-        // スクロールカーソル関連メソッドを追加生成
-        // 前提: カーソル属性がtrueの場合にはシングル属性はfalse
+        // Additionally generates scroll cursor-related methods such as the previous method when the cursor attribute is true.
+        // Assumption: If the cursor attribute is true, the single attribute is false.
         if (fSqlInfo.getScroll() == BlancoDbSqlInfoScrollStringGroup.TYPE_SCROLL_INSENSITIVE
                 || fSqlInfo.getScroll() == BlancoDbSqlInfoScrollStringGroup.TYPE_SCROLL_SENSITIVE
                 || fSqlInfo.getScroll() == BlancoDbSqlInfoScrollStringGroup.NOT_DEFINED) {
-            // TODO 1.6.4との互換性確保のため BlancoDbSqlInfoScrollStringGroup.NOT_DEFINED
-            // の場合にもスクロール関連メソッドを生成しています。
+            // TODO: For compatibility with 1.6.4, the scroll-related methods are generated even when the BlancoDbSqlInfoScrollStringGroup.NOT_DEFINED.
 
             new PreviousMethod(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile,
                     fCgClass).expand();
@@ -152,7 +150,7 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
                 fCgClass).expand();
 
         if (fBundle.getExpanderDisableGetStatement().equals("true") == false) {
-            // 1.6.8以前と互換性を持たせる必要がある場合にのみ getStatementを生成しません。
+            // It doesn't generate getStatement only if you need to make it compatible with 1.6.8 or earlier.
             new GetStatementMethod(fDbSetting, fSqlInfo, fCgFactory,
                     fCgSourceFile, fCgClass, false).expand();
         }
@@ -170,16 +168,16 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
                     fCgClass).expand();
         }
 
-        // 更新可能属性の場合にのみの生成です。
+        // Generating only for the updatable attribute.
         if (fSqlInfo.getUpdatable()) {
-            // 検索結果の列の数だけ、updateメソッドを生成
+            // Generates as many update methods as there are columns in the search results.
             boolean isAllFieldReadOnly = true;
             for (int index = 0; index < fSqlInfo.getResultSetColumnList()
                     .size(); index++) {
                 final BlancoDbMetaDataColumnStructure columnStructure = (BlancoDbMetaDataColumnStructure) fSqlInfo
                         .getResultSetColumnList().get(index);
 
-                // ResultSetMetaDataが Writableであれば それ以上は条件を加えずにメソッドを生成します。
+                // If ResultSetMetaData is Writable, the methods will be generated without any further conditions.
                 if (columnStructure.getWritable()) {
                     new UpdateObjectMethod(fDbSetting, fSqlInfo, fCgFactory,
                             fCgSourceFile, fCgClass, columnStructure).expand();
@@ -199,7 +197,7 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
                 .expand();
 
 		if (fDbSetting.getLoggingsql()) {
-			// 標準出力に出力。
+			// Outputs to stdout.
 			new LogSqlInParamField(fDbSetting, fSqlInfo, fCgFactory,
 					fCgSourceFile, fCgClass).expand();
 			if (fSqlInfo.getDynamicSql()) {

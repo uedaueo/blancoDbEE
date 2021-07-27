@@ -20,7 +20,7 @@ import blanco.db.common.valueobject.BlancoDbSetting;
 import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Tosiki Iga
  */
@@ -36,13 +36,13 @@ public class GetResultSetMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("getResultSet",
-                "内部的に保持されているResultSetオブジェクトを取得します。");
+                "Gets the internally held ResultSet object.");
         fCgClass.getMethodList().add(cgMethod);
 
         cgMethod.setReturn(fCgFactory.createReturn("java.sql.ResultSet",
-                "ResultSetオブジェクト。"));
+                "The ResultSet object."));
         cgMethod.getLangDoc().getDescriptionList().add(
-                "@deprecated 基本的にResultSetは外部から直接利用する必要はありません。");
+                "@deprecated Basically, you don't need to use ResultSet directly from outside.");
 
         final List<String> listLine = cgMethod.getLineList();
 

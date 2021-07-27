@@ -22,32 +22,32 @@ import my.db.util.BlancoDbUtil;
 /**
  * [SimpleTestBlancodbSelect]  (QueryIterator)
  *
- * 検索型SQL文をラッピングして各種アクセサを提供します。<br>
- * シングル属性: 有効 (期待する処理件数は1件)<br>
- * スクロール属性: forward_only<br>
+ * Wraps a search-type SQL statement to provide various accessors.<br>
+ * Single attribute: Enabled (expected number of processes is 1)<br>
+ * Scroll attribute: forward_only<br>
  */
 public class SimpleTestBlancodbSelectIterator {
     /**
-     * このクラスが内部的に利用するデータベース接続オブジェクト。
+     * Database connection object used internally by this class.
      *
-     * データベース接続オブジェクトはコンストラクタの引数として外部から与えられます。<br>
-     * トランザクションのコミットやロールバックは、このクラスの内部では実行しません。
+     * Database connection object is given externally as arguments to the constructor.<br>
+     * Transaction commit and rollback are not performed inside this class.
      */
     protected Connection fConnection;
 
     /**
-     * このクラスが内部的に利用するステートメントオブジェクト。
+     * Statement object used internally by this class.
      *
-     * このオブジェクトはデータベース接続オブジェクトから生成されて内部的に利用されます。<br>
-     * closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。
+     * This object is generated from the database connection object and used internally.<br>
+     * Closes this object when the close method is called.
      */
     protected PreparedStatement fStatement;
 
     /**
-     * このクラスが内部的に利用する結果セットオブジェクト。
+     * The result set object used internally by this class.
      *
-     * このオブジェクトはデータベースステートメントオブジェクトから生成されて内部的に利用されます。<br>
-     * closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。
+     * This object is created from the database statement object and used internally.<br>
+     * Closes this object when the close method is called.
      */
     protected ResultSet fResultSet;
 
@@ -121,11 +121,11 @@ public class SimpleTestBlancodbSelectIterator {
     }
 
     /**
-     * SQL文に与えるSQL入力パラメータをセットします。
+     * Sets the SQL input parameters to be given to the SQL statement.
      *
-     * 内部的には PreparedStatementにSQL入力パラメータをセットします。
+     * Internally, the PreparedStatement is set with SQL input parameters.
      *
-     * @param colId 'colId'列の値
+     * @param colId Value in 'colId' column
      * @throws SQLException If an SQL exception occurs.
      */
     public void setInputParameter(final int colId) throws SQLException {
@@ -140,7 +140,7 @@ public class SimpleTestBlancodbSelectIterator {
     }
 
     /**
-     * 検索型クエリを実行します。<br>
+     * Executes a search-type query.<br>
      *
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
@@ -148,11 +148,11 @@ public class SimpleTestBlancodbSelectIterator {
      */
     public void executeQuery() throws DeadlockException, TimeoutException, SQLException {
         if (fStatement == null) {
-            // PreparedStatementが未取得の状態なので、PreparedStatement.executeQuery()実行に先立ちprepareStatement()メソッドを呼び出して取得します。
+            // Since PreparedStatement has not yet been obtained, it is obtained by calling the prepareStatement() method prior to executing PreparedStatement.executeQuery().
             prepareStatement();
         }
         if (fResultSet != null) {
-            // 前回の結果セット(ResultSet)が残っているので、これを一旦開放します。
+            // Since the previous result set (ResultSet) is still there, releases it.
             fResultSet.close();
             fResultSet = null;
         }
@@ -165,10 +165,10 @@ public class SimpleTestBlancodbSelectIterator {
     }
 
     /**
-     * カーソルを現在の位置から1行次へ移動します。
-     * シングル属性が有効なのでスコープをprotectedとします。<br>
+     * Moves the cursor to the next line from the current position.
+     * Since the single attribute is valid, the scope is set to protected.<br>
      *
-     * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
+     * @return True if the new current row is valid, false if there are no more rows.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
@@ -186,12 +186,12 @@ public class SimpleTestBlancodbSelectIterator {
     }
 
     /**
-     * 現在の行のデータをオブジェクトとして取得します。
+     * Gets the data of the current row as an object.
      *
-     * シングル属性が有効なのでスコープをprotectedとします。<br>
-     * このメソッドの代わりに getSingleRowメソッドを利用してください。<br>
+     * Since the single attribute is valid, the scope is set to protected.<br>
+     * Uses the getSingleRow method instead of this method.<br>
      *
-     * @return 行オブジェクト。
+     * @return Row object.
      * @throws SQLException If an SQL exception occurs.
      */
     protected SimpleTestBlancodbSelectRow getRow() throws SQLException {
@@ -214,46 +214,46 @@ public class SimpleTestBlancodbSelectIterator {
     }
 
     /**
-     * 内部的に保持されているResultSetオブジェクトを取得します。
+     * Gets the internally held ResultSet object.
      *
-     * @deprecated 基本的にResultSetは外部から直接利用する必要はありません。
+     * @deprecated Basically, you don't need to use ResultSet directly from outside.
      *
-     * @return ResultSetオブジェクト。
+     * @return The ResultSet object.
      */
     public ResultSet getResultSet() {
         return fResultSet;
     }
 
     /**
-     * 現在の行のデータをオブジェクトとして取得します。
+     * Gets the data of the current row as an object.
      *
-     * SQL文の実行結果が1行であることを確認します。実行結果が1行以外である場合には例外を発生させます。<br>
-     * シングル属性が有効となっているので生成されます。<br>
+     * Verifies that the result of the SQL statement execution is a single row. If the result is not a single row, it will raise an exception.<br>
+     * Since the single attribute is valid, it will be generated.<br>
      *
-     * @return 行オブジェクト。
-     * @throws NoRowFoundException データベースの処理の結果、1行もデータが検索されなかった場合。
-     * @throws TooManyRowsFoundException データベースの処理の結果、1行を超えるデータが検索されてしまった場合。
+     * @return The row object.
+     * @throws NoRowFoundException If no rows of data were retrieved as a result of the database processing.
+     * @throws TooManyRowsFoundException If more than one row of data has been retrieved as a result of database processing.
      * @throws SQLException If an SQL exception occurs.
      */
     public SimpleTestBlancodbSelectRow getSingleRow() throws NoRowFoundException, TooManyRowsFoundException, SQLException {
         if (next() == false) {
-            throw new NoRowFoundException("データベースの処理の結果、1行もデータが検索されませんでした。");
+            throw new NoRowFoundException("No rows of data were retrieved as a result of the database processing.");
         }
 
         SimpleTestBlancodbSelectRow result = getRow();
 
         if (next()) {
-            throw new TooManyRowsFoundException("データベースの処理の結果、1行を超えるデータが検索されました。");
+            throw new TooManyRowsFoundException("More than one row of data has been retrieved as a result of database processing.");
         }
 
         return result;
     }
 
     /**
-     * このクラスのクローズ処理をおこないます。
+     * Closes this class.
      *
-     * 内部的に生成していたJDBCリソースのオブジェクトに対して close()メソッドの呼び出しをおこないます。<br>
-     * クラスの利用が終わったら、必ずこのメソッドを呼び出すようにします。
+     * Calls the close() method on the JDBC resource object that was created internally.<br>
+     * Make sure to call this method after using the class.
      *
      * @throws SQLException If an SQL exception occurs.
      */

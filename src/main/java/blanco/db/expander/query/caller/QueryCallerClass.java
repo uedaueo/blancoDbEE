@@ -30,7 +30,7 @@ import blanco.db.resourcebundle.BlancoDbResourceBundle;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
- * 個別のクラスを展開するためのクラス。
+ * A class for expanding individual classes.
  * 
  * @author Yasuo Nakanishi
  */
@@ -54,21 +54,21 @@ public class QueryCallerClass extends BlancoDbAbstractClass {
                 + "] " + fSqlInfo.getDescription() + " (QueryCaller)");
         fCgSourceFile.getClassList().add(fCgClass);
 
-        // (2013/01/08 一旦登録解除) fCgClass.getExtendClassList().add(fCgFactory.createType("java.io.Closeable"));
+        // (2013/01/08 Unregisters once) fCgClass.getExtendClassList().add(fCgFactory.createType("java.io.Closeable"));
         fCgClass.getImplementInterfaceList().add(fCgFactory.createType("blanco.db.runtime.BlancoDbQuery"));
 
-        // アノテーションを付与します。
+        // Adds annotations.
         fCgClass.getAnnotationList().add("BlancoGeneratedBy(name = \"blancoDb\")");
         fCgSourceFile.getImportList().add("blanco.fw.BlancoGeneratedBy");
 
         fCgClass.getLangDoc().getDescriptionList()
-                .add("呼出型SQL文をラッピングして各種アクセサを提供します。<br>");
+                .add("Wraps a call-type SQL statement to provide various accessors.<br>");
 
         fCgSourceFile.getImportList().add(
                 BlancoDbUtil.getRuntimePackage(fDbSetting)
                         + ".exception.IntegrityConstraintException");
 
-        // BlancoDbUtilは常にインポートします。
+        // Always imports BlancoDbUtil.
         fCgSourceFile.getImportList().add(
                 BlancoDbUtil.getRuntimePackage(fDbSetting)
                         + ".util.BlancoDbUtil");
@@ -104,7 +104,7 @@ public class QueryCallerClass extends BlancoDbAbstractClass {
         }
 
         if (fBundle.getExpanderDisableGetStatement().equals("true") == false) {
-            // 1.6.8以前と互換性を持たせる必要がある場合にのみ getStatementを生成しません。
+            // It doesn't generate getStatement only if you need to make it compatible with 1.6.8 or earlier.
             new GetStatementMethod(fDbSetting, fSqlInfo, fCgFactory,
                     fCgSourceFile, fCgClass, true).expand();
         }
@@ -116,7 +116,7 @@ public class QueryCallerClass extends BlancoDbAbstractClass {
                 .expand();
 
 		if (fDbSetting.getLoggingsql()) {
-			// 標準出力に出力。
+			// Outputs to stdout.
 			new LogSqlInParamField(fDbSetting, fSqlInfo, fCgFactory,
 					fCgSourceFile, fCgClass).expand();
 			if (fSqlInfo.getDynamicSql()) {

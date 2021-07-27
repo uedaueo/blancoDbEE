@@ -24,8 +24,8 @@ import my.db.util.BlancoDbUtil;
 /**
  * [SampleSQLite004] 簡易なSQLのサンプルです。 (QueryIterator)
  *
- * 検索型SQL文をラッピングして各種アクセサを提供します。<br>
- * スクロール属性: forward_only<br>
+ * Wraps a search-type SQL statement to provide various accessors.<br>
+ * Scroll attribute: forward_only<br>
  */
 public class SampleSQLite004Iterator {
     protected Map<String, BlancoDbDynamicClause> fMapDynamicClause = new HashMap<String, BlancoDbDynamicClause>()
@@ -40,26 +40,26 @@ public class SampleSQLite004Iterator {
     };
 
     /**
-     * このクラスが内部的に利用するデータベース接続オブジェクト。
+     * Database connection object used internally by this class.
      *
-     * データベース接続オブジェクトはコンストラクタの引数として外部から与えられます。<br>
-     * トランザクションのコミットやロールバックは、このクラスの内部では実行しません。
+     * Database connection object is given externally as arguments to the constructor.<br>
+     * Transaction commit and rollback are not performed inside this class.
      */
     protected Connection fConnection;
 
     /**
-     * このクラスが内部的に利用するステートメントオブジェクト。
+     * Statement object used internally by this class.
      *
-     * このオブジェクトはデータベース接続オブジェクトから生成されて内部的に利用されます。<br>
-     * closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。
+     * This object is generated from the database connection object and used internally.<br>
+     * Closes this object when the close method is called.
      */
     protected PreparedStatement fStatement;
 
     /**
-     * このクラスが内部的に利用する結果セットオブジェクト。
+     * The result set object used internally by this class.
      *
-     * このオブジェクトはデータベースステートメントオブジェクトから生成されて内部的に利用されます。<br>
-     * closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。
+     * This object is created from the database statement object and used internally.<br>
+     * Closes this object when the close method is called.
      */
     protected ResultSet fResultSet;
 
@@ -133,27 +133,27 @@ public class SampleSQLite004Iterator {
     }
 
     /**
-     * SQL文に与えるSQL入力パラメータをセットします。
+     * Sets the SQL input parameters to be given to the SQL statement.
      *
-     * 内部的には PreparedStatementにSQL入力パラメータをセットします。
+     * Internally, the PreparedStatement is set with SQL input parameters.
      *
-     * @param colText 'colText'列の値
-     * @param colNumeric 'colNumeric'列の値
-     * @param BETWEEN01 'BETWEEN01'列の値
-     * @param INCLAUSE01 'INCLAUSE01'列の値
-     * @param COMPARE01 'COMPARE01'列の値
-     * @param ORDERBY 'ORDERBY'列の値
+     * @param colText Value in 'colText' column
+     * @param colNumeric Value in 'colNumeric' column
+     * @param BETWEEN01 Value in 'BETWEEN01' column
+     * @param INCLAUSE01 Value in 'INCLAUSE01' column
+     * @param COMPARE01 Value in 'COMPARE01' column
+     * @param ORDERBY Value in 'ORDERBY' column
      * @throws SQLException If an SQL exception occurs.
      */
     public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY) throws SQLException {
-        /* タグを置換する */
+        /* Replace tags  */
         String query = this.getQuery();
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, BETWEEN01, query, "BETWEEN01");
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, INCLAUSE01, query, "INCLAUSE01");
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, COMPARE01, query, "COMPARE01");
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, ORDERBY, query, "ORDERBY");
 
-        /* 必ず statement を作り直す */
+        /* Always recreates the statement. */
         prepareStatement(query);
 
         int index = 1;
@@ -185,7 +185,7 @@ public class SampleSQLite004Iterator {
     }
 
     /**
-     * 検索型クエリを実行します。<br>
+     * Executes a search-type query.<br>
      *
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
@@ -193,11 +193,11 @@ public class SampleSQLite004Iterator {
      */
     public void executeQuery() throws DeadlockException, TimeoutException, SQLException {
         if (fStatement == null) {
-            // PreparedStatementが未取得の状態なので、PreparedStatement.executeQuery()実行に先立ちprepareStatement()メソッドを呼び出して取得します。
+            // Since PreparedStatement has not yet been obtained, it is obtained by calling the prepareStatement() method prior to executing PreparedStatement.executeQuery().
             prepareStatement();
         }
         if (fResultSet != null) {
-            // 前回の結果セット(ResultSet)が残っているので、これを一旦開放します。
+            // Since the previous result set (ResultSet) is still there, releases it.
             fResultSet.close();
             fResultSet = null;
         }
@@ -210,9 +210,9 @@ public class SampleSQLite004Iterator {
     }
 
     /**
-     * カーソルを現在の位置から1行次へ移動します。
+     * Moves the cursor to the next line from the current position.
      *
-     * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
+     * @return True if the new current row is valid, false if there are no more rows.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
@@ -230,11 +230,11 @@ public class SampleSQLite004Iterator {
     }
 
     /**
-     * 現在の行のデータをオブジェクトとして取得します。
+     * Gets the data of the current row as an object.
      *
-     * このメソッドを呼び出す前に、next()などのカーソルを操作するメソッドを呼び出す必要があります。
+     * Before calling this method, you need to call a method that manipulates the cursor, such as next().
      *
-     * @return 行オブジェクト。
+     * @return Row object.
      * @throws SQLException If an SQL exception occurs.
      */
     public SampleSQLite004Row getRow() throws SQLException {
@@ -257,26 +257,26 @@ public class SampleSQLite004Iterator {
     }
 
     /**
-     * 内部的に保持されているResultSetオブジェクトを取得します。
+     * Gets the internally held ResultSet object.
      *
-     * @deprecated 基本的にResultSetは外部から直接利用する必要はありません。
+     * @deprecated Basically, you don't need to use ResultSet directly from outside.
      *
-     * @return ResultSetオブジェクト。
+     * @return The ResultSet object.
      */
     public ResultSet getResultSet() {
         return fResultSet;
     }
 
     /**
-     * 検索結果をリストの形式で取得します。
+     * Gets the search results in the form of a list.
      *
-     * リストには SampleSQLite004クラスが格納されます。<br>
-     * 検索結果の件数があらかじめわかっていて、且つ件数が少ない場合に利用することができます。<br>
-     * 検索結果の件数が多い場合には、このメソッドは利用せず、代わりに next()メソッドを利用することをお勧めします。<br>
-     * このQueryIteratorは FORWARD_ONLY(順方向カーソル)です。大量のデータを扱うことがわかっている場合には、このgetListメソッドの利用は極力避けるか、あるいは スクロールカーソルとしてソースコードを再生成してください。
+     * The list will contain the SampleSQLite004 class.<br>
+     * This can be used when the number of search results is known in advance and the number is small.<br>
+     * If you have a large number of search results, it is recommended that you do not use this method, but use the next() method instead.<br>
+     * This QueryIterator is FORWARD_ONLY (forward cursor). If you know that you will be working with a large amount of data, avoid using this getList method as much as possible or regenerate the source code as a scrolling cursor.
      *
-     * @param size 読み出しを行う行数。
-     * @return SampleSQLite004クラスのList。検索結果が0件の場合には空のリストが戻ります。
+     * @param size The number of lines to read.
+     * @return SampleSQLite004Class List, which will return an empty list if the search results are zero.
      * @throws SQLException If an SQL exception occurs.
      */
     public List<SampleSQLite004Row> getList(final int size) throws SQLException {
@@ -291,10 +291,10 @@ public class SampleSQLite004Iterator {
     }
 
     /**
-     * このクラスのクローズ処理をおこないます。
+     * Closes this class.
      *
-     * 内部的に生成していたJDBCリソースのオブジェクトに対して close()メソッドの呼び出しをおこないます。<br>
-     * クラスの利用が終わったら、必ずこのメソッドを呼び出すようにします。
+     * Calls the close() method on the JDBC resource object that was created internally.<br>
+     * Make sure to call this method after using the class.
      *
      * @throws SQLException If an SQL exception occurs.
      */

@@ -22,7 +22,7 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Tosiki Iga
  */
@@ -42,14 +42,14 @@ public class PreviousMethod extends BlancoDbAbstractMethod {
         fCgClass.getMethodList().add(cgMethod);
 
         /*
-         * シングル属性が有効である場合には protectedとします。
+         * If the single attribute is valid, it is protected.
          */
         if (fSqlInfo.getSingle()) {
             cgMethod.setAccess("protected");
         }
 
         cgMethod.setReturn(fCgFactory.createReturn("boolean",
-                "新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。"));
+                "True if the new current row is valid, false if there are no more rows."));
 
         BlancoDbCgUtilJava.addExceptionToMethodDeadlockTimeoutException(
                 fCgFactory, cgMethod, fDbSetting);
@@ -57,11 +57,11 @@ public class PreviousMethod extends BlancoDbAbstractMethod {
                 cgMethod);
 
         cgMethod.getLangDoc().getDescriptionList()
-                .add("カーソルを現在の位置から1行前へ移動します。");
+                .add("Moves the cursor one line forward from the current position.");
         cgMethod.getLangDoc().getDescriptionList().add("");
         if (fSqlInfo.getSingle()) {
             cgMethod.getLangDoc().getDescriptionList().add(
-                    "シングル属性が有効なのでスコープをprotectedとします。<br>");
+                    "Since the single attribute is valid, the scope is set to protected.<br>");
         }
 
         final List<String> listLine = cgMethod.getLineList();
@@ -73,7 +73,7 @@ public class PreviousMethod extends BlancoDbAbstractMethod {
             }
         }
 
-        // resultSetが未確保であるばあい、強制的にexecuteQueryを呼び出します。
+        // If the resultSet is not allocated, it will force an executeQuery call.
         listLine.add("if (fResultSet == null) {");
         listLine.add("executeQuery();");
         listLine.add("}");

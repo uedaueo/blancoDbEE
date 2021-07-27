@@ -27,7 +27,7 @@ import blanco.db.util.BlancoDbMappingUtilJava;
 import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  *
  * @author Tosiki Iga
  */
@@ -52,19 +52,19 @@ public class GetCallerOutputParameterMethod extends BlancoDbAbstractMethod {
         fCgClass.getMethodList().add(cgMethod);
 
         cgMethod.getLangDoc().getDescriptionList().add(
-                "ストアドプロシージャの実行結果の出力パラメータを取得します。");
-        cgMethod.getLangDoc().getDescriptionList().add("SQL出力パラメータをゲットします。");
+                "Gets the output parameters of the stored procedure execution result.");
+        cgMethod.getLangDoc().getDescriptionList().add("Gets the SQL output parameters.");
         cgMethod.getLangDoc().getDescriptionList().add("");
         cgMethod.getLangDoc().getDescriptionList().add(
-                "内部的には CallableStatementから出力パラメータをゲットします。");
+                "Internally, it gets the output parameters from the CallableStatement.");
 
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
 
         cgMethod.setReturn(fCgFactory.createReturn(BlancoDbMappingUtilJava
-                .getFullClassName(fColumnStructure), "ストアドプロシージャの["
+                .getFullClassName(fColumnStructure), "Stored procedure ["
                 + BlancoJavaSourceUtil.escapeStringAsJavaDoc(fColumnStructure
-                        .getName()) + "]出力"));
+                        .getName()) + "] output"));
 
         final List<String> listLine = cgMethod.getLineList();
 
@@ -81,9 +81,9 @@ public class GetCallerOutputParameterMethod extends BlancoDbAbstractMethod {
         final List<Integer> listCol = query
                 .getSqlParameters(fColumnStructure.getName());
         if (listCol == null) {
-            throw new IllegalArgumentException("SQL定義ID[" + fSqlInfo.getName()
-                    + "]の SQL出力パラメータ[" + fColumnStructure.getName()
-                    + "]が結びついていません.");
+            throw new IllegalArgumentException("SQL output parameter [" + fColumnStructure.getName()
+                    + "] of SQL definition ID [" + fSqlInfo.getName()
+                    + "] is not connected.");
         }
         for (int iteSame = 0; iteSame < listCol.size(); iteSame++) {
             final int index = listCol.get(iteSame);

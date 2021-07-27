@@ -26,18 +26,18 @@ import my.db.util.BlancoDbUtil;
  */
 public class SimpleTestBlancodbInsertNoNullsInvoker {
     /**
-     * このクラスが内部的に利用するデータベース接続オブジェクト。
+     * Database connection object used internally by this class.
      *
-     * データベース接続オブジェクトはコンストラクタの引数として外部から与えられます。<br>
-     * トランザクションのコミットやロールバックは、このクラスの内部では実行しません。
+     * Database connection object is given externally as arguments to the constructor.<br>
+     * Transaction commit and rollback are not performed inside this class.
      */
     protected Connection fConnection;
 
     /**
-     * このクラスが内部的に利用するステートメントオブジェクト。
+     * Statement object used internally by this class.
      *
-     * このオブジェクトはデータベース接続オブジェクトから生成されて内部的に利用されます。<br>
-     * closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。
+     * This object is generated from the database connection object and used internally.<br>
+     * Closes this object when the close method is called.
      */
     protected PreparedStatement fStatement;
 
@@ -111,11 +111,11 @@ public class SimpleTestBlancodbInsertNoNullsInvoker {
     }
 
     /**
-     * SQL文に与えるSQL入力パラメータをセットします。
+     * Sets the SQL input parameters to be given to the SQL statement.
      *
-     * 内部的には PreparedStatementにSQL入力パラメータをセットします。
+     * Internally, the PreparedStatement is set with SQL input parameters.
      *
-     * @param colId 'colId'列の値
+     * @param colId Value in 'colId' column
      * @throws SQLException If an SQL exception occurs.
      */
     public void setInputParameter(final int colId) throws SQLException {

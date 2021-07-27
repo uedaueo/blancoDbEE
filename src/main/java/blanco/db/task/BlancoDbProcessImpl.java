@@ -22,7 +22,7 @@ import blanco.db.task.valueobject.BlancoDbProcessInput;
 
 public class BlancoDbProcessImpl implements BlancoDbProcess {
     /**
-     * リソースバンドルアクセサオブジェクトを記憶します。
+     * Stores resource bundle accessor objects.
      */
     private final BlancoDbResourceBundle fBundle = new BlancoDbResourceBundle();
 
@@ -68,7 +68,7 @@ public class BlancoDbProcessImpl implements BlancoDbProcess {
                 dbSetting.setUseRuntime(true);
             }
 
-            // 処理中に SQL 定義書の例外が発生した場合に処理中断するかどうか。
+            // Whether or not to abort the process when an exception occurs in the SQL definition during processing.
             dbSetting.setFailonerror("true".equals(input.getFailonerror()));
 
             if (input.getLog().equals("true")) {
@@ -76,12 +76,12 @@ public class BlancoDbProcessImpl implements BlancoDbProcess {
                 dbSetting.setLoggingMode(new BlancoDbLoggingModeStringGroup()
                         .convertToInt(input.getLogmode()));
                 if (dbSetting.getLoggingMode() == BlancoDbLoggingModeStringGroup.NOT_DEFINED) {
-                    throw new IllegalArgumentException("ロギングモードとして指定された値["
-                            + input.getLogmode() + "]はサポートされません。処理中断します。");
+                    throw new IllegalArgumentException("The value ["
+                            + input.getLogmode() + "] specified as logging mode is not supported. Aborts the process.");
                 }
             }
 			if (input.getLogsql().equals("true")) {
-				// 可読性の高いロギングを有効化します。
+				// Enables highly readable logging.
 				dbSetting.setLoggingsql(true);
 			}
             if (BlancoStringUtil.null2Blank(input.getStatementtimeout())
@@ -91,40 +91,40 @@ public class BlancoDbProcessImpl implements BlancoDbProcess {
                             .getStatementtimeout()));
                 } catch (NumberFormatException ex) {
                     throw new IllegalArgumentException(
-                            "ステートメントタイムアウト値として指定された値["
+                            "The value specified as the statement timeout value ["
                                     + input.getStatementtimeout()
-                                    + "]は数値として解析できませんでした。処理中断します。:"
+                                    + "] could not be parsed as a numeric value. Aborts the process :"
                                     + ex.toString());
                 }
             }
             dbSetting.setExecuteSql(new BlancoDbExecuteSqlStringGroup()
                     .convertToInt(input.getExecutesql()));
             if (dbSetting.getExecuteSql() == BlancoDbExecuteSqlStringGroup.NOT_DEFINED) {
-                throw new IllegalArgumentException("executesqlとして不正な値("
-                        + input.getExecutesql() + ")が与えられました。");
+                throw new IllegalArgumentException("An invalid value ("
+                        + input.getExecutesql() + ") was given as executesql.");
             }
 
             if (input.getSchema() != null) {
-                // スキーマ名を指定。
+                // Specifies the schema name.
                 dbSetting.setSchema(input.getSchema());
             }
 
             if (input.getTable() == null || input.getTable().equals("true")) {
-                // 単一表アクセスを自動生成
+                // Auto-generates single table access.
                 final BlancoDbTableMeta2Xml tableMeta2Xml = new BlancoDbTableMeta2Xml() {
                     public boolean progress(int progressCurrent,
                             int progressTotal, String progressItem) {
-                        // 常にtrueを返します。
+                        // Always returns true.
                         return true;
                     }
                 };
                 tableMeta2Xml.process(dbSetting, blancoTmpDbTableDirectory);
 
-                // XMLファイルを元にR/Oマッピングを自動生成
+                // Auto-generates R/O mapping based on XML files.
                 final BlancoDbXml2JavaClass generator = new BlancoDbXml2JavaClass() {
                     public boolean progress(int progressCurrent,
                             int progressTotal, String progressItem) {
-                        // 常にtrueを返します。
+                        // Always returns true.
                         return true;
                     }
                 };
@@ -135,8 +135,8 @@ public class BlancoDbProcessImpl implements BlancoDbProcess {
             if (input.getSql() == null || input.getSql().equals("true")) {
                 final File fileMetadir = new File(input.getMetadir());
                 if (fileMetadir.exists() == false) {
-                    throw new IllegalArgumentException("メタディレクトリ["
-                            + input.getMetadir() + "]が存在しません。");
+                    throw new IllegalArgumentException("The meta directory ["
+                            + input.getMetadir() + "] does not exist.");
                 }
 
                 final BlancoDbMeta2Xml meta2Xml = new BlancoDbMeta2Xml();
@@ -144,11 +144,11 @@ public class BlancoDbProcessImpl implements BlancoDbProcess {
                 meta2Xml.processDirectory(fileMetadir, blancoTmpDbSqlDirectory
                         .getAbsolutePath());
 
-                // XMLファイルを元にR/Oマッピングを自動生成
+                // Auto-generates R/O mapping based on XML files.
                 final BlancoDbXml2JavaClass generator = new BlancoDbXml2JavaClass() {
                     public boolean progress(int progressCurrent,
                             int progressTotal, String progressItem) {
-                        // 常にtrueを返します。
+                        // Always returns true.
                         return true;
                     }
                 };
@@ -181,7 +181,7 @@ public class BlancoDbProcessImpl implements BlancoDbProcess {
                     + e.toString());
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("入力値エラー:" + e.toString());
+            throw new IllegalArgumentException("Input value error :" + e.toString());
         }
         return BlancoDbBatchProcess.END_SUCCESS;
     }

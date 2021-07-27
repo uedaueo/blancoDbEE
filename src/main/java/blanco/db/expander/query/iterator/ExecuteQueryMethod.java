@@ -24,7 +24,7 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author Yasuo Nakanishi
  */
@@ -48,7 +48,7 @@ public class ExecuteQueryMethod extends BlancoDbAbstractMethod {
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
 
-        cgMethod.getLangDoc().getDescriptionList().add("検索型クエリを実行します。<br>");
+        cgMethod.getLangDoc().getDescriptionList().add("Executes a search-type query.<br>");
 
         final List<String> listLine = cgMethod.getLineList();
 
@@ -59,16 +59,16 @@ public class ExecuteQueryMethod extends BlancoDbAbstractMethod {
             }
         }
 
-        // statementが未確保であるばあい、強制的にprepareStatementを呼び出します。
+        // If the statement is not allocated, it will force an prepareStatement call.
         listLine.add("if (fStatement == null) {");
         listLine
-                .add("// PreparedStatementが未取得の状態なので、PreparedStatement.executeQuery()実行に先立ちprepareStatement()メソッドを呼び出して取得します。");
+                .add("// Since PreparedStatement has not yet been obtained, it is obtained by calling the prepareStatement() method prior to executing PreparedStatement.executeQuery().");
         listLine.add("prepareStatement();");
         listLine.add("}");
 
-        // resultSetがあいた状態であれば、先にcloseを行います。
+        // If the resultSet is open, closes it first.
         listLine.add("if (fResultSet != null) {");
-        listLine.add("// 前回の結果セット(ResultSet)が残っているので、これを一旦開放します。");
+        listLine.add("// Since the previous result set (ResultSet) is still there, releases it.");
         listLine.add("fResultSet.close();");
         listLine.add("fResultSet = null;");
         listLine.add("}");
@@ -76,7 +76,7 @@ public class ExecuteQueryMethod extends BlancoDbAbstractMethod {
         listLine.add("");
 
         if(fDbSetting.getLoggingsql()) {
-        	// 標準出力に出力します。 
+        	// Outputs to stdout.
 			listLine.add("System.out.println(\"SQL: ["
 					+ fSqlInfo.getName()
 					+ "](Iterator) "
@@ -95,7 +95,7 @@ public class ExecuteQueryMethod extends BlancoDbAbstractMethod {
 				listLine.add("final Runtime runtime = Runtime.getRuntime();");
 				listLine.add("final long usedMemoryStart = BlancoDbUtil.getUsedMemory(runtime);");
 				listLine.add("final long startTime = System.currentTimeMillis();");
-				listLine.add("fLog.info(\"" + fSqlInfo.getName() + "開始\");");
+				listLine.add("fLog.info(\"" + fSqlInfo.getName() + " start\");");
 				listLine.add("");
 				break;
 			}
@@ -115,7 +115,7 @@ public class ExecuteQueryMethod extends BlancoDbAbstractMethod {
 				listLine.add("final long usedMemoryEnd = BlancoDbUtil.getUsedMemory(runtime);");
 				listLine.add("fLog.info(\""
 						+ fSqlInfo.getName()
-						+ "終了 所要時間：\" + BlancoDbUtil.getTimeString(endTime - startTime) + \" 終了時使用メモリ：\" + BlancoDbUtil.getMemorySizeString(usedMemoryEnd) + \" 使用メモリ差分：\" + BlancoDbUtil.getMemorySizeString(usedMemoryEnd - usedMemoryStart));");
+						+ "End Required time: \" + BlancoDbUtil.getTimeString(endTime - startTime) + \" memory used at end: \" + BlancoDbUtil.getMemorySizeString(usedMemoryEnd) + \" Difference in memory used: \" + BlancoDbUtil.getMemorySizeString(usedMemoryEnd - usedMemoryStart));");
 				break;
 			}
 		}

@@ -18,31 +18,31 @@ import my.db.util.BlancoDbUtil;
 /**
  * [SimpleTestBlancodbSelectAll]  (QueryIterator)
  *
- * 検索型SQL文をラッピングして各種アクセサを提供します。<br>
- * スクロール属性: insensitive<br>
+ * Wraps a search-type SQL statement to provide various accessors.<br>
+ * Scroll attribute: insensitive<br>
  */
 public class SimpleTestBlancodbSelectAllIterator {
     /**
-     * このクラスが内部的に利用するデータベース接続オブジェクト。
+     * Database connection object used internally by this class.
      *
-     * データベース接続オブジェクトはコンストラクタの引数として外部から与えられます。<br>
-     * トランザクションのコミットやロールバックは、このクラスの内部では実行しません。
+     * Database connection object is given externally as arguments to the constructor.<br>
+     * Transaction commit and rollback are not performed inside this class.
      */
     protected Connection fConnection;
 
     /**
-     * このクラスが内部的に利用するステートメントオブジェクト。
+     * Statement object used internally by this class.
      *
-     * このオブジェクトはデータベース接続オブジェクトから生成されて内部的に利用されます。<br>
-     * closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。
+     * This object is generated from the database connection object and used internally.<br>
+     * Closes this object when the close method is called.
      */
     protected PreparedStatement fStatement;
 
     /**
-     * このクラスが内部的に利用する結果セットオブジェクト。
+     * The result set object used internally by this class.
      *
-     * このオブジェクトはデータベースステートメントオブジェクトから生成されて内部的に利用されます。<br>
-     * closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。
+     * This object is created from the database statement object and used internally.<br>
+     * Closes this object when the close method is called.
      */
     protected ResultSet fResultSet;
 
@@ -117,7 +117,7 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * 検索型クエリを実行します。<br>
+     * Executes a search-type query.<br>
      *
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
@@ -125,11 +125,11 @@ public class SimpleTestBlancodbSelectAllIterator {
      */
     public void executeQuery() throws DeadlockException, TimeoutException, SQLException {
         if (fStatement == null) {
-            // PreparedStatementが未取得の状態なので、PreparedStatement.executeQuery()実行に先立ちprepareStatement()メソッドを呼び出して取得します。
+            // Since PreparedStatement has not yet been obtained, it is obtained by calling the prepareStatement() method prior to executing PreparedStatement.executeQuery().
             prepareStatement();
         }
         if (fResultSet != null) {
-            // 前回の結果セット(ResultSet)が残っているので、これを一旦開放します。
+            // Since the previous result set (ResultSet) is still there, releases it.
             fResultSet.close();
             fResultSet = null;
         }
@@ -142,9 +142,9 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * カーソルを現在の位置から1行次へ移動します。
+     * Moves the cursor to the next line from the current position.
      *
-     * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
+     * @return True if the new current row is valid, false if there are no more rows.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
@@ -162,9 +162,9 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * カーソルを現在の位置から1行前へ移動します。
+     * Moves the cursor one line forward from the current position.
      *
-     * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
+     * @return True if the new current row is valid, false if there are no more rows.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
@@ -182,9 +182,9 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * カーソルを結果セットの先頭行へ移動します。
+     * Moves the cursor to the first line of the result set.
      *
-     * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
+     * @return True if the new current row is valid, false if there are no more rows.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
@@ -202,9 +202,9 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * カーソルを結果セットの最終行へ移動します。
+     * Moves the cursor to the last line of the result set.
      *
-     * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
+     * @return True if the new current row is valid, false if there are no more rows.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
@@ -222,13 +222,13 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * カーソルを結果セットの指定された行へ移動します。
+     * Moves the cursor to the specified line of the result set.
      *
-     * absolute(1)はfirst()を呼び出すのと同じです。<br>
-     * absolute(-1)はlast()を呼び出すのと同じです。<br>
+     * absolute(1) is the same as calling first().<br>
+     * absolute(-1) is the same as calling last().<br>
      *
-     * @param rows カーソルの移動先の行番号を指定します。正の番号の場合には結果セットの先頭からカウントします。負の番号の場合は結果セットの終端からカウントします。
-     * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
+     * @param rows Specifies the line number to which the cursor will move. If it is a positive number, it counts from the beginning of the result set. If the number is negative, it counts from the end of the result set.
+     * @return True if the new current row is valid, false if there are no more rows.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
@@ -246,12 +246,12 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * カーソルを結果セットの相対行数だけ移動します。
-     * relative(1)はnext()を呼び出すのと同じです。<br>
-     * relative(-1)はprevious()を呼び出すのと同じです。<br>
+     * Moves the cursor by the relative number of rows in the result set.
+     * relative(1) is the same as calling next().<br>
+     * relative(-1) is the same as calling previous().<br>
      *
-     * @param rows 現在の行から移動する相対行数を指定します。正の数ではカーソルを順方向に移動し、負の数ではカーソルを逆方向に移動します。
-     * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
+     * @param rows Specifies the number of relative rows to move from the current row. A positive number moves the cursor forward, a negative number moves the cursor backward.
+     * @return True if the new current row is valid, false if there are no more rows.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
@@ -269,11 +269,11 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * 現在の行のデータをオブジェクトとして取得します。
+     * Gets the data of the current row as an object.
      *
-     * このメソッドを呼び出す前に、next()などのカーソルを操作するメソッドを呼び出す必要があります。
+     * Before calling this method, you need to call a method that manipulates the cursor, such as next().
      *
-     * @return 行オブジェクト。
+     * @return Row object.
      * @throws SQLException If an SQL exception occurs.
      */
     public SimpleTestBlancodbSelectAllRow getRow() throws SQLException {
@@ -296,26 +296,26 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * 内部的に保持されているResultSetオブジェクトを取得します。
+     * Gets the internally held ResultSet object.
      *
-     * @deprecated 基本的にResultSetは外部から直接利用する必要はありません。
+     * @deprecated Basically, you don't need to use ResultSet directly from outside.
      *
-     * @return ResultSetオブジェクト。
+     * @return The ResultSet object.
      */
     public ResultSet getResultSet() {
         return fResultSet;
     }
 
     /**
-     * 検索結果をリストの形式で取得します。
+     * Gets the search results in the form of a list.
      *
-     * リストには SimpleTestBlancodbSelectAllクラスが格納されます。<br>
-     * 検索結果の件数があらかじめわかっていて、且つ件数が少ない場合に利用することができます。<br>
-     * 検索結果の件数が多い場合には、このメソッドは利用せず、代わりに next()メソッドを利用することをお勧めします。<br>
+     * The list will contain the SimpleTestBlancodbSelectAll class.<br>
+     * This can be used when the number of search results is known in advance and the number is small.<br>
+     * If you have a large number of search results, it is recommended that you do not use this method, but use the next() method instead.<br>
      *
-     * @param absoluteStartPoint 読み出しを開始する行。最初の行から読み出したい場合には 1 を指定します。
-     * @param size 読み出しを行う行数。
-     * @return SimpleTestBlancodbSelectAllクラスのList。検索結果が0件の場合には空のリストが戻ります。
+     * @param absoluteStartPoint The line to start reading. Specify 1 if you want to read from the first line.
+     * @param size The number of lines to read.
+     * @return SimpleTestBlancodbSelectAllClass List, which will return an empty list if the search results are zero.
      * @throws SQLException If an SQL exception occurs.
      */
     public List<SimpleTestBlancodbSelectAllRow> getList(final int absoluteStartPoint, final int size) throws SQLException {
@@ -335,10 +335,10 @@ public class SimpleTestBlancodbSelectAllIterator {
     }
 
     /**
-     * このクラスのクローズ処理をおこないます。
+     * Closes this class.
      *
-     * 内部的に生成していたJDBCリソースのオブジェクトに対して close()メソッドの呼び出しをおこないます。<br>
-     * クラスの利用が終わったら、必ずこのメソッドを呼び出すようにします。
+     * Calls the close() method on the JDBC resource object that was created internally.<br>
+     * Make sure to call this method after using the class.
      *
      * @throws SQLException If an SQL exception occurs.
      */

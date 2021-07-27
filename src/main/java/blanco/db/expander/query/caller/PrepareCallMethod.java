@@ -21,7 +21,7 @@ import blanco.db.common.valueobject.BlancoDbSqlInfoStructure;
 import blanco.db.util.BlancoDbCgUtilJava;
 
 /**
- * 個別のメソッドを展開するためのクラス。
+ * A class for expanding individual methods.
  * 
  * @author IGA Tosiki
  */
@@ -37,14 +37,14 @@ public class PrepareCallMethod extends BlancoDbAbstractMethod {
 
     public void expand() {
         final BlancoCgMethod cgMethod = fCgFactory.createMethod("prepareCall",
-                "SQL定義書から与えられたSQL文をもちいてプリコンパイルを実施します。");
+                "Precompiles with the SQL statement given from the SQL definition document.");
         fCgClass.getMethodList().add(cgMethod);
 
         BlancoDbCgUtilJava.addExceptionToMethodSqlException(fCgFactory,
                 cgMethod);
 
         cgMethod.getLangDoc().getDescriptionList().add(
-                "内部的にConnection.prepareCallを呼び出します。<br>");
+                "Calls Connection.prepareCall internally.<br>");
 
         final List<String> listLine = cgMethod.getLineList();
 
