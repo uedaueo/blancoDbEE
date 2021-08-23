@@ -11,6 +11,7 @@ package blanco.db.util;
 
 import blanco.cg.BlancoCgObjectFactory;
 import blanco.cg.valueobject.*;
+import blanco.db.BlancoDbConstants;
 import blanco.db.common.stringgroup.BlancoDbDriverNameStringGroup;
 import blanco.db.common.stringgroup.BlancoDbLoggingModeStringGroup;
 import blanco.db.common.util.BlancoDbUtil;
@@ -121,6 +122,12 @@ public class BlancoDbUtilClassJava {
                 plainText.add("};");
                 fCgSourceFile.getImportList().add("java.util.Map");
                 fCgSourceFile.getImportList().add("java.util.HashMap");
+            }
+
+            {
+                List<String> plainText = cgClass.getPlainTextList();
+                plainText.add("");
+                plainText.add("static final public Long QUERY_TIMEOUT_DEFAULT = " + BlancoDbConstants.QUERY_TIMEOUT_DEFAULT + "L;");
             }
 
             final BlancoCgMethod cgMethod = fCgFactory.createMethod(
@@ -397,7 +404,42 @@ public class BlancoDbUtilClassJava {
 
         {
             /*
-             * 動的SQLのためのInputパラメータ関数を生成します
+             * Add MAX_EXECUTION_TIME optimizer hint to iterator query.
+             */
+            final BlancoCgMethod cgMethod = fCgFactory.createMethod(
+                    "createTimeoutHintMySQL", "Add MAX_EXECUTION_TIME optimizer hint to iterator query.");
+            cgClass.getMethodList().add(cgMethod);
+            cgMethod.setStatic(true);
+            cgMethod.setFinal(true);
+
+            fCgSourceFile.getImportList().add("java.util.regex.Pattern");
+
+            /* First argument: Query Timeout value */
+            BlancoCgParameter paramTimeout = fCgFactory.createParameter("argTimeout", "java.lang.Long", "Timeout value in milli-seconds.");
+            cgMethod.getParameterList().add(paramTimeout);
+            /* Second argument: Query String */
+            BlancoCgParameter paramQuery = fCgFactory.createParameter("argQuery", "java.lang.String", "Query String to be parsed.");
+            cgMethod.getParameterList().add(paramQuery);
+
+            /* Defines the return value. */
+            cgMethod.setReturn(fCgFactory.createReturn("java.lang.String",
+                    "Returns the query appended timeout hint."));
+
+            /* Method body */
+            final List<String> listLine = cgMethod.getLineList();
+            listLine.add("String query = argQuery;");
+            listLine.add("if (query != null && query.length() > 0 && argTimeout != null && argTimeout > 0L) {");
+            listLine.add("String strSelect = \"\\\\bselect\\\\b\";");
+            listLine.add("String strHint = \"SELECT /*+ MAX_EXECUTION_TIME(\" + argTimeout + \") */\";");
+            listLine.add("");
+            listLine.add("query = Pattern.compile(strSelect, Pattern.CASE_INSENSITIVE).matcher(query).replaceFirst(strHint);");
+            listLine.add("}");
+            listLine.add("return query;");
+        }
+
+        {
+            /*
+             * Generates input parameter function for dynamic SQL.
              */
             final BlancoCgMethod cgMethod = fCgFactory.createMethod(
                     "setInputParameter", "動的SQLのためのInputパラメータ関数です。");

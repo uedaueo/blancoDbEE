@@ -100,8 +100,23 @@ public class SampleMySQL004Tester {
                 orderbyColumns,
                 joinLiteral,
                 funcLiteral,
-                funcLiteral2
+                funcLiteral2,
+                3000L
         );
+
+//        ite.setInputParameter(
+//                "%",
+//                12.0,
+//                betweenNumeric,
+//                inId,
+//                compText,
+//                orderbyColumns,
+//                joinLiteral,
+//                funcLiteral,
+//                funcLiteral2,
+//                0L
+//        );
+
 
         ite.executeQuery();
         List<SampleMySQL004Row> rows = ite.getList(6000);
