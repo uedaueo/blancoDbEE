@@ -1,17 +1,16 @@
 package my.db.row;
 
-import java.io.Reader;
 import java.math.BigDecimal;
 
 /**
  * A row class created from SQL definition (blancoDb).
  *
- * 'SampleMySQL001Row' row is represented.
+ * 'SampleSQLite003Row' row is represented.
  * (1) 'COL_ID' column type:int
- * (2) 'COL_TEXT' column type:java.io.Reader
+ * (2) 'COL_TEXT' column type:java.lang.String
  * (3) 'COL_NUMERIC' column type:java.math.BigDecimal
  */
-public class SampleMySQL001Row {
+public class SampleSQLite003Row {
     /**
      * Field [COL_ID].
      *
@@ -24,7 +23,7 @@ public class SampleMySQL001Row {
      *
      * フィールド: [COL_TEXT]。
      */
-    private Reader fColText;
+    private String fColText;
 
     /**
      * Field [COL_NUMERIC].
@@ -62,7 +61,7 @@ public class SampleMySQL001Row {
      *
      * @param argColText フィールド[COL_TEXT]に設定する値。
      */
-    public void setColText(final Reader argColText) {
+    public void setColText(final String argColText) {
         fColText = argColText;
     }
 
@@ -73,7 +72,7 @@ public class SampleMySQL001Row {
      *
      * @return フィールド[COL_TEXT]から取得した値。
      */
-    public Reader getColText() {
+    public String getColText() {
         return fColText;
     }
 
@@ -113,7 +112,7 @@ public class SampleMySQL001Row {
     @Override
     public String toString() {
         final StringBuffer buf = new StringBuffer();
-        buf.append("my.db.row.SampleMySQL001Row[");
+        buf.append("my.db.row.SampleSQLite003Row[");
         buf.append("COL_ID=" + fColId);
         buf.append(",COL_TEXT=" + fColText);
         buf.append(",COL_NUMERIC=" + fColNumeric);
@@ -132,9 +131,9 @@ public class SampleMySQL001Row {
      *
      * @param target target value object.
      */
-    public void copyTo(final SampleMySQL001Row target) {
+    public void copyTo(final SampleSQLite003Row target) {
         if (target == null) {
-            throw new IllegalArgumentException("Bug: SampleMySQL001Row#copyTo(target): argument 'target' is null");
+            throw new IllegalArgumentException("Bug: SampleSQLite003Row#copyTo(target): argument 'target' is null");
         }
 
         // No needs to copy parent class.
@@ -143,8 +142,8 @@ public class SampleMySQL001Row {
         // Type: int
         target.fColId = this.fColId;
         // Name: fColText
-        // Type: java.io.Reader
-        // フィールド[fColText]はサポート外の型[java.io.Reader]です。
+        // Type: java.lang.String
+        target.fColText = this.fColText;
         // Name: fColNumeric
         // Type: java.math.BigDecimal
         target.fColNumeric = this.fColNumeric;

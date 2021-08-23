@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import my.db.exception.DeadlockException;
 import my.db.exception.IntegrityConstraintException;
@@ -35,6 +36,8 @@ public class BlancoDbUtil {
             put("NOT LIKE", "NOT LIKE");
         }
     };
+
+    static final public Long QUERY_TIMEOUT_DEFAULT = 60000L;
 
     /**
      * Converts SQL exceptions to blanco Framework exception objects.<br>
@@ -208,6 +211,24 @@ public class BlancoDbUtil {
             }
         } else {
             query = argQuery.replace("${" + argExpectedTag + "}", "");
+        }
+        return query;
+    }
+
+    /**
+     * Add MAX_EXECUTION_TIME optimizer hint to iterator query.
+     *
+     * @param argTimeout Timeout value in milli-seconds.
+     * @param argQuery Query String to be parsed.
+     * @return Returns the query appended timeout hint.
+     */
+    public static final String createTimeoutHintMySQL(final Long argTimeout, final String argQuery) {
+        String query = argQuery;
+        if (query != null && query.length() > 0 && argTimeout != null && argTimeout > 0L) {
+            String strSelect = "\\bselect\\b";
+            String strHint = "SELECT /*+ MAX_EXECUTION_TIME(" + argTimeout + ") */";
+
+            query = Pattern.compile(strSelect, Pattern.CASE_INSENSITIVE).matcher(query).replaceFirst(strHint);
         }
         return query;
     }

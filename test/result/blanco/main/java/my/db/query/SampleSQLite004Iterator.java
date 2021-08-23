@@ -240,7 +240,7 @@ public class SampleSQLite004Iterator {
     public SampleSQLite004Row getRow() throws SQLException {
         SampleSQLite004Row result = new SampleSQLite004Row();
         result.setColId(fResultSet.getInt(1));
-        result.setColText(fResultSet.getString(2));
+        result.setColText(fResultSet.getCharacterStream(2));
         result.setColNumeric(fResultSet.getBigDecimal(3));
 
         return result;

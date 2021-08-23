@@ -1,14 +1,17 @@
 package my.db.row;
 
+import java.io.Reader;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * A row class created from SQL definition (blancoDb).
  *
  * 'SampleSQLite001Row' row is represented.
  * (1) 'COL_ID' column type:int
- * (2) 'COL_TEXT' column type:java.lang.String
+ * (2) 'COL_TEXT' column type:java.io.Reader
  * (3) 'COL_NUMERIC' column type:java.math.BigDecimal
+ * (4) 'COL_DATE' column type:java.util.Date
  */
 public class SampleSQLite001Row {
     /**
@@ -23,7 +26,7 @@ public class SampleSQLite001Row {
      *
      * フィールド: [COL_TEXT]。
      */
-    private String fColText;
+    private Reader fColText;
 
     /**
      * Field [COL_NUMERIC].
@@ -31,6 +34,13 @@ public class SampleSQLite001Row {
      * フィールド: [COL_NUMERIC]。
      */
     private BigDecimal fColNumeric;
+
+    /**
+     * Field [COL_DATE].
+     *
+     * フィールド: [COL_DATE]。
+     */
+    private Date fColDate;
 
     /**
      * フィールド [COL_ID] の値を設定します。
@@ -61,7 +71,7 @@ public class SampleSQLite001Row {
      *
      * @param argColText フィールド[COL_TEXT]に設定する値。
      */
-    public void setColText(final String argColText) {
+    public void setColText(final Reader argColText) {
         fColText = argColText;
     }
 
@@ -72,7 +82,7 @@ public class SampleSQLite001Row {
      *
      * @return フィールド[COL_TEXT]から取得した値。
      */
-    public String getColText() {
+    public Reader getColText() {
         return fColText;
     }
 
@@ -99,6 +109,28 @@ public class SampleSQLite001Row {
     }
 
     /**
+     * フィールド [COL_DATE] の値を設定します。
+     *
+     * フィールドの説明: [Field [COL_DATE].]。
+     *
+     * @param argColDate フィールド[COL_DATE]に設定する値。
+     */
+    public void setColDate(final Date argColDate) {
+        fColDate = argColDate;
+    }
+
+    /**
+     * フィールド [COL_DATE] の値を取得します。
+     *
+     * フィールドの説明: [Field [COL_DATE].]。
+     *
+     * @return フィールド[COL_DATE]から取得した値。
+     */
+    public Date getColDate() {
+        return fColDate;
+    }
+
+    /**
      * このバリューオブジェクトの文字列表現を取得します。
      *
      * <P>使用上の注意</P>
@@ -116,6 +148,7 @@ public class SampleSQLite001Row {
         buf.append("COL_ID=" + fColId);
         buf.append(",COL_TEXT=" + fColText);
         buf.append(",COL_NUMERIC=" + fColNumeric);
+        buf.append(",COL_DATE=" + fColDate);
         buf.append("]");
         return buf.toString();
     }
@@ -142,10 +175,13 @@ public class SampleSQLite001Row {
         // Type: int
         target.fColId = this.fColId;
         // Name: fColText
-        // Type: java.lang.String
-        target.fColText = this.fColText;
+        // Type: java.io.Reader
+        // フィールド[fColText]はサポート外の型[java.io.Reader]です。
         // Name: fColNumeric
         // Type: java.math.BigDecimal
         target.fColNumeric = this.fColNumeric;
+        // Name: fColDate
+        // Type: java.util.Date
+        target.fColDate = (this.fColDate == null ? null : new Date(this.fColDate.getTime()));
     }
 }

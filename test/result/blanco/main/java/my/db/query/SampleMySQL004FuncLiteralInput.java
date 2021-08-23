@@ -6,29 +6,29 @@ package my.db.query;
 /**
  * [SampleMySQL004] 簡易なSQLのサンプルです。 (FunctionLiteralInput)
  *
- * 動的条件句関数定義用の入力のためのオブジェクトを提供します。<br>
+ * Provides an object for input of dynamic conditional clause function definitions.<br>
  */
 public class SampleMySQL004FuncLiteralInput {
     /**
-     * この入力用クラスが期待するパラメータの数
+     * The number of parameters expected by this input class.
      */
     private Integer paramNum = 2;
 
     /**
-     * 1番目のパラメータ
+     * 1th parameter
      */
     private Long param01;
 
     /**
-     * 2番目のパラメータ
+     * 2th parameter
      */
     private String param02;
 
     /**
-     * コンストラクタ
+     * Constructor
      *
-     * @param argParam01 1番目のパラメータ
-     * @param argParam02 2番目のパラメータ
+     * @param argParam01 1th parameter
+     * @param argParam02 2th parameter
      */
     public SampleMySQL004FuncLiteralInput(final Long argParam01, final String argParam02) {
         this.param01 = argParam01;
@@ -36,10 +36,10 @@ public class SampleMySQL004FuncLiteralInput {
     }
 
     /**
-     * パラメータ取得
+     * Get parameters
      *
-     * @param param 1から始まるパラメータの順番です。
-     * @return パラメータを戻します。所定の型でCastする必要があります。
+     * @param param The order of the parameters starting from 1.
+     * @return Returns a parameter. Must be cast with a given type.
      */
     public Object getParam(final Integer param) {
         if (param == 1) {

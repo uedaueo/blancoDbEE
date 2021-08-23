@@ -101,6 +101,18 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
                     "Internally, the CallableStatement is set with SQL input parameters.");
         }
 
+        /*
+         * create timeout value parameter if required.
+         */
+        if (fSqlInfo.getUseTimeoutHintMySQL()) {
+            BlancoCgParameter param = fCgFactory.createParameter(
+                    "argTimeout",
+                    "java.lang.Long",
+                    "Timeout value in milli-seconds.");
+            param.setFinal(true);
+            cgMethod.getParameterList().add(param);
+        }
+
         final List<String> listLine = cgMethod.getLineList();
 
         if (fDbSetting.getLogging()) {
@@ -136,8 +148,8 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         /*
          * If the dynamic conditional clause is set, inserts the tag replacement code.
          */
-        if (this.fSqlInfo.getDynamicConditionList().size() > 0) {
-            this.createTagConversion(listLine, this.fSqlInfo.getDynamicConditionList());
+        if (this.fSqlInfo.getDynamicConditionList().size() > 0 || this.fSqlInfo.getUseTimeoutHintMySQL()) {
+            this.createTagConversion(listLine, this.fSqlInfo.getDynamicConditionList(), this.fSqlInfo.getUseTimeoutHintMySQL());
             listLine.add("");
             listLine.add("/* Always recreates the statement. */");
             listLine.add("prepareStatement(query);");
@@ -306,10 +318,14 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
      */
     private void createTagConversion(
             final List<String> listLine,
-            final List<BlancoDbDynamicConditionStructure> conditionStructureList
+            final List<BlancoDbDynamicConditionStructure> conditionStructureList,
+            final boolean useTimeoutHintMySQL
     ) {
         listLine.add("/* Replace tags  */");
         listLine.add("String query = this.getQuery();");
+        if (useTimeoutHintMySQL) {
+            listLine.add("query = BlancoDbUtil.createTimeoutHintMySQL(argTimeout, query);");
+        }
         Map<String, Boolean> convDone = new HashMap<>();
         for (BlancoDbDynamicConditionStructure conditionStructure : conditionStructureList) {
             if (convDone.get(conditionStructure.getTag()) == null || !convDone.get(conditionStructure.getTag())) {

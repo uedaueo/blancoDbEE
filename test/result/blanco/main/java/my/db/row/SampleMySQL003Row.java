@@ -4,30 +4,30 @@ import java.io.Reader;
 import java.math.BigDecimal;
 
 /**
- * SQL定義書(blancoDb)から作成された行クラス。
+ * A row class created from SQL definition (blancoDb).
  *
- * 'SampleMySQL003Row'行を表現します。
- * (1) 'ID'列 型:int
- * (2) 'TEXT'列 型:java.io.Reader
- * (3) 'MyNUMERIC'列 型:java.math.BigDecimal
+ * 'SampleMySQL003Row' row is represented.
+ * (1) 'ID' column type:int
+ * (2) 'TEXT' column type:java.io.Reader
+ * (3) 'MyNUMERIC' column type:java.math.BigDecimal
  */
 public class SampleMySQL003Row {
     /**
-     * フィールド[ID]です。
+     * Field [ID].
      *
      * フィールド: [ID]。
      */
     private int fId;
 
     /**
-     * フィールド[TEXT]です。
+     * Field [TEXT].
      *
      * フィールド: [TEXT]。
      */
     private Reader fText;
 
     /**
-     * フィールド[MyNUMERIC]です。
+     * Field [MyNUMERIC].
      *
      * フィールド: [MyNUMERIC]。
      */
@@ -36,7 +36,7 @@ public class SampleMySQL003Row {
     /**
      * フィールド [ID] の値を設定します。
      *
-     * フィールドの説明: [フィールド[ID]です。]。
+     * フィールドの説明: [Field [ID].]。
      *
      * @param argId フィールド[ID]に設定する値。
      */
@@ -47,7 +47,7 @@ public class SampleMySQL003Row {
     /**
      * フィールド [ID] の値を取得します。
      *
-     * フィールドの説明: [フィールド[ID]です。]。
+     * フィールドの説明: [Field [ID].]。
      *
      * @return フィールド[ID]から取得した値。
      */
@@ -58,7 +58,7 @@ public class SampleMySQL003Row {
     /**
      * フィールド [TEXT] の値を設定します。
      *
-     * フィールドの説明: [フィールド[TEXT]です。]。
+     * フィールドの説明: [Field [TEXT].]。
      *
      * @param argText フィールド[TEXT]に設定する値。
      */
@@ -69,7 +69,7 @@ public class SampleMySQL003Row {
     /**
      * フィールド [TEXT] の値を取得します。
      *
-     * フィールドの説明: [フィールド[TEXT]です。]。
+     * フィールドの説明: [Field [TEXT].]。
      *
      * @return フィールド[TEXT]から取得した値。
      */
@@ -80,7 +80,7 @@ public class SampleMySQL003Row {
     /**
      * フィールド [MyNUMERIC] の値を設定します。
      *
-     * フィールドの説明: [フィールド[MyNUMERIC]です。]。
+     * フィールドの説明: [Field [MyNUMERIC].]。
      *
      * @param argMyNUMERIC フィールド[MyNUMERIC]に設定する値。
      */
@@ -91,7 +91,7 @@ public class SampleMySQL003Row {
     /**
      * フィールド [MyNUMERIC] の値を取得します。
      *
-     * フィールドの説明: [フィールド[MyNUMERIC]です。]。
+     * フィールドの説明: [Field [MyNUMERIC].]。
      *
      * @return フィールド[MyNUMERIC]から取得した値。
      */

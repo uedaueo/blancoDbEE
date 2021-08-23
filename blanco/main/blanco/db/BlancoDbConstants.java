@@ -29,27 +29,38 @@ public class BlancoDbConstants {
     public static final String TARGET_SUBDIRECTORY = "/db";
 
     /**
+     * 項目番号:5<br>
      * targetdirに設定される文字列
      */
     public static final String TARGET_STYLE_BLANCO = "blanco";
 
     /**
+     * 項目番号:6<br>
      * targetdirに設定される文字列
      */
     public static final String TARGET_STYLE_MAVEN = "maven";
 
     /**
+     * 項目番号:7<br>
      * targetdirに設定される文字列
      */
     public static final String TARGET_STYLE_FREE = "free";
 
     /**
+     * 項目番号:8<br>
      * 生成したソースコードを保管するディレクトリのsuffix
      */
     public static final String TARGET_DIR_SUFFIX_BLANCO = "main";
 
     /**
+     * 項目番号:9<br>
      * 生成したソースコードを保管するディレクトリのsuffix
      */
     public static final String TARGET_DIR_SUFFIX_MAVEN = "main/java";
+
+    /**
+     * 項目番号:10<br>
+     * クエリタイムアウトを強制指定する場合のデフォルト値（ミリ秒）です。
+     */
+    public static final Long QUERY_TIMEOUT_DEFAULT = 60000L;
 }

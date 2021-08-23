@@ -3,30 +3,30 @@ package my.db.row;
 import java.math.BigDecimal;
 
 /**
- * SQL定義書(blancoDb)から作成された行クラス。
+ * A row class created from SQL definition (blancoDb).
  *
- * 'SampleMySQL001Row'行を表現します。
- * (1) 'COL_ID'列 型:int
- * (2) 'COL_TEXT'列 型:java.lang.String
- * (3) 'COL_NUMERIC'列 型:java.math.BigDecimal
+ * 'SampleMySQL001Row' row is represented.
+ * (1) 'COL_ID' column type:int
+ * (2) 'COL_TEXT' column type:java.lang.String
+ * (3) 'COL_NUMERIC' column type:java.math.BigDecimal
  */
 public class SampleMySQL001Row {
     /**
-     * フィールド[COL_ID]です。
+     * Field [COL_ID].
      *
      * フィールド: [COL_ID]。
      */
     private int fColId;
 
     /**
-     * フィールド[COL_TEXT]です。
+     * Field [COL_TEXT].
      *
      * フィールド: [COL_TEXT]。
      */
     private String fColText;
 
     /**
-     * フィールド[COL_NUMERIC]です。
+     * Field [COL_NUMERIC].
      *
      * フィールド: [COL_NUMERIC]。
      */
@@ -35,7 +35,7 @@ public class SampleMySQL001Row {
     /**
      * フィールド [COL_ID] の値を設定します。
      *
-     * フィールドの説明: [フィールド[COL_ID]です。]。
+     * フィールドの説明: [Field [COL_ID].]。
      *
      * @param argColId フィールド[COL_ID]に設定する値。
      */
@@ -46,7 +46,7 @@ public class SampleMySQL001Row {
     /**
      * フィールド [COL_ID] の値を取得します。
      *
-     * フィールドの説明: [フィールド[COL_ID]です。]。
+     * フィールドの説明: [Field [COL_ID].]。
      *
      * @return フィールド[COL_ID]から取得した値。
      */
@@ -57,7 +57,7 @@ public class SampleMySQL001Row {
     /**
      * フィールド [COL_TEXT] の値を設定します。
      *
-     * フィールドの説明: [フィールド[COL_TEXT]です。]。
+     * フィールドの説明: [Field [COL_TEXT].]。
      *
      * @param argColText フィールド[COL_TEXT]に設定する値。
      */
@@ -68,7 +68,7 @@ public class SampleMySQL001Row {
     /**
      * フィールド [COL_TEXT] の値を取得します。
      *
-     * フィールドの説明: [フィールド[COL_TEXT]です。]。
+     * フィールドの説明: [Field [COL_TEXT].]。
      *
      * @return フィールド[COL_TEXT]から取得した値。
      */
@@ -79,7 +79,7 @@ public class SampleMySQL001Row {
     /**
      * フィールド [COL_NUMERIC] の値を設定します。
      *
-     * フィールドの説明: [フィールド[COL_NUMERIC]です。]。
+     * フィールドの説明: [Field [COL_NUMERIC].]。
      *
      * @param argColNumeric フィールド[COL_NUMERIC]に設定する値。
      */
@@ -90,7 +90,7 @@ public class SampleMySQL001Row {
     /**
      * フィールド [COL_NUMERIC] の値を取得します。
      *
-     * フィールドの説明: [フィールド[COL_NUMERIC]です。]。
+     * フィールドの説明: [Field [COL_NUMERIC].]。
      *
      * @return フィールド[COL_NUMERIC]から取得した値。
      */
