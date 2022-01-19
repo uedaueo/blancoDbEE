@@ -3,30 +3,30 @@ package my.db.row;
 import java.math.BigDecimal;
 
 /**
- * A row class created from SQL definition (blancoDb).
+ * SQL定義書(blancoDb)から作成された行クラス。
  *
- * 'SampleSQLite003Row' row is represented.
- * (1) 'COL_ID' column type:int
- * (2) 'COL_TEXT' column type:java.lang.String
- * (3) 'COL_NUMERIC' column type:java.math.BigDecimal
+ * 'SampleSQLite003Row'行を表現します。
+ * (1) 'COL_ID'列 型:int
+ * (2) 'COL_TEXT'列 型:java.lang.String
+ * (3) 'COL_NUMERIC'列 型:java.math.BigDecimal
  */
 public class SampleSQLite003Row {
     /**
-     * Field [COL_ID].
+     * フィールド[COL_ID]です。
      *
      * フィールド: [COL_ID]。
      */
     private int fColId;
 
     /**
-     * Field [COL_TEXT].
+     * フィールド[COL_TEXT]です。
      *
      * フィールド: [COL_TEXT]。
      */
     private String fColText;
 
     /**
-     * Field [COL_NUMERIC].
+     * フィールド[COL_NUMERIC]です。
      *
      * フィールド: [COL_NUMERIC]。
      */
@@ -35,7 +35,7 @@ public class SampleSQLite003Row {
     /**
      * フィールド [COL_ID] の値を設定します。
      *
-     * フィールドの説明: [Field [COL_ID].]。
+     * フィールドの説明: [フィールド[COL_ID]です。]。
      *
      * @param argColId フィールド[COL_ID]に設定する値。
      */
@@ -46,7 +46,7 @@ public class SampleSQLite003Row {
     /**
      * フィールド [COL_ID] の値を取得します。
      *
-     * フィールドの説明: [Field [COL_ID].]。
+     * フィールドの説明: [フィールド[COL_ID]です。]。
      *
      * @return フィールド[COL_ID]から取得した値。
      */
@@ -57,7 +57,7 @@ public class SampleSQLite003Row {
     /**
      * フィールド [COL_TEXT] の値を設定します。
      *
-     * フィールドの説明: [Field [COL_TEXT].]。
+     * フィールドの説明: [フィールド[COL_TEXT]です。]。
      *
      * @param argColText フィールド[COL_TEXT]に設定する値。
      */
@@ -68,7 +68,7 @@ public class SampleSQLite003Row {
     /**
      * フィールド [COL_TEXT] の値を取得します。
      *
-     * フィールドの説明: [Field [COL_TEXT].]。
+     * フィールドの説明: [フィールド[COL_TEXT]です。]。
      *
      * @return フィールド[COL_TEXT]から取得した値。
      */
@@ -79,7 +79,7 @@ public class SampleSQLite003Row {
     /**
      * フィールド [COL_NUMERIC] の値を設定します。
      *
-     * フィールドの説明: [Field [COL_NUMERIC].]。
+     * フィールドの説明: [フィールド[COL_NUMERIC]です。]。
      *
      * @param argColNumeric フィールド[COL_NUMERIC]に設定する値。
      */
@@ -90,7 +90,7 @@ public class SampleSQLite003Row {
     /**
      * フィールド [COL_NUMERIC] の値を取得します。
      *
-     * フィールドの説明: [Field [COL_NUMERIC].]。
+     * フィールドの説明: [フィールド[COL_NUMERIC]です。]。
      *
      * @return フィールド[COL_NUMERIC]から取得した値。
      */
