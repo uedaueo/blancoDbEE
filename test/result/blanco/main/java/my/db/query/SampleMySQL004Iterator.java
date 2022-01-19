@@ -24,8 +24,8 @@ import my.db.util.BlancoDbUtil;
 /**
  * [SampleMySQL004] 簡易なSQLのサンプルです。 (QueryIterator)
  *
- * 検索型SQL文をラッピングして各種アクセサを提供します。<br>
- * スクロール属性: forward_only<br>
+ * Wraps a search-type SQL statement to provide various accessors.<br>
+ * Scroll attribute: forward_only<br>
  */
 public class SampleMySQL004Iterator {
     protected Map<String, BlancoDbDynamicClause> fMapDynamicClause = new HashMap<String, BlancoDbDynamicClause>()
@@ -43,54 +43,54 @@ public class SampleMySQL004Iterator {
     };
 
     /**
-     * このクラスが内部的に利用するデータベース接続オブジェクト。
+     * Database connection object used internally by this class.
      *
-     * データベース接続オブジェクトはコンストラクタの引数として外部から与えられます。<br>
-     * トランザクションのコミットやロールバックは、このクラスの内部では実行しません。
+     * Database connection object is given externally as arguments to the constructor.<br>
+     * Transaction commit and rollback are not performed inside this class.
      */
     protected Connection fConnection;
 
     /**
-     * このクラスが内部的に利用するステートメントオブジェクト。
+     * Statement object used internally by this class.
      *
-     * このオブジェクトはデータベース接続オブジェクトから生成されて内部的に利用されます。<br>
-     * closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。
+     * This object is generated from the database connection object and used internally.<br>
+     * Closes this object when the close method is called.
      */
     protected PreparedStatement fStatement;
 
     /**
-     * このクラスが内部的に利用する結果セットオブジェクト。
+     * The result set object used internally by this class.
      *
-     * このオブジェクトはデータベースステートメントオブジェクトから生成されて内部的に利用されます。<br>
-     * closeメソッドの呼び出し時に、このオブジェクトのcloseを実行します。
+     * This object is created from the database statement object and used internally.<br>
+     * Closes this object when the close method is called.
      */
     protected ResultSet fResultSet;
 
     /**
-     * SampleMySQL004Iteratorクラスのコンストラクタ。
+     * SampleMySQL004IteratorConstructor for the class.
      *
-     * データベースコネクションオブジェクトを引数としてクエリクラスを作成します。<br>
-     * このクラスの利用後は、必ず close()メソッドを呼び出す必要があります。<br>
+     * Creates a query class with a database connection object as an argument.<br>
+     * After using this class, you must call the close() method.<br>
      *
-     * @param conn データベース接続
+     * @param conn Database connection
      */
     public SampleMySQL004Iterator(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SampleMySQL004Iteratorクラスのコンストラクタ。
+     * SampleMySQL004IteratorConstructor for the class.
      *
-     * データベースコネクションオブジェクトを与えずにクエリクラスを作成します。<br>
+     * Creates a query class without giving a database connection object.<br>
      */
     @Deprecated
     public SampleMySQL004Iterator() {
     }
 
     /**
-     * SampleMySQL004Iteratorクラスにデータベース接続を設定。
+     * SampleMySQL004IteratorSets a database connection to the class.
      *
-     * @param conn データベース接続
+     * @param conn Database connection
      */
     @Deprecated
     public void setConnection(final Connection conn) {
@@ -98,22 +98,22 @@ public class SampleMySQL004Iterator {
     }
 
     /**
-     * SQL定義書で与えられたSQL文を取得します。
+     * Gets the SQL statement given in the SQL definition document.
      *
-     * SQL入力パラメータとして #キーワードによる指定がある場合には、該当箇所を ? に置き換えた後の SQL文が取得できます。
+     * If the # keyword is specified as the SQL input parameter, the SQL statement after replacing the corresponding part with ? can be obtained.
      *
-     * @return JDBCドライバに与えて実行可能な状態のSQL文。
+     * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
         return "SELECT test1.COL_ID ID, test1.COL_TEXT TEXT, test1.COL_NUMERIC MyNUMERIC from\n   TEST_BLANCODB test1\n${JOIN_LITERAL}\nwhere\n   test1.COL_TEXT like ?\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND test1.COL_NUMERIC = ?\n   ${FUNC_LITERAL}\n   ${FUNC_LITERAL2}\n${ORDERBY}";
     }
 
     /**
-     * SQL定義書から与えられたSQL文をもちいてプリコンパイルを実施します。
+     * Precompiles with the SQL statement given from the SQL definition document.
      *
-     * 内部的にConnection.prepareStatementを呼び出します。<br>
+     * Internally calls Connection.prepareStatement.<br>
      *
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public void prepareStatement() throws SQLException {
         close();
@@ -121,14 +121,14 @@ public class SampleMySQL004Iterator {
     }
 
     /**
-     * 与えられたSQL文をもちいてプリコンパイルを実施(動的SQL)します。
+     * Precompiles with the given SQL statement (dynamic SQL).
      *
-     * このメソッドは、動的に内容が変化するような SQL を実行する必要がある場合にのみ利用します。<br>
-     * SQL 定義書で「動的SQL」が「使用する」に設定されています。<br>
-     * 内部的に JDBC ドライバの Connection.prepareStatement を呼び出します。<br>
+     * This method should only be used when you need to execute SQL that dynamically changes its contents.<br>
+     * "Dynamic SQL" is set to "Use" in the SQL definition document.<br>
+     * Internally calls the JDBC driver's Connection.prepareStatement.<br>
      *
-     * @param query プリコンパイルを実施させたいSQL文。動的SQLの場合には、この引数には加工された後の実行可能なSQL文を与えます。
-     * @throws SQLException SQL例外が発生した場合。
+     * @param query The SQL statement that you want to have precompiled. In the case of dynamic SQL, this argument is the executable SQL statement after it has been processed.
+     * @throws SQLException If an SQL exception occurs.
      */
     public void prepareStatement(final String query) throws SQLException {
         close();
@@ -136,24 +136,25 @@ public class SampleMySQL004Iterator {
     }
 
     /**
-     * SQL文に与えるSQL入力パラメータをセットします。
+     * Sets the SQL input parameters to be given to the SQL statement.
      *
-     * 内部的には PreparedStatementにSQL入力パラメータをセットします。
+     * Internally, the PreparedStatement is set with SQL input parameters.
      *
-     * @param colText 'colText'列の値
-     * @param colNumeric 'colNumeric'列の値
-     * @param BETWEEN01 'BETWEEN01'列の値
-     * @param INCLAUSE01 'INCLAUSE01'列の値
-     * @param COMPARE01 'COMPARE01'列の値
-     * @param ORDERBY 'ORDERBY'列の値
-     * @param JOIN_LITERAL 'JOIN_LITERAL'列の値
-     * @param FUNC_LITERAL 'FUNC_LITERAL'列の値
-     * @param FUNC_LITERAL2 'FUNC_LITERAL2'列の値
+     * @param colText Value in 'colText' column
+     * @param colNumeric Value in 'colNumeric' column
+     * @param BETWEEN01 Value in 'BETWEEN01' column
+     * @param INCLAUSE01 Value in 'INCLAUSE01' column
+     * @param COMPARE01 Value in 'COMPARE01' column
+     * @param ORDERBY Value in 'ORDERBY' column
+     * @param JOIN_LITERAL Value in 'JOIN_LITERAL' column
+     * @param FUNC_LITERAL Value in 'FUNC_LITERAL' column
+     * @param FUNC_LITERAL2 Value in 'FUNC_LITERAL2' column
      * @param argTimeout Timeout value in milli-seconds.
-     * @throws SQLException SQL例外が発生した場合。
+     * @param argTimeout Timeout value in milli-seconds.
+     * @throws SQLException If an SQL exception occurs.
      */
-    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY, final BlancoDbDynamicParameter<BlancoDbDynamicLiteral> JOIN_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteralInput> FUNC_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteral2Input> FUNC_LITERAL2, final Long argTimeout) throws SQLException {
-        /* タグを置換する */
+    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY, final BlancoDbDynamicParameter<BlancoDbDynamicLiteral> JOIN_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteralInput> FUNC_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteral2Input> FUNC_LITERAL2, final Long argTimeout, final Long argTimeout) throws SQLException {
+        /* Replace tags  */
         String query = this.getQuery();
         query = BlancoDbUtil.createTimeoutHintMySQL(argTimeout, query);
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, BETWEEN01, query, "BETWEEN01");
@@ -164,7 +165,7 @@ public class SampleMySQL004Iterator {
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, FUNC_LITERAL, query, "FUNC_LITERAL");
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, FUNC_LITERAL2, query, "FUNC_LITERAL2");
 
-        /* 必ず statement を作り直す */
+        /* Always recreates the statement. */
         prepareStatement(query);
 
         int index = 1;
@@ -213,19 +214,19 @@ public class SampleMySQL004Iterator {
     }
 
     /**
-     * 検索型クエリを実行します。<br>
+     * Executes a search-type query.<br>
      *
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public void executeQuery() throws DeadlockException, TimeoutException, SQLException {
         if (fStatement == null) {
-            // PreparedStatementが未取得の状態なので、PreparedStatement.executeQuery()実行に先立ちprepareStatement()メソッドを呼び出して取得します。
+            // Since PreparedStatement has not yet been obtained, it is obtained by calling the prepareStatement() method prior to executing PreparedStatement.executeQuery().
             prepareStatement();
         }
         if (fResultSet != null) {
-            // 前回の結果セット(ResultSet)が残っているので、これを一旦開放します。
+            // Since the previous result set (ResultSet) is still there, releases it.
             fResultSet.close();
             fResultSet = null;
         }
@@ -238,12 +239,12 @@ public class SampleMySQL004Iterator {
     }
 
     /**
-     * カーソルを現在の位置から1行次へ移動します。
+     * Moves the cursor to the next line from the current position.
      *
-     * @return 新しい現在の行が有効な場合はtrue、それ以上の行がない場合はfalse。
-     * @throws DeadlockException データベースデッドロックが発生した場合。
-     * @throws TimeoutException データベースタイムアウトが発生した場合。
-     * @throws SQLException SQL例外が発生した場合。
+     * @return True if the new current row is valid, false if there are no more rows.
+     * @throws DeadlockException If a database deadlock occurs.
+     * @throws TimeoutException If a database timeout occurs.
+     * @throws SQLException If an SQL exception occurs.
      */
     public boolean next() throws DeadlockException, TimeoutException, SQLException {
         if (fResultSet == null) {
@@ -258,12 +259,12 @@ public class SampleMySQL004Iterator {
     }
 
     /**
-     * 現在の行のデータをオブジェクトとして取得します。
+     * Gets the data of the current row as an object.
      *
-     * このメソッドを呼び出す前に、next()などのカーソルを操作するメソッドを呼び出す必要があります。
+     * Before calling this method, you need to call a method that manipulates the cursor, such as next().
      *
-     * @return 行オブジェクト。
-     * @throws SQLException SQL例外が発生した場合。
+     * @return Row object.
+     * @throws SQLException If an SQL exception occurs.
      */
     public SampleMySQL004Row getRow() throws SQLException {
         SampleMySQL004Row result = new SampleMySQL004Row();
@@ -275,37 +276,37 @@ public class SampleMySQL004Iterator {
     }
 
     /**
-     * ステートメント (java.sql.PreparedStatement) を取得します。
-     * @deprecated 基本的にStatementは外部から直接利用する必要はありません。
+     * Gets the statement (java.sql.PreparedStatement).
+     * @deprecated Basically, Statement does not need to be used directly from the outside.
      *
-     * @return 内部的に利用されている java.sql.PreparedStatementオブジェクト
+     * @return The java.sql.PreparedStatement object used internally
      */
     public PreparedStatement getStatement() {
         return fStatement;
     }
 
     /**
-     * 内部的に保持されているResultSetオブジェクトを取得します。
+     * Gets the internally held ResultSet object.
      *
-     * @deprecated 基本的にResultSetは外部から直接利用する必要はありません。
+     * @deprecated Basically, you don't need to use ResultSet directly from outside.
      *
-     * @return ResultSetオブジェクト。
+     * @return The ResultSet object.
      */
     public ResultSet getResultSet() {
         return fResultSet;
     }
 
     /**
-     * 検索結果をリストの形式で取得します。
+     * Gets the search results in the form of a list.
      *
-     * リストには SampleMySQL004クラスが格納されます。<br>
-     * 検索結果の件数があらかじめわかっていて、且つ件数が少ない場合に利用することができます。<br>
-     * 検索結果の件数が多い場合には、このメソッドは利用せず、代わりに next()メソッドを利用することをお勧めします。<br>
-     * このQueryIteratorは FORWARD_ONLY(順方向カーソル)です。大量のデータを扱うことがわかっている場合には、このgetListメソッドの利用は極力避けるか、あるいは スクロールカーソルとしてソースコードを再生成してください。
+     * The list will contain the SampleMySQL004 class.<br>
+     * This can be used when the number of search results is known in advance and the number is small.<br>
+     * If you have a large number of search results, it is recommended that you do not use this method, but use the next() method instead.<br>
+     * This QueryIterator is FORWARD_ONLY (forward cursor). If you know that you will be working with a large amount of data, avoid using this getList method as much as possible or regenerate the source code as a scrolling cursor.
      *
-     * @param size 読み出しを行う行数。
-     * @return SampleMySQL004クラスのList。検索結果が0件の場合には空のリストが戻ります。
-     * @throws SQLException SQL例外が発生した場合。
+     * @param size The number of lines to read.
+     * @return SampleMySQL004Class List, which will return an empty list if the search results are zero.
+     * @throws SQLException If an SQL exception occurs.
      */
     public List<SampleMySQL004Row> getList(final int size) throws SQLException {
         List<SampleMySQL004Row> result = new ArrayList<SampleMySQL004Row>(8192);
@@ -319,12 +320,12 @@ public class SampleMySQL004Iterator {
     }
 
     /**
-     * このクラスのクローズ処理をおこないます。
+     * Closes this class.
      *
-     * 内部的に生成していたJDBCリソースのオブジェクトに対して close()メソッドの呼び出しをおこないます。<br>
-     * クラスの利用が終わったら、必ずこのメソッドを呼び出すようにします。
+     * Calls the close() method on the JDBC resource object that was created internally.<br>
+     * Make sure to call this method after using the class.
      *
-     * @throws SQLException SQL例外が発生した場合。
+     * @throws SQLException If an SQL exception occurs.
      */
     public void close() throws SQLException {
         try {
@@ -341,16 +342,16 @@ public class SampleMySQL004Iterator {
     }
 
     /**
-     * finalizeメソッド。
+     * finalize method.
      *
-     * このクラスが内部的に生成したオブジェクトのなかで、close()呼び出し忘れバグが存在するかどうかチェックします。<br>
+     * Checks if there is a close() call forgetting bug in the object generated internally by this class.<br>
      *
-     * @throws Throwable finalize処理の中で発生した例外。
+     * @throws Throwable Exception raised in the finalize process.
      */
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SampleMySQL004Iterator : close()メソッドによるリソースの開放が行われていません。";
+            final String message = "SampleMySQL004Iterator : The resource has not been released by the close() method.";
             System.out.println(message);
         }
     }

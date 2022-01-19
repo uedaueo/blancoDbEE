@@ -825,27 +825,27 @@ public class BlancoDbTask extends Task {
     public final void execute() throws BuildException {
         System.out.println("BlancoDbTask begin.");
 
-        // 項目番号[1]、アトリビュート[jdbcdriver]は必須入力です。入力チェックを行います。
+        // 項目番号[1], アトリビュート[jdbcdriver]は必須入力です。入力チェックを行います。
         if (fIsFieldJdbcdriverProcessed == false) {
             throw new BuildException("必須アトリビュート[jdbcdriver]が設定されていません。処理を中断します。");
         }
-        // 項目番号[2]、アトリビュート[jdbcurl]は必須入力です。入力チェックを行います。
+        // 項目番号[2], アトリビュート[jdbcurl]は必須入力です。入力チェックを行います。
         if (fIsFieldJdbcurlProcessed == false) {
             throw new BuildException("必須アトリビュート[jdbcurl]が設定されていません。処理を中断します。");
         }
-        // 項目番号[3]、アトリビュート[jdbcuser]は必須入力です。入力チェックを行います。
+        // 項目番号[3], アトリビュート[jdbcuser]は必須入力です。入力チェックを行います。
         if (fIsFieldJdbcuserProcessed == false) {
             throw new BuildException("必須アトリビュート[jdbcuser]が設定されていません。処理を中断します。");
         }
-        // 項目番号[4]、アトリビュート[jdbcpassword]は必須入力です。入力チェックを行います。
+        // 項目番号[4], アトリビュート[jdbcpassword]は必須入力です。入力チェックを行います。
         if (fIsFieldJdbcpasswordProcessed == false) {
             throw new BuildException("必須アトリビュート[jdbcpassword]が設定されていません。処理を中断します。");
         }
-        // 項目番号[6]、アトリビュート[metadir]は必須入力です。入力チェックを行います。
+        // 項目番号[6], アトリビュート[metadir]は必須入力です。入力チェックを行います。
         if (fIsFieldMetadirProcessed == false) {
             throw new BuildException("必須アトリビュート[metadir]が設定されていません。処理を中断します。");
         }
-        // 項目番号[9]、アトリビュート[basepackage]は必須入力です。入力チェックを行います。
+        // 項目番号[9], アトリビュート[basepackage]は必須入力です。入力チェックを行います。
         if (fIsFieldBasepackageProcessed == false) {
             throw new BuildException("必須アトリビュート[basepackage]が設定されていません。処理を中断します。");
         }
@@ -881,10 +881,10 @@ public class BlancoDbTask extends Task {
 
         try {
             // 実際のAntタスクの主処理を実行します。
-            // この箇所でコンパイルエラーが発生する場合、BlancoDbProcessインタフェースを実装して blanco.db.taskパッケージに BlancoDbProcessImplクラスを作成することにより解決できる場合があります。
+            // If you get a compile error at this point, You may be able to solve it by implementing a BlancoDbProcess interface and creating an BlancoDbProcessImpl class in package blanco.db.task.
             final BlancoDbProcess proc = new BlancoDbProcessImpl();
             if (proc.execute(fInput) != BlancoDbBatchProcess.END_SUCCESS) {
-                throw new BuildException("タスクは異常終了しました。");
+                throw new BuildException("The task has terminated abnormally.");
             }
         } catch (IllegalArgumentException e) {
             if (getVerbose()) {
