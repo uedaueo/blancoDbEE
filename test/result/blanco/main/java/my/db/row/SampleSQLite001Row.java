@@ -154,12 +154,12 @@ public class SampleSQLite001Row {
     }
 
     /**
-     * このバリューオブジェクトを指定のターゲットに複写します。
+     * Copies this value object to the specified target.
      *
-     * <P>使用上の注意</P>
+     * <P>Cautions for use</P>
      * <UL>
-     * <LI>オブジェクトのシャロー範囲のみ複写処理対象となります。
-     * <LI>オブジェクトが循環参照している場合には、このメソッドは使わないでください。
+     * <LI>Only the shallow range of the object will be subject to the copying process.
+     * <LI>Do not use this method if the object has a circular reference.
      * </UL>
      *
      * @param target target value object.
@@ -176,7 +176,7 @@ public class SampleSQLite001Row {
         target.fColId = this.fColId;
         // Name: fColText
         // Type: java.io.Reader
-        // フィールド[fColText]はサポート外の型[java.io.Reader]です。
+        // Field[fColText] is an unsupported type[java.io.Reader].
         // Name: fColNumeric
         // Type: java.math.BigDecimal
         target.fColNumeric = this.fColNumeric;
