@@ -237,7 +237,7 @@ public class SampleSQLite003Iterator {
     public SampleSQLite003Row getRow() throws SQLException {
         SampleSQLite003Row result = new SampleSQLite003Row();
         result.setColId(fResultSet.getInt(1));
-        result.setColText(fResultSet.getCharacterStream(2));
+        result.setColText(fResultSet.getString(2));
         result.setColNumeric(fResultSet.getBigDecimal(3));
 
         return result;

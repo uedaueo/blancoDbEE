@@ -9,12 +9,12 @@
  */
 package blanco.db;
 
+import java.io.IOException;
+
+import org.junit.jupiter.api.Test;
+
 import blanco.db.task.BlancoDbProcessImpl;
 import blanco.db.task.valueobject.BlancoDbProcessInput;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Generation test for Kotlin.
@@ -58,7 +58,7 @@ public class BlancoDbTest {
         BlancoDbProcessInput input = new BlancoDbProcessInput();
         input.setBasepackage("my.db");
         input.setJdbcdriver("com.mysql.cj.jdbc.Driver");
-        input.setJdbcurl("jdbc:mysql://10.211.55.26:3306/blancoDb");
+        input.setJdbcurl("jdbc:mysql://10.211.55.29:3306/blancoDb");
         input.setJdbcuser("blancodb");
         input.setJdbcpassword("blancodb");
         input.setMetadir("test/data/mysql/");

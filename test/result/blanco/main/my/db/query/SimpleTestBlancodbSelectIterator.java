@@ -90,7 +90,7 @@ public class SimpleTestBlancodbSelectIterator {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "\n        SELECT COL_ID, COL_TEXT, COL_NUMERIC\n  FROM TEST_BLANCODB\n WHERE COL_ID = ?\n      ";
+        return "SELECT COL_ID, COL_TEXT, COL_NUMERIC\n  FROM TEST_BLANCODB\n WHERE COL_ID = ?";
     }
 
     /**

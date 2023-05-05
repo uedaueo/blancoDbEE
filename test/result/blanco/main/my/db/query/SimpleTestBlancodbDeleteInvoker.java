@@ -80,7 +80,7 @@ public class SimpleTestBlancodbDeleteInvoker {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "\n        DELETE FROM TEST_BLANCODB\n WHERE COL_ID = ?\n      ";
+        return "DELETE FROM TEST_BLANCODB\n WHERE COL_ID = ?";
     }
 
     /**

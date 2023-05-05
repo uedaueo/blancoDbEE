@@ -80,7 +80,7 @@ public class SimpleTestBlancodbInsertInvoker {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "\n        INSERT\n  INTO TEST_BLANCODB\n       (COL_ID, COL_TEXT, COL_NUMERIC)\nVALUES\n       (?, ?, ?)\n      ";
+        return "INSERT\n  INTO TEST_BLANCODB\n       (COL_ID, COL_TEXT, COL_NUMERIC)\nVALUES\n       (?, ?, ?)";
     }
 
     /**

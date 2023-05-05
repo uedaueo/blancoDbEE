@@ -80,7 +80,7 @@ public class SimpleTestBlancodbInsertNoNullsInvoker {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "\n        INSERT\n  INTO TEST_BLANCODB\n       (COL_ID)\nVALUES\n       (?)\n      ";
+        return "INSERT\n  INTO TEST_BLANCODB\n       (COL_ID)\nVALUES\n       (?)";
     }
 
     /**

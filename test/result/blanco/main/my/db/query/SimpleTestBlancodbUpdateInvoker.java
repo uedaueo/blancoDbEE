@@ -80,7 +80,7 @@ public class SimpleTestBlancodbUpdateInvoker {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "\n        UPDATE TEST_BLANCODB\n   SET COL_TEXT = ?, COL_NUMERIC = ?\n WHERE COL_ID = ?\n      ";
+        return "UPDATE TEST_BLANCODB\n   SET COL_TEXT = ?, COL_NUMERIC = ?\n WHERE COL_ID = ?";
     }
 
     /**

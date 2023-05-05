@@ -18,7 +18,7 @@ import java.util.List;
 public class SampleMySQL004Tester {
     public static void main(String[] args) throws Exception {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        final Connection conn = DriverManager.getConnection("jdbc:mysql://10.211.55.26:3306/blancoDb", "blancodb", "blancodb");
+        final Connection conn = DriverManager.getConnection("jdbc:mysql://10.211.55.29:3306/blancoDb", "blancodb", "blancodb");
         conn.setAutoCommit(false);
 
         final SampleMySQL004Iterator ite = new SampleMySQL004Iterator(conn);
