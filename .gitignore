@@ -12,7 +12,12 @@ buildNumber.properties
 !/.mvn/wrapper/maven-wrapper.jar
 
 tmp/
+.svn
+.classpath
+.project
 .idea/
+.vscode
+.settings
 blancoDbEE.iml
 ~$*
 test/backup/
