@@ -12,16 +12,16 @@ import java.util.List;
 
 import my.db.exception.DeadlockException;
 import my.db.exception.TimeoutException;
-import my.db.row.SimpleTestBlancodbSelectAllRow;
+import my.db.row.SimpleUserSelectAllRow;
 import my.db.util.BlancoDbUtil;
 
 /**
- * [SimpleTestBlancodbSelectAll]  (QueryIterator)
+ * [SimpleUserSelectAll]  (QueryIterator)
  *
  * Wraps a search-type SQL statement to provide various accessors.<br>
  * Scroll attribute: insensitive<br>
  */
-public class SimpleTestBlancodbSelectAllIterator {
+public class SimpleUserSelectAllIterator {
     /**
      * Database connection object used internally by this class.
      *
@@ -47,28 +47,28 @@ public class SimpleTestBlancodbSelectAllIterator {
     protected ResultSet fResultSet;
 
     /**
-     * SimpleTestBlancodbSelectAllIteratorConstructor for the class.
+     * SimpleUserSelectAllIteratorConstructor for the class.
      *
      * Creates a query class with a database connection object as an argument.<br>
      * After using this class, you must call the close() method.<br>
      *
      * @param conn Database connection
      */
-    public SimpleTestBlancodbSelectAllIterator(final Connection conn) {
+    public SimpleUserSelectAllIterator(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SimpleTestBlancodbSelectAllIteratorConstructor for the class.
+     * SimpleUserSelectAllIteratorConstructor for the class.
      *
      * Creates a query class without giving a database connection object.<br>
      */
     @Deprecated
-    public SimpleTestBlancodbSelectAllIterator() {
+    public SimpleUserSelectAllIterator() {
     }
 
     /**
-     * SimpleTestBlancodbSelectAllIteratorSets a database connection to the class.
+     * SimpleUserSelectAllIteratorSets a database connection to the class.
      *
      * @param conn Database connection
      */
@@ -85,7 +85,7 @@ public class SimpleTestBlancodbSelectAllIterator {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "SELECT COL_ID, COL_NUMERIC, COL_DATE\n  FROM TEST_BLANCODB\n ORDER BY COL_ID";
+        return "SELECT user_id, password, created_at, updated_at\n  FROM user\n ORDER BY user_id";
     }
 
     /**
@@ -276,13 +276,17 @@ public class SimpleTestBlancodbSelectAllIterator {
      * @return Row object.
      * @throws SQLException If an SQL exception occurs.
      */
-    public SimpleTestBlancodbSelectAllRow getRow() throws SQLException {
-        SimpleTestBlancodbSelectAllRow result = new SimpleTestBlancodbSelectAllRow();
-        result.setColId(fResultSet.getInt(1));
-        result.setColNumeric(fResultSet.getBigDecimal(2));
-        result.setColDate(BlancoDbUtil.convertTimestampToDate(fResultSet.getTimestamp(3)));
+    public SimpleUserSelectAllRow getRow() throws SQLException {
+        SimpleUserSelectAllRow result = new SimpleUserSelectAllRow();
+        result.setUserId(fResultSet.getString(1));
+        result.setPassword(fResultSet.getString(2));
+        result.setCreatedAt(BlancoDbUtil.convertTimestampToDate(fResultSet.getTimestamp(3)));
         if (fResultSet.wasNull()) {
-            result.setColDate(null);
+            result.setCreatedAt(null);
+        }
+        result.setUpdatedAt(BlancoDbUtil.convertTimestampToDate(fResultSet.getTimestamp(4)));
+        if (fResultSet.wasNull()) {
+            result.setUpdatedAt(null);
         }
 
         return result;
@@ -312,17 +316,17 @@ public class SimpleTestBlancodbSelectAllIterator {
     /**
      * Gets the search results in the form of a list.
      *
-     * The list will contain the SimpleTestBlancodbSelectAll class.<br>
+     * The list will contain the SimpleUserSelectAll class.<br>
      * This can be used when the number of search results is known in advance and the number is small.<br>
      * If you have a large number of search results, it is recommended that you do not use this method, but use the next() method instead.<br>
      *
      * @param absoluteStartPoint The line to start reading. Specify 1 if you want to read from the first line.
      * @param size The number of lines to read.
-     * @return SimpleTestBlancodbSelectAllClass List, which will return an empty list if the search results are zero.
+     * @return SimpleUserSelectAllClass List, which will return an empty list if the search results are zero.
      * @throws SQLException If an SQL exception occurs.
      */
-    public List<SimpleTestBlancodbSelectAllRow> getList(final int absoluteStartPoint, final int size) throws SQLException {
-        List<SimpleTestBlancodbSelectAllRow> result = new ArrayList<SimpleTestBlancodbSelectAllRow>(8192);
+    public List<SimpleUserSelectAllRow> getList(final int absoluteStartPoint, final int size) throws SQLException {
+        List<SimpleUserSelectAllRow> result = new ArrayList<SimpleUserSelectAllRow>(8192);
         if (absolute(absoluteStartPoint) == false) {
             return result;
         }
@@ -369,7 +373,7 @@ public class SimpleTestBlancodbSelectAllIterator {
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SimpleTestBlancodbSelectAllIterator : The resource has not been released by the close() method.";
+            final String message = "SimpleUserSelectAllIterator : The resource has not been released by the close() method.";
             System.out.println(message);
         }
     }

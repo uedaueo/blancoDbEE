@@ -150,10 +150,9 @@ public class SampleMySQL004Iterator {
      * @param FUNC_LITERAL Value in 'FUNC_LITERAL' column
      * @param FUNC_LITERAL2 Value in 'FUNC_LITERAL2' column
      * @param argTimeout Timeout value in milli-seconds.
-     * @param argTimeout Timeout value in milli-seconds.
      * @throws SQLException If an SQL exception occurs.
      */
-    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY, final BlancoDbDynamicParameter<BlancoDbDynamicLiteral> JOIN_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteralInput> FUNC_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteral2Input> FUNC_LITERAL2, final Long argTimeout, final Long argTimeout) throws SQLException {
+    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY, final BlancoDbDynamicParameter<BlancoDbDynamicLiteral> JOIN_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteralInput> FUNC_LITERAL, final BlancoDbDynamicParameter<SampleMySQL004FuncLiteral2Input> FUNC_LITERAL2, final Long argTimeout) throws SQLException {
         /* Replace tags  */
         String query = this.getQuery();
         query = BlancoDbUtil.createTimeoutHintMySQL(argTimeout, query);

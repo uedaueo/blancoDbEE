@@ -90,7 +90,7 @@ public class SimpleTestBlancodbSelectIterator {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "SELECT COL_ID, COL_TEXT, COL_NUMERIC\n  FROM TEST_BLANCODB\n WHERE COL_ID = ?";
+        return "SELECT COL_ID, COL_NUMERIC, COL_DATE\n  FROM TEST_BLANCODB\n WHERE COL_ID = ?";
     }
 
     /**
@@ -197,8 +197,11 @@ public class SimpleTestBlancodbSelectIterator {
     protected SimpleTestBlancodbSelectRow getRow() throws SQLException {
         SimpleTestBlancodbSelectRow result = new SimpleTestBlancodbSelectRow();
         result.setColId(fResultSet.getInt(1));
-        result.setColText(fResultSet.getString(2));
-        result.setColNumeric(fResultSet.getBigDecimal(3));
+        result.setColNumeric(fResultSet.getBigDecimal(2));
+        result.setColDate(BlancoDbUtil.convertTimestampToDate(fResultSet.getTimestamp(3)));
+        if (fResultSet.wasNull()) {
+            result.setColDate(null);
+        }
 
         return result;
     }

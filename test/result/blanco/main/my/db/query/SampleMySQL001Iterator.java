@@ -240,7 +240,7 @@ public class SampleMySQL001Iterator {
     public SampleMySQL001Row getRow() throws SQLException {
         SampleMySQL001Row result = new SampleMySQL001Row();
         result.setColId(fResultSet.getInt(1));
-        result.setColText(fResultSet.getString(2));
+        result.setColText(fResultSet.getCharacterStream(2));
         result.setColNumeric(fResultSet.getBigDecimal(3));
 
         return result;

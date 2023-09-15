@@ -5,14 +5,13 @@ package my.db.query;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import my.db.exception.DeadlockException;
-import my.db.exception.NoRowFoundException;
+import my.db.exception.IntegrityConstraintException;
+import my.db.exception.NoRowModifiedException;
 import my.db.exception.TimeoutException;
-import my.db.exception.TooManyRowsFoundException;
-import my.db.row.SampleSQLite001Row;
+import my.db.exception.TooManyRowsModifiedException;
 import my.db.util.BlancoDbDynamicClause;
 import my.db.util.BlancoDbDynamicLiteral;
 import my.db.util.BlancoDbDynamicOrderBy;
@@ -20,13 +19,12 @@ import my.db.util.BlancoDbDynamicParameter;
 import my.db.util.BlancoDbUtil;
 
 /**
- * [SampleSQLite001] Simple SQL sample. (QueryIterator)
+ * [SimpleTokenDelete]  (QueryInvoker)
  *
- * Wraps a search-type SQL statement to provide various accessors.<br>
+ * Wraps an executable SQL statement and provides various accessors.<br>
  * Single attribute: Enabled (expected number of processes is 1)<br>
- * Scroll attribute: forward_only<br>
  */
-public class SampleSQLite001Iterator {
+public class SimpleTokenDeleteInvoker {
     /**
      * Database connection object used internally by this class.
      *
@@ -44,36 +42,28 @@ public class SampleSQLite001Iterator {
     protected PreparedStatement fStatement;
 
     /**
-     * The result set object used internally by this class.
-     *
-     * This object is created from the database statement object and used internally.<br>
-     * Closes this object when the close method is called.
-     */
-    protected ResultSet fResultSet;
-
-    /**
-     * SampleSQLite001IteratorConstructor for the class.
+     * SimpleTokenDeleteInvokerConstructor for the class.
      *
      * Creates a query class with a database connection object as an argument.<br>
      * After using this class, you must call the close() method.<br>
      *
      * @param conn Database connection
      */
-    public SampleSQLite001Iterator(final Connection conn) {
+    public SimpleTokenDeleteInvoker(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SampleSQLite001IteratorConstructor for the class.
+     * SimpleTokenDeleteInvokerConstructor for the class.
      *
      * Creates a query class without giving a database connection object.<br>
      */
     @Deprecated
-    public SampleSQLite001Iterator() {
+    public SimpleTokenDeleteInvoker() {
     }
 
     /**
-     * SampleSQLite001IteratorSets a database connection to the class.
+     * SimpleTokenDeleteInvokerSets a database connection to the class.
      *
      * @param conn Database connection
      */
@@ -90,7 +80,7 @@ public class SampleSQLite001Iterator {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "SELECT\n        *\n    FROM\n        TEST_BLANCODB\n    WHERE\n        col_id = ?";
+        return "DELETE FROM token\n WHERE user_id = ?";
     }
 
     /**
@@ -125,82 +115,68 @@ public class SampleSQLite001Iterator {
      *
      * Internally, the PreparedStatement is set with SQL input parameters.
      *
-     * @param col_id Value in 'col_id' column
+     * @param userId Value in 'userId' column
      * @throws SQLException If an SQL exception occurs.
      */
-    public void setInputParameter(final int col_id) throws SQLException {
+    public void setInputParameter(final String userId) throws SQLException {
         if (fStatement == null) {
             prepareStatement();
         }
 
         int index = 1;
-        fStatement.setInt(index, col_id);
+        fStatement.setString(index, userId);
         index++;
 
     }
 
     /**
-     * Executes a search-type query.<br>
+     * Executes the SQL statement.
      *
+     * Since the single attribute is valid, the scope is set to protected.<br>
+     * Use the executeSingleUpdate method instead of this method.<br>
+     *
+     * @return The number of processed lines
+     * @throws IntegrityConstraintException If a database constarint violation occurs.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
      */
-    public void executeQuery() throws DeadlockException, TimeoutException, SQLException {
+    protected int executeUpdate() throws IntegrityConstraintException, DeadlockException, TimeoutException, SQLException {
         if (fStatement == null) {
-            // Since PreparedStatement has not yet been obtained, it is obtained by calling the prepareStatement() method prior to executing PreparedStatement.executeQuery().
+            // Since PreparedStatement has not been obtained yet, obtains by calling prepareStatement() method prior to executing PreparedStatement.executeUpdate().
             prepareStatement();
         }
-        if (fResultSet != null) {
-            // Since the previous result set (ResultSet) is still there, releases it.
-            fResultSet.close();
-            fResultSet = null;
-        }
 
         try {
-            fResultSet = fStatement.executeQuery();
+            return fStatement.executeUpdate();
         } catch (SQLException ex) {
             throw BlancoDbUtil.convertToBlancoException(ex);
         }
     }
 
     /**
-     * Moves the cursor to the next line from the current position.
-     * Since the single attribute is valid, the scope is set to protected.<br>
+     * Executes the SQL statement.
      *
-     * @return True if the new current row is valid, false if there are no more rows.
+     * Verifies that the result of the SQL statement execution is a single row. If the result is not a single row, it will raise an exception.<br>
+     * Generated since the single attribute is enabled.<br>
+     *
+     * @throws NoRowModifiedException If not a single row of data has been changed as a result of the database processing.
+     * @throws TooManyRowsModifiedException If more than one row of data has been changed as a result of database processing.
+     * @throws IntegrityConstraintException If a database constarint violation occurs.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
      */
-    protected boolean next() throws DeadlockException, TimeoutException, SQLException {
-        if (fResultSet == null) {
-            executeQuery();
+    public void executeSingleUpdate() throws NoRowModifiedException, TooManyRowsModifiedException, IntegrityConstraintException, DeadlockException, TimeoutException, SQLException {
+        int result = 0;
+        result = executeUpdate();
+
+        if (result == 0) {
+            throw new NoRowModifiedException("Not a single row of data has been changed as a result of the database processing.");
+        } else if (result > 1) {
+            String message = "More than one row of data has been changed as a result of database processing. The number of changes:" + result;
+            throw new TooManyRowsModifiedException(message);
         }
-
-        try {
-            return fResultSet.next();
-        } catch (SQLException ex) {
-            throw BlancoDbUtil.convertToBlancoException(ex);
-        }
-    }
-
-    /**
-     * Gets the data of the current row as an object.
-     *
-     * Since the single attribute is valid, the scope is set to protected.<br>
-     * Uses the getSingleRow method instead of this method.<br>
-     *
-     * @return Row object.
-     * @throws SQLException If an SQL exception occurs.
-     */
-    protected SampleSQLite001Row getRow() throws SQLException {
-        SampleSQLite001Row result = new SampleSQLite001Row();
-        result.setColId(fResultSet.getInt(1));
-        result.setColText(fResultSet.getString(2));
-        result.setColNumeric(fResultSet.getBigDecimal(3));
-
-        return result;
     }
 
     /**
@@ -214,60 +190,17 @@ public class SampleSQLite001Iterator {
     }
 
     /**
-     * Gets the internally held ResultSet object.
-     *
-     * @deprecated Basically, you don't need to use ResultSet directly from outside.
-     *
-     * @return The ResultSet object.
-     */
-    public ResultSet getResultSet() {
-        return fResultSet;
-    }
-
-    /**
-     * Gets the data of the current row as an object.
-     *
-     * Verifies that the result of the SQL statement execution is a single row. If the result is not a single row, it will raise an exception.<br>
-     * Since the single attribute is valid, it will be generated.<br>
-     *
-     * @return The row object.
-     * @throws NoRowFoundException If no rows of data were retrieved as a result of the database processing.
-     * @throws TooManyRowsFoundException If more than one row of data has been retrieved as a result of database processing.
-     * @throws SQLException If an SQL exception occurs.
-     */
-    public SampleSQLite001Row getSingleRow() throws NoRowFoundException, TooManyRowsFoundException, SQLException {
-        if (next() == false) {
-            throw new NoRowFoundException("No rows of data were retrieved as a result of the database processing.");
-        }
-
-        SampleSQLite001Row result = getRow();
-
-        if (next()) {
-            throw new TooManyRowsFoundException("More than one row of data has been retrieved as a result of database processing.");
-        }
-
-        return result;
-    }
-
-    /**
      * Closes this class.
      *
      * Calls the close() method on the JDBC resource object that was created internally.<br>
-     * Make sure to call this method after using the class.
+     * Make sure to call this method when you are done using the class.
      *
      * @throws SQLException If an SQL exception occurs.
      */
     public void close() throws SQLException {
-        try {
-            if (fResultSet != null) {
-                fResultSet.close();
-                fResultSet = null;
-            }
-        } finally {
-            if (fStatement != null) {
-                fStatement.close();
-                fStatement = null;
-            }
+        if (fStatement != null) {
+            fStatement.close();
+            fStatement = null;
         }
     }
 
@@ -281,7 +214,7 @@ public class SampleSQLite001Iterator {
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SampleSQLite001Iterator : The resource has not been released by the close() method.";
+            final String message = "SimpleTokenDeleteInvoker : The resource has not been released by the close() method.";
             System.out.println(message);
         }
     }

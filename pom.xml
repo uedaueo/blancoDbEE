@@ -20,6 +20,8 @@
 		<git.repositoryOwner>uedaueo</git.repositoryOwner>
 		<git.repositoryName>blancofw-maven2</git.repositoryName>
 		<git.isMerge>true</git.isMerge>
+		<blanco.mysql.host>10.211.55.29</blanco.mysql.host>
+		<blanco.mysql.skip>true</blanco.mysql.skip>
 	</properties>
 
 	<distributionManagement>
@@ -77,9 +79,16 @@
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
-			<version>3.41.2.1</version>
+<!--			<version>3.41.2.1</version>-->
+			<version>3.43.0.0</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<version>8.1.0</version>
+		</dependency>
 	</dependencies>
 
 	<!-- ref: http://maven.apache.org/guides/mini/guide-central-repository-upload.html -->
@@ -157,7 +166,7 @@
 							<target>
 								<taskdef name="blancoresourcebundle" classname="blanco.resourcebundle.task.BlancoResourceBundleTask" classpathref="maven.compile.classpath">
 								</taskdef>
-								<blancoresourcebundle metadir="meta/program" encoding="${project.build.sourceEncoding}" />
+								<blancoresourcebundle metadir="meta/program" encoding="${project.build.sourceEncoding}" commenttimestamp="false" />
 							</target>
 						</configuration>
 						<goals>
@@ -201,7 +210,23 @@
 						<configuration>
 							<target>
 								<taskdef name="blancodb" classname="blanco.db.task.BlancoDbTask" classpathref="maven.runtime.classpath" />
-								<blancodb basepackage="my.db" jdbcdriver="org.sqlite.JDBC" jdbcurl="jdbc:sqlite:./test/data/sqlite/sqlite.db" jdbcuser="sqlite" jdbcpassword="password" metadir="test/data/sqlite/" targetdir="test/result/blanco" sql="true" table="true" encoding="UTF-8" />
+								<blancodb basepackage="my.db" jdbcdriver="org.sqlite.JDBC" jdbcurl="jdbc:sqlite:./test/data/sqlite/sqlite.db" jdbcuser="sqlite" jdbcpassword="password" metadir="test/data/sqlite/" tmpdir="tmpSqlite" targetdir="test/result/blanco" sql="true" table="true" encoding="UTF-8" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<!-- create tables by using test/data/mysql/blancodb.sql -->
+						<id>blanco-meta-blancodb-test-mysql</id>
+						<phase>generate-test-sources</phase>
+						<configuration>
+							<skip>${blanco.mysql.skip}</skip>
+							<target>
+								<taskdef name="blancodb" classname="blanco.db.task.BlancoDbTask" classpathref="maven.runtime.classpath" />
+								<blancodb basepackage="my.db" jdbcdriver="com.mysql.cj.jdbc.Driver" jdbcurl="jdbc:mysql://${blanco.mysql.host}:3306/blancoDb" jdbcuser="blancodb" jdbcpassword="blancodb" metadir="test/data/mysql/" tmpdir="tmpMysql" targetdir="test/result/blanco" sql="true" table="true" encoding="UTF-8" />
 							</target>
 						</configuration>
 						<goals>

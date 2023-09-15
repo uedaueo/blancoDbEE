@@ -3,7 +3,6 @@
  */
 package my.db.query;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,12 +21,12 @@ import my.db.util.BlancoDbDynamicParameter;
 import my.db.util.BlancoDbUtil;
 
 /**
- * [SimpleTestBlancodbUpdate]  (QueryInvoker)
+ * [SimpleTokenInsert]  (QueryInvoker)
  *
  * Wraps an executable SQL statement and provides various accessors.<br>
  * Single attribute: Enabled (expected number of processes is 1)<br>
  */
-public class SimpleTestBlancodbUpdateInvoker {
+public class SimpleTokenInsertInvoker {
     /**
      * Database connection object used internally by this class.
      *
@@ -45,28 +44,28 @@ public class SimpleTestBlancodbUpdateInvoker {
     protected PreparedStatement fStatement;
 
     /**
-     * SimpleTestBlancodbUpdateInvokerConstructor for the class.
+     * SimpleTokenInsertInvokerConstructor for the class.
      *
      * Creates a query class with a database connection object as an argument.<br>
      * After using this class, you must call the close() method.<br>
      *
      * @param conn Database connection
      */
-    public SimpleTestBlancodbUpdateInvoker(final Connection conn) {
+    public SimpleTokenInsertInvoker(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SimpleTestBlancodbUpdateInvokerConstructor for the class.
+     * SimpleTokenInsertInvokerConstructor for the class.
      *
      * Creates a query class without giving a database connection object.<br>
      */
     @Deprecated
-    public SimpleTestBlancodbUpdateInvoker() {
+    public SimpleTokenInsertInvoker() {
     }
 
     /**
-     * SimpleTestBlancodbUpdateInvokerSets a database connection to the class.
+     * SimpleTokenInsertInvokerSets a database connection to the class.
      *
      * @param conn Database connection
      */
@@ -83,7 +82,7 @@ public class SimpleTestBlancodbUpdateInvoker {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "UPDATE TEST_BLANCODB\n   SET COL_NUMERIC = ?, COL_DATE = ?\n WHERE COL_ID = ?";
+        return "INSERT\n  INTO token\n       (user_id, token, expired_at, created_at, updated_at)\nVALUES\n       (?, ?, ?, ?, ?)";
     }
 
     /**
@@ -118,28 +117,44 @@ public class SimpleTestBlancodbUpdateInvoker {
      *
      * Internally, the PreparedStatement is set with SQL input parameters.
      *
-     * @param colNumeric Value in 'colNumeric' column
-     * @param colDate Value in 'colDate' column
-     * @param whereColId Value in 'whereColId' column
+     * @param userId Value in 'userId' column
+     * @param token Value in 'token' column
+     * @param expiredAt Value in 'expiredAt' column
+     * @param createdAt Value in 'createdAt' column
+     * @param updatedAt Value in 'updatedAt' column
      * @throws SQLException If an SQL exception occurs.
      */
-    public void setInputParameter(final BigDecimal colNumeric, final Date colDate, final int whereColId) throws SQLException {
+    public void setInputParameter(final String userId, final String token, final Date expiredAt, final Date createdAt, final Date updatedAt) throws SQLException {
         if (fStatement == null) {
             prepareStatement();
         }
 
         int index = 1;
-        fStatement.setBigDecimal(index, colNumeric);
+        fStatement.setString(index, userId);
         index++;
 
-        if (colDate == null) {
+        fStatement.setString(index, token);
+        index++;
+
+        if (expiredAt == null) {
             fStatement.setNull(index, java.sql.Types.TIMESTAMP);
         } else {
-            fStatement.setTimestamp(index, new Timestamp(colDate.getTime()));
+            fStatement.setTimestamp(index, new Timestamp(expiredAt.getTime()));
         }
         index++;
 
-        fStatement.setInt(index, whereColId);
+        if (createdAt == null) {
+            fStatement.setNull(index, java.sql.Types.TIMESTAMP);
+        } else {
+            fStatement.setTimestamp(index, new Timestamp(createdAt.getTime()));
+        }
+        index++;
+
+        if (updatedAt == null) {
+            fStatement.setNull(index, java.sql.Types.TIMESTAMP);
+        } else {
+            fStatement.setTimestamp(index, new Timestamp(updatedAt.getTime()));
+        }
         index++;
 
     }
@@ -229,7 +244,7 @@ public class SimpleTestBlancodbUpdateInvoker {
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SimpleTestBlancodbUpdateInvoker : The resource has not been released by the close() method.";
+            final String message = "SimpleTokenInsertInvoker : The resource has not been released by the close() method.";
             System.out.println(message);
         }
     }

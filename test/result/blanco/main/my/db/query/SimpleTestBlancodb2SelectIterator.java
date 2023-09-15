@@ -7,14 +7,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import my.db.exception.DeadlockException;
+import my.db.exception.NoRowFoundException;
 import my.db.exception.TimeoutException;
-import my.db.row.SampleMySQL001Row;
+import my.db.exception.TooManyRowsFoundException;
+import my.db.row.SimpleTestBlancodb2SelectRow;
 import my.db.util.BlancoDbDynamicClause;
 import my.db.util.BlancoDbDynamicLiteral;
 import my.db.util.BlancoDbDynamicOrderBy;
@@ -22,23 +20,13 @@ import my.db.util.BlancoDbDynamicParameter;
 import my.db.util.BlancoDbUtil;
 
 /**
- * [SampleMySQL001] 簡易なSQLのサンプルです。 (QueryIterator)
+ * [SimpleTestBlancodb2Select]  (QueryIterator)
  *
  * Wraps a search-type SQL statement to provide various accessors.<br>
+ * Single attribute: Enabled (expected number of processes is 1)<br>
  * Scroll attribute: forward_only<br>
  */
-public class SampleMySQL001Iterator {
-    protected Map<String, BlancoDbDynamicClause> fMapDynamicClause = new HashMap<String, BlancoDbDynamicClause>()
-    {
-        {
-            put("betweenNumeric", new BlancoDbDynamicClause("BETWEEN01", "NOT BETWEEN", "COL_NUMERIC", "AND", "java.lang.Double"));
-            put("inId", new BlancoDbDynamicClause("INCLAUSE01", "IN", "COL_ID", "AND", "java.lang.Long"));
-            put("compTextEq", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "EQ"));
-            put("compTextLike", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "LIKE"));
-            put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ORDERBY", "COL_ID,COL_TEXT,COL_NUMERIC"));
-        }
-    };
-
+public class SimpleTestBlancodb2SelectIterator {
     /**
      * Database connection object used internally by this class.
      *
@@ -64,28 +52,28 @@ public class SampleMySQL001Iterator {
     protected ResultSet fResultSet;
 
     /**
-     * SampleMySQL001IteratorConstructor for the class.
+     * SimpleTestBlancodb2SelectIteratorConstructor for the class.
      *
      * Creates a query class with a database connection object as an argument.<br>
      * After using this class, you must call the close() method.<br>
      *
      * @param conn Database connection
      */
-    public SampleMySQL001Iterator(final Connection conn) {
+    public SimpleTestBlancodb2SelectIterator(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SampleMySQL001IteratorConstructor for the class.
+     * SimpleTestBlancodb2SelectIteratorConstructor for the class.
      *
      * Creates a query class without giving a database connection object.<br>
      */
     @Deprecated
-    public SampleMySQL001Iterator() {
+    public SimpleTestBlancodb2SelectIterator() {
     }
 
     /**
-     * SampleMySQL001IteratorSets a database connection to the class.
+     * SimpleTestBlancodb2SelectIteratorSets a database connection to the class.
      *
      * @param conn Database connection
      */
@@ -102,7 +90,7 @@ public class SampleMySQL001Iterator {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "select COL_ID, COL_TEXT, COL_NUMERIC from\n   TEST_BLANCODB\nwhere\n   COL_TEXT like ?\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND COL_NUMERIC = ?\n${ORDERBY}";
+        return "SELECT COL_ID, COL_NUMERIC\n  FROM TEST_BLANCODB2\n WHERE COL_ID = ?";
     }
 
     /**
@@ -121,13 +109,13 @@ public class SampleMySQL001Iterator {
      * Precompiles with the given SQL statement (dynamic SQL).
      *
      * This method should only be used when you need to execute SQL that dynamically changes its contents.<br>
-     * "Dynamic SQL" is set to "Use" in the SQL definition document.<br>
+     * If you need to use dynamic SQL, please change "Dynamic SQL" to "Use" in the SQL definition document. After the change, it will be available externally.<br>
      * Internally calls the JDBC driver's Connection.prepareStatement.<br>
      *
      * @param query The SQL statement that you want to have precompiled. In the case of dynamic SQL, this argument is the executable SQL statement after it has been processed.
      * @throws SQLException If an SQL exception occurs.
      */
-    public void prepareStatement(final String query) throws SQLException {
+    protected void prepareStatement(final String query) throws SQLException {
         close();
         fStatement = fConnection.prepareStatement(query);
     }
@@ -137,49 +125,16 @@ public class SampleMySQL001Iterator {
      *
      * Internally, the PreparedStatement is set with SQL input parameters.
      *
-     * @param colText Value in 'colText' column
-     * @param colNumeric Value in 'colNumeric' column
-     * @param BETWEEN01 Value in 'BETWEEN01' column
-     * @param INCLAUSE01 Value in 'INCLAUSE01' column
-     * @param COMPARE01 Value in 'COMPARE01' column
-     * @param ORDERBY Value in 'ORDERBY' column
+     * @param colId Value in 'colId' column
      * @throws SQLException If an SQL exception occurs.
      */
-    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY) throws SQLException {
-        /* Replace tags  */
-        String query = this.getQuery();
-        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, BETWEEN01, query, "BETWEEN01");
-        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, INCLAUSE01, query, "INCLAUSE01");
-        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, COMPARE01, query, "COMPARE01");
-        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, ORDERBY, query, "ORDERBY");
-
-        /* Always recreates the statement. */
-        prepareStatement(query);
+    public void setInputParameter(final int colId) throws SQLException {
+        if (fStatement == null) {
+            prepareStatement();
+        }
 
         int index = 1;
-        fStatement.setString(index, colText);
-        index++;
-
-        if (BETWEEN01 != null) {
-            java.util.List<java.lang.Double> values = BETWEEN01.getValues();
-            index = BlancoDbUtil.setInputParameter(fStatement, values, index);
-        }
-
-        if (INCLAUSE01 != null) {
-            java.util.List<java.lang.Long> values = INCLAUSE01.getValues();
-            index = BlancoDbUtil.setInputParameter(fStatement, values, index);
-        }
-
-        if (COMPARE01 != null) {
-            java.util.List<java.lang.String> values = COMPARE01.getValues();
-            index = BlancoDbUtil.setInputParameter(fStatement, values, index);
-        }
-
-        if (colNumeric == null) {
-            fStatement.setNull(index, java.sql.Types.FLOAT);
-        } else {
-            fStatement.setDouble(index, colNumeric.doubleValue());
-        }
+        fStatement.setInt(index, colId);
         index++;
 
     }
@@ -211,13 +166,14 @@ public class SampleMySQL001Iterator {
 
     /**
      * Moves the cursor to the next line from the current position.
+     * Since the single attribute is valid, the scope is set to protected.<br>
      *
      * @return True if the new current row is valid, false if there are no more rows.
      * @throws DeadlockException If a database deadlock occurs.
      * @throws TimeoutException If a database timeout occurs.
      * @throws SQLException If an SQL exception occurs.
      */
-    public boolean next() throws DeadlockException, TimeoutException, SQLException {
+    protected boolean next() throws DeadlockException, TimeoutException, SQLException {
         if (fResultSet == null) {
             executeQuery();
         }
@@ -232,16 +188,16 @@ public class SampleMySQL001Iterator {
     /**
      * Gets the data of the current row as an object.
      *
-     * Before calling this method, you need to call a method that manipulates the cursor, such as next().
+     * Since the single attribute is valid, the scope is set to protected.<br>
+     * Uses the getSingleRow method instead of this method.<br>
      *
      * @return Row object.
      * @throws SQLException If an SQL exception occurs.
      */
-    public SampleMySQL001Row getRow() throws SQLException {
-        SampleMySQL001Row result = new SampleMySQL001Row();
+    protected SimpleTestBlancodb2SelectRow getRow() throws SQLException {
+        SimpleTestBlancodb2SelectRow result = new SimpleTestBlancodb2SelectRow();
         result.setColId(fResultSet.getInt(1));
-        result.setColText(fResultSet.getString(2));
-        result.setColNumeric(fResultSet.getBigDecimal(3));
+        result.setColNumeric(fResultSet.getBigDecimal(2));
 
         return result;
     }
@@ -268,25 +224,27 @@ public class SampleMySQL001Iterator {
     }
 
     /**
-     * Gets the search results in the form of a list.
+     * Gets the data of the current row as an object.
      *
-     * The list will contain the SampleMySQL001 class.<br>
-     * This can be used when the number of search results is known in advance and the number is small.<br>
-     * If you have a large number of search results, it is recommended that you do not use this method, but use the next() method instead.<br>
-     * This QueryIterator is FORWARD_ONLY (forward cursor). If you know that you will be working with a large amount of data, avoid using this getList method as much as possible or regenerate the source code as a scrolling cursor.
+     * Verifies that the result of the SQL statement execution is a single row. If the result is not a single row, it will raise an exception.<br>
+     * Since the single attribute is valid, it will be generated.<br>
      *
-     * @param size The number of lines to read.
-     * @return SampleMySQL001Class List, which will return an empty list if the search results are zero.
+     * @return The row object.
+     * @throws NoRowFoundException If no rows of data were retrieved as a result of the database processing.
+     * @throws TooManyRowsFoundException If more than one row of data has been retrieved as a result of database processing.
      * @throws SQLException If an SQL exception occurs.
      */
-    public List<SampleMySQL001Row> getList(final int size) throws SQLException {
-        List<SampleMySQL001Row> result = new ArrayList<SampleMySQL001Row>(8192);
-        for (int count = 1; count <= size; count++) {
-            if (next() == false) {
-                break;
-            }
-            result.add(getRow());
+    public SimpleTestBlancodb2SelectRow getSingleRow() throws NoRowFoundException, TooManyRowsFoundException, SQLException {
+        if (next() == false) {
+            throw new NoRowFoundException("No rows of data were retrieved as a result of the database processing.");
         }
+
+        SimpleTestBlancodb2SelectRow result = getRow();
+
+        if (next()) {
+            throw new TooManyRowsFoundException("More than one row of data has been retrieved as a result of database processing.");
+        }
+
         return result;
     }
 
@@ -322,7 +280,7 @@ public class SampleMySQL001Iterator {
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SampleMySQL001Iterator : The resource has not been released by the close() method.";
+            final String message = "SimpleTestBlancodb2SelectIterator : The resource has not been released by the close() method.";
             System.out.println(message);
         }
     }

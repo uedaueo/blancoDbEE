@@ -113,18 +113,6 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
             cgMethod.getParameterList().add(param);
         }
 
-        /*
-         * create timeout value parameter if required.
-         */
-        if (fSqlInfo.getUseTimeoutHintMySQL()) {
-            BlancoCgParameter param = fCgFactory.createParameter(
-                    "argTimeout",
-                    "java.lang.Long",
-                    "Timeout value in milli-seconds.");
-            param.setFinal(true);
-            cgMethod.getParameterList().add(param);
-        }
-
         final List<String> listLine = cgMethod.getLineList();
 
         if (fDbSetting.getLogging()) {

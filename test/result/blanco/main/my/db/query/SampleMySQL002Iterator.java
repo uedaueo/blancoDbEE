@@ -236,7 +236,7 @@ public class SampleMySQL002Iterator {
     public SampleMySQL002Row getRow() throws SQLException {
         SampleMySQL002Row result = new SampleMySQL002Row();
         result.setColId(fResultSet.getInt(1));
-        result.setColText(fResultSet.getString(2));
+        result.setColText(fResultSet.getCharacterStream(2));
         result.setColNumeric(fResultSet.getBigDecimal(3));
 
         return result;

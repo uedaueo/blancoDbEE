@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import my.db.exception.DeadlockException;
 import my.db.exception.IntegrityConstraintException;
@@ -22,12 +20,12 @@ import my.db.util.BlancoDbDynamicParameter;
 import my.db.util.BlancoDbUtil;
 
 /**
- * [SimpleTestBlancodbUpdate]  (QueryInvoker)
+ * [SimpleTestBlancodb2Update]  (QueryInvoker)
  *
  * Wraps an executable SQL statement and provides various accessors.<br>
  * Single attribute: Enabled (expected number of processes is 1)<br>
  */
-public class SimpleTestBlancodbUpdateInvoker {
+public class SimpleTestBlancodb2UpdateInvoker {
     /**
      * Database connection object used internally by this class.
      *
@@ -45,28 +43,28 @@ public class SimpleTestBlancodbUpdateInvoker {
     protected PreparedStatement fStatement;
 
     /**
-     * SimpleTestBlancodbUpdateInvokerConstructor for the class.
+     * SimpleTestBlancodb2UpdateInvokerConstructor for the class.
      *
      * Creates a query class with a database connection object as an argument.<br>
      * After using this class, you must call the close() method.<br>
      *
      * @param conn Database connection
      */
-    public SimpleTestBlancodbUpdateInvoker(final Connection conn) {
+    public SimpleTestBlancodb2UpdateInvoker(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SimpleTestBlancodbUpdateInvokerConstructor for the class.
+     * SimpleTestBlancodb2UpdateInvokerConstructor for the class.
      *
      * Creates a query class without giving a database connection object.<br>
      */
     @Deprecated
-    public SimpleTestBlancodbUpdateInvoker() {
+    public SimpleTestBlancodb2UpdateInvoker() {
     }
 
     /**
-     * SimpleTestBlancodbUpdateInvokerSets a database connection to the class.
+     * SimpleTestBlancodb2UpdateInvokerSets a database connection to the class.
      *
      * @param conn Database connection
      */
@@ -83,7 +81,7 @@ public class SimpleTestBlancodbUpdateInvoker {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "UPDATE TEST_BLANCODB\n   SET COL_NUMERIC = ?, COL_DATE = ?\n WHERE COL_ID = ?";
+        return "UPDATE TEST_BLANCODB2\n   SET COL_NUMERIC = ?\n WHERE COL_ID = ?";
     }
 
     /**
@@ -119,24 +117,16 @@ public class SimpleTestBlancodbUpdateInvoker {
      * Internally, the PreparedStatement is set with SQL input parameters.
      *
      * @param colNumeric Value in 'colNumeric' column
-     * @param colDate Value in 'colDate' column
      * @param whereColId Value in 'whereColId' column
      * @throws SQLException If an SQL exception occurs.
      */
-    public void setInputParameter(final BigDecimal colNumeric, final Date colDate, final int whereColId) throws SQLException {
+    public void setInputParameter(final BigDecimal colNumeric, final int whereColId) throws SQLException {
         if (fStatement == null) {
             prepareStatement();
         }
 
         int index = 1;
         fStatement.setBigDecimal(index, colNumeric);
-        index++;
-
-        if (colDate == null) {
-            fStatement.setNull(index, java.sql.Types.TIMESTAMP);
-        } else {
-            fStatement.setTimestamp(index, new Timestamp(colDate.getTime()));
-        }
         index++;
 
         fStatement.setInt(index, whereColId);
@@ -229,7 +219,7 @@ public class SimpleTestBlancodbUpdateInvoker {
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SimpleTestBlancodbUpdateInvoker : The resource has not been released by the close() method.";
+            final String message = "SimpleTestBlancodb2UpdateInvoker : The resource has not been released by the close() method.";
             System.out.println(message);
         }
     }
