@@ -3,12 +3,9 @@
  */
 package my.db.query;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import my.db.exception.DeadlockException;
 import my.db.exception.IntegrityConstraintException;
@@ -83,7 +80,7 @@ public class SimpleTestBlancodbUpdateInvoker {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "UPDATE TEST_BLANCODB\n   SET COL_NUMERIC = ?, COL_DATE = ?\n WHERE COL_ID = ?";
+        return "UPDATE TEST_BLANCODB\n   SET COL_TEXT = ?, COL_NUMERIC = ?\n WHERE COL_ID = ?";
     }
 
     /**
@@ -118,24 +115,24 @@ public class SimpleTestBlancodbUpdateInvoker {
      *
      * Internally, the PreparedStatement is set with SQL input parameters.
      *
+     * @param colText Value in 'colText' column
      * @param colNumeric Value in 'colNumeric' column
-     * @param colDate Value in 'colDate' column
      * @param whereColId Value in 'whereColId' column
      * @throws SQLException If an SQL exception occurs.
      */
-    public void setInputParameter(final BigDecimal colNumeric, final Date colDate, final int whereColId) throws SQLException {
+    public void setInputParameter(final String colText, final Double colNumeric, final int whereColId) throws SQLException {
         if (fStatement == null) {
             prepareStatement();
         }
 
         int index = 1;
-        fStatement.setBigDecimal(index, colNumeric);
+        fStatement.setString(index, colText);
         index++;
 
-        if (colDate == null) {
-            fStatement.setNull(index, java.sql.Types.TIMESTAMP);
+        if (colNumeric == null) {
+            fStatement.setNull(index, java.sql.Types.FLOAT);
         } else {
-            fStatement.setTimestamp(index, new Timestamp(colDate.getTime()));
+            fStatement.setDouble(index, colNumeric.doubleValue());
         }
         index++;
 

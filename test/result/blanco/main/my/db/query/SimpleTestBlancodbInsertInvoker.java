@@ -3,12 +3,9 @@
  */
 package my.db.query;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import my.db.exception.DeadlockException;
 import my.db.exception.IntegrityConstraintException;
@@ -83,7 +80,7 @@ public class SimpleTestBlancodbInsertInvoker {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "INSERT\n  INTO TEST_BLANCODB\n       (COL_ID, COL_NUMERIC, COL_DATE)\nVALUES\n       (?, ?, ?)";
+        return "INSERT\n  INTO TEST_BLANCODB\n       (COL_ID, COL_TEXT, COL_NUMERIC)\nVALUES\n       (?, ?, ?)";
     }
 
     /**
@@ -119,11 +116,11 @@ public class SimpleTestBlancodbInsertInvoker {
      * Internally, the PreparedStatement is set with SQL input parameters.
      *
      * @param colId Value in 'colId' column
+     * @param colText Value in 'colText' column
      * @param colNumeric Value in 'colNumeric' column
-     * @param colDate Value in 'colDate' column
      * @throws SQLException If an SQL exception occurs.
      */
-    public void setInputParameter(final int colId, final BigDecimal colNumeric, final Date colDate) throws SQLException {
+    public void setInputParameter(final int colId, final String colText, final Double colNumeric) throws SQLException {
         if (fStatement == null) {
             prepareStatement();
         }
@@ -132,13 +129,13 @@ public class SimpleTestBlancodbInsertInvoker {
         fStatement.setInt(index, colId);
         index++;
 
-        fStatement.setBigDecimal(index, colNumeric);
+        fStatement.setString(index, colText);
         index++;
 
-        if (colDate == null) {
-            fStatement.setNull(index, java.sql.Types.TIMESTAMP);
+        if (colNumeric == null) {
+            fStatement.setNull(index, java.sql.Types.FLOAT);
         } else {
-            fStatement.setTimestamp(index, new Timestamp(colDate.getTime()));
+            fStatement.setDouble(index, colNumeric.doubleValue());
         }
         index++;
 

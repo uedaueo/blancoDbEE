@@ -1,15 +1,14 @@
 package my.db.row;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * A row class created from SQL definition (blancoDb).
  *
  * 'SimpleTestBlancodbSelectAllRow' row is represented.
  * (1) 'COL_ID' column type:int
- * (2) 'COL_NUMERIC' column type:java.math.BigDecimal
- * (3) 'COL_DATE' column type:java.util.Date
+ * (2) 'COL_TEXT' column type:java.lang.String
+ * (3) 'COL_NUMERIC' column type:java.math.BigDecimal
  */
 public class SimpleTestBlancodbSelectAllRow {
     /**
@@ -20,18 +19,18 @@ public class SimpleTestBlancodbSelectAllRow {
     private int fColId;
 
     /**
+     * Field [COL_TEXT].
+     *
+     * フィールド: [COL_TEXT]。
+     */
+    private String fColText;
+
+    /**
      * Field [COL_NUMERIC].
      *
      * フィールド: [COL_NUMERIC]。
      */
     private BigDecimal fColNumeric;
-
-    /**
-     * Field [COL_DATE].
-     *
-     * フィールド: [COL_DATE]。
-     */
-    private Date fColDate;
 
     /**
      * フィールド [COL_ID] の値を設定します。
@@ -53,6 +52,28 @@ public class SimpleTestBlancodbSelectAllRow {
      */
     public int getColId() {
         return fColId;
+    }
+
+    /**
+     * フィールド [COL_TEXT] の値を設定します。
+     *
+     * フィールドの説明: [Field [COL_TEXT].]。
+     *
+     * @param argColText フィールド[COL_TEXT]に設定する値。
+     */
+    public void setColText(final String argColText) {
+        fColText = argColText;
+    }
+
+    /**
+     * フィールド [COL_TEXT] の値を取得します。
+     *
+     * フィールドの説明: [Field [COL_TEXT].]。
+     *
+     * @return フィールド[COL_TEXT]から取得した値。
+     */
+    public String getColText() {
+        return fColText;
     }
 
     /**
@@ -78,28 +99,6 @@ public class SimpleTestBlancodbSelectAllRow {
     }
 
     /**
-     * フィールド [COL_DATE] の値を設定します。
-     *
-     * フィールドの説明: [Field [COL_DATE].]。
-     *
-     * @param argColDate フィールド[COL_DATE]に設定する値。
-     */
-    public void setColDate(final Date argColDate) {
-        fColDate = argColDate;
-    }
-
-    /**
-     * フィールド [COL_DATE] の値を取得します。
-     *
-     * フィールドの説明: [Field [COL_DATE].]。
-     *
-     * @return フィールド[COL_DATE]から取得した値。
-     */
-    public Date getColDate() {
-        return fColDate;
-    }
-
-    /**
      * Gets the string representation of this value object.
      *
      * <P>Precautions for use</P>
@@ -115,8 +114,8 @@ public class SimpleTestBlancodbSelectAllRow {
         final StringBuffer buf = new StringBuffer();
         buf.append("my.db.row.SimpleTestBlancodbSelectAllRow[");
         buf.append("COL_ID=" + fColId);
+        buf.append(",COL_TEXT=" + fColText);
         buf.append(",COL_NUMERIC=" + fColNumeric);
-        buf.append(",COL_DATE=" + fColDate);
         buf.append("]");
         return buf.toString();
     }
@@ -142,11 +141,11 @@ public class SimpleTestBlancodbSelectAllRow {
         // Name: fColId
         // Type: int
         target.fColId = this.fColId;
+        // Name: fColText
+        // Type: java.lang.String
+        target.fColText = this.fColText;
         // Name: fColNumeric
         // Type: java.math.BigDecimal
         target.fColNumeric = this.fColNumeric;
-        // Name: fColDate
-        // Type: java.util.Date
-        target.fColDate = (this.fColDate == null ? null : new Date(this.fColDate.getTime()));
     }
 }
