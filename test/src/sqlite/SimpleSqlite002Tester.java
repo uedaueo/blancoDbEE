@@ -5,11 +5,9 @@ import my.db.row.SampleSQLite002Row;
 import my.db.util.BlancoDbDynamicOrderBy;
 import my.db.util.BlancoDbDynamicParameter;
 
-import java.io.Reader;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +69,7 @@ public class SimpleSqlite002Tester {
 
         for (SampleSQLite002Row row : rows) {
             int col_id = row.getColId();
-            Reader col_text = row.getColText();
+            String col_text = row.getColText();
             BigDecimal col_numeric = row.getColNumeric();
 
             System.out.println("Search result: [" + col_id + "][" + col_text + "][" + col_numeric + "]");

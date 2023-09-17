@@ -59,7 +59,8 @@ public class BlancoDbDynamicClause {
     public BlancoDbDynamicClause(final String argTag, final String argCondition, final String argItem) {
         this.tag = argTag;
         this.condition = argCondition;
-        this.items = this.parseItems(argItem);
+        this.items = new java.util.ArrayList<>();
+        items.add(argItem);
     }
 
     /**
@@ -74,7 +75,8 @@ public class BlancoDbDynamicClause {
     public BlancoDbDynamicClause(final String argTag, final String argCondition, final String argItem, final String argLogical, final String argType) {
         this.tag = argTag;
         this.condition = argCondition;
-        this.items = this.parseItems(argItem);
+        this.items = new java.util.ArrayList<>();
+        items.add(argItem);
         this.logical = argLogical;
         this.type = argType;
     }
@@ -92,7 +94,8 @@ public class BlancoDbDynamicClause {
     public BlancoDbDynamicClause(final String argTag, final String argCondition, final String argItem, final String argLogical, final String argType, final String argComparison) {
         this.tag = argTag;
         this.condition = argCondition;
-        this.items = this.parseItems(argItem);
+        this.items = new java.util.ArrayList<>();
+        items.add(argItem);
         this.logical = argLogical;
         this.type = argType;
         this.comparison = argComparison;
@@ -109,7 +112,6 @@ public class BlancoDbDynamicClause {
     public BlancoDbDynamicClause(final String argTag, final String argCondition, final String argItem, final Boolean argRawItem) {
         this.tag = argTag;
         this.condition = argCondition;
-        this.items = this.parseItems(argItem);
         if (argRawItem) {
             this.items = new java.util.ArrayList<>();
             items.add(argItem);

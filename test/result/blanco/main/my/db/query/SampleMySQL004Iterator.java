@@ -35,8 +35,8 @@ public class SampleMySQL004Iterator {
             put("inId", new BlancoDbDynamicClause("INCLAUSE01", "IN", "test1.COL_ID", "AND", "java.lang.Long"));
             put("compTextEq", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "test1.COL_TEXT", "OR", "java.lang.String", "EQ"));
             put("compTextLike", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "test1.COL_TEXT", "OR", "java.lang.String", "LIKE"));
-            put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ORDERBY", "ID,TEXT,MyNUMERIC"));
-            put("joinLiteral", new BlancoDbDynamicClause("JOIN_LITERAL", "LITERAL", "LEFT OUTER JOIN TEST_BLANCODB2 test2 \n    ON test1.COL_ID = test2.COL_ID\n  AND test2.COL_ID=2"));
+            put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ORDERBY", "ID,TEXT,MyNUMERIC", false));
+            put("joinLiteral", new BlancoDbDynamicClause("JOIN_LITERAL", "LITERAL", "LEFT OUTER JOIN TEST_BLANCODB2 test2 \n    ON test1.COL_ID = test2.COL_ID\n  AND test2.COL_ID=2", true));
             put("funcLiteral", new BlancoDbDynamicClause("FUNC_LITERAL", "FUNCTION", "OR test1.COL_DATE < FROM_UNIXTIME( ? , ? )", true));
             put("funcLiteral2", new BlancoDbDynamicClause("FUNC_LITERAL2", "FUNCTION", "OR test1.COL_DATE < FROM_UNIXTIME( ?  )", true));
         }

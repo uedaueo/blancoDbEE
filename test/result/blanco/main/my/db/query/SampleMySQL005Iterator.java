@@ -14,7 +14,7 @@ import java.util.Map;
 
 import my.db.exception.DeadlockException;
 import my.db.exception.TimeoutException;
-import my.db.row.SampleSQLite002Row;
+import my.db.row.SampleMySQL005Row;
 import my.db.util.BlancoDbDynamicClause;
 import my.db.util.BlancoDbDynamicLiteral;
 import my.db.util.BlancoDbDynamicOrderBy;
@@ -22,20 +22,23 @@ import my.db.util.BlancoDbDynamicParameter;
 import my.db.util.BlancoDbUtil;
 
 /**
- * [SampleSQLite002] 簡易なSQLのサンプルです。 (QueryIterator)
+ * [SampleMySQL005] 簡易なSQLのサンプルです。 (QueryIterator)
  *
  * Wraps a search-type SQL statement to provide various accessors.<br>
  * Scroll attribute: forward_only<br>
  */
-public class SampleSQLite002Iterator {
+public class SampleMySQL005Iterator {
     protected Map<String, BlancoDbDynamicClause> fMapDynamicClause = new HashMap<String, BlancoDbDynamicClause>()
     {
         {
-            put("betweenNumeric", new BlancoDbDynamicClause("BETWEEN01", "BETWEEN", "COL_NUMERIC", "AND", "java.lang.Double"));
-            put("inId", new BlancoDbDynamicClause("INCLAUSE01", "IN", "COL_ID", "AND", "java.lang.Long"));
-            put("compTextEq", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "NE"));
-            put("compTextLike", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "COL_TEXT", "OR", "java.lang.String", "LIKE"));
-            put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ORDERBY", "COL_TEXT", false));
+            put("betweenNumeric", new BlancoDbDynamicClause("BETWEEN01", "NOT BETWEEN", "test1.COL_NUMERIC", "AND", "java.lang.Double"));
+            put("inId", new BlancoDbDynamicClause("INCLAUSE01", "IN", "test1.COL_ID", "AND", "java.lang.Long"));
+            put("compTextEq", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "test1.COL_TEXT", "OR", "java.lang.String", "EQ"));
+            put("compTextLike", new BlancoDbDynamicClause("COMPARE01", "COMPARE", "test1.COL_TEXT", "OR", "java.lang.String", "LIKE"));
+            put("orderbyColumns", new BlancoDbDynamicClause("ORDERBY", "ORDERBY", "ID,TEXT,MyNUMERIC", false));
+            put("joinLiteral", new BlancoDbDynamicClause("JOIN_LITERAL", "LITERAL", "LEFT OUTER JOIN TEST_BLANCODB2 test2 \n    ON test1.COL_ID = test2.COL_ID\n  AND test2.COL_ID=2", true));
+            put("inClause02", new BlancoDbDynamicClause("INCLAUSE02", "IN", "COALESCE(test1.COL_ID, test2.COL_ID)", "OR", "java.lang.Long"));
+            put("inClause03", new BlancoDbDynamicClause("INCLAUSE03", "IN", "COALESCE(test1.COL_ID, test2.COL_ID, ?)", "AND", "java.lang.Long"));
         }
     };
 
@@ -64,28 +67,28 @@ public class SampleSQLite002Iterator {
     protected ResultSet fResultSet;
 
     /**
-     * SampleSQLite002IteratorConstructor for the class.
+     * SampleMySQL005IteratorConstructor for the class.
      *
      * Creates a query class with a database connection object as an argument.<br>
      * After using this class, you must call the close() method.<br>
      *
      * @param conn Database connection
      */
-    public SampleSQLite002Iterator(final Connection conn) {
+    public SampleMySQL005Iterator(final Connection conn) {
         fConnection = conn;
     }
 
     /**
-     * SampleSQLite002IteratorConstructor for the class.
+     * SampleMySQL005IteratorConstructor for the class.
      *
      * Creates a query class without giving a database connection object.<br>
      */
     @Deprecated
-    public SampleSQLite002Iterator() {
+    public SampleMySQL005Iterator() {
     }
 
     /**
-     * SampleSQLite002IteratorSets a database connection to the class.
+     * SampleMySQL005IteratorSets a database connection to the class.
      *
      * @param conn Database connection
      */
@@ -102,7 +105,7 @@ public class SampleSQLite002Iterator {
      * @return SQL statement in the state that can be given to the JDBC driver and executed.
      */
     public String getQuery() {
-        return "select COL_ID, COL_TEXT, COL_NUMERIC from\n   TEST_BLANCODB\nwhere\n   COL_TEXT like ?\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND COL_NUMERIC = ?\n${ORDERBY}";
+        return "SELECT test1.COL_ID ID, test1.COL_TEXT TEXT, test1.COL_NUMERIC MyNUMERIC from\n   TEST_BLANCODB test1\n${JOIN_LITERAL}\nwhere\n   test1.COL_TEXT like ?\n   ${BETWEEN01}\n   ${INCLAUSE01}\n   ${COMPARE01}\n   AND test1.COL_NUMERIC = ?\n   ${INCLAUSE02}\n   ${INCLAUSE03}\n${ORDERBY}";
     }
 
     /**
@@ -143,15 +146,24 @@ public class SampleSQLite002Iterator {
      * @param INCLAUSE01 Value in 'INCLAUSE01' column
      * @param COMPARE01 Value in 'COMPARE01' column
      * @param ORDERBY Value in 'ORDERBY' column
+     * @param JOIN_LITERAL Value in 'JOIN_LITERAL' column
+     * @param INCLAUSE02 Value in 'INCLAUSE02' column
+     * @param INCLAUSE03FunctionInput Value in 'INCLAUSE03' column
+     * @param INCLAUSE03 Value in 'INCLAUSE03' column
+     * @param argTimeout Timeout value in milli-seconds.
      * @throws SQLException If an SQL exception occurs.
      */
-    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY) throws SQLException {
+    public void setInputParameter(final String colText, final Double colNumeric, final BlancoDbDynamicParameter<Double> BETWEEN01, final BlancoDbDynamicParameter<Long> INCLAUSE01, final BlancoDbDynamicParameter<String> COMPARE01, final BlancoDbDynamicParameter<BlancoDbDynamicOrderBy> ORDERBY, final BlancoDbDynamicParameter<BlancoDbDynamicLiteral> JOIN_LITERAL, final BlancoDbDynamicParameter<Long> INCLAUSE02, final BlancoDbDynamicParameter<SampleMySQL005Inclause03Input> INCLAUSE03FunctionInput, final BlancoDbDynamicParameter<Long> INCLAUSE03, final Long argTimeout) throws SQLException {
         /* Replace tags  */
         String query = this.getQuery();
+        query = BlancoDbUtil.createTimeoutHintMySQL(argTimeout, query);
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, BETWEEN01, query, "BETWEEN01");
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, INCLAUSE01, query, "INCLAUSE01");
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, COMPARE01, query, "COMPARE01");
         query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, ORDERBY, query, "ORDERBY");
+        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, JOIN_LITERAL, query, "JOIN_LITERAL");
+        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, INCLAUSE02, query, "INCLAUSE02");
+        query = BlancoDbUtil.createDynamicClause(fMapDynamicClause, INCLAUSE03, query, "INCLAUSE03");
 
         /* Always recreates the statement. */
         prepareStatement(query);
@@ -181,6 +193,20 @@ public class SampleSQLite002Iterator {
             fStatement.setDouble(index, colNumeric.doubleValue());
         }
         index++;
+
+        if (INCLAUSE02 != null) {
+            java.util.List<java.lang.Long> values = INCLAUSE02.getValues();
+            index = BlancoDbUtil.setInputParameter(fStatement, values, index);
+        }
+
+        if (INCLAUSE03 != null && INCLAUSE03FunctionInput != null) {
+            SampleMySQL005Inclause03Input input = INCLAUSE03FunctionInput.getValues().get(0);
+            java.util.List<java.lang.Long> param01 = new java.util.ArrayList<>();
+            param01.add((java.lang.Long) input.getParam(1));
+            index = BlancoDbUtil.setInputParameter(fStatement, param01, index);
+            java.util.List<java.lang.Long> values = INCLAUSE03.getValues();
+            index = BlancoDbUtil.setInputParameter(fStatement, values, index);
+        }
 
     }
 
@@ -237,11 +263,11 @@ public class SampleSQLite002Iterator {
      * @return Row object.
      * @throws SQLException If an SQL exception occurs.
      */
-    public SampleSQLite002Row getRow() throws SQLException {
-        SampleSQLite002Row result = new SampleSQLite002Row();
-        result.setColId(fResultSet.getInt(1));
-        result.setColText(fResultSet.getString(2));
-        result.setColNumeric(fResultSet.getBigDecimal(3));
+    public SampleMySQL005Row getRow() throws SQLException {
+        SampleMySQL005Row result = new SampleMySQL005Row();
+        result.setId(fResultSet.getInt(1));
+        result.setText(fResultSet.getCharacterStream(2));
+        result.setMyNUMERIC(fResultSet.getBigDecimal(3));
 
         return result;
     }
@@ -270,17 +296,17 @@ public class SampleSQLite002Iterator {
     /**
      * Gets the search results in the form of a list.
      *
-     * The list will contain the SampleSQLite002 class.<br>
+     * The list will contain the SampleMySQL005 class.<br>
      * This can be used when the number of search results is known in advance and the number is small.<br>
      * If you have a large number of search results, it is recommended that you do not use this method, but use the next() method instead.<br>
      * This QueryIterator is FORWARD_ONLY (forward cursor). If you know that you will be working with a large amount of data, avoid using this getList method as much as possible or regenerate the source code as a scrolling cursor.
      *
      * @param size The number of lines to read.
-     * @return SampleSQLite002Class List, which will return an empty list if the search results are zero.
+     * @return SampleMySQL005Class List, which will return an empty list if the search results are zero.
      * @throws SQLException If an SQL exception occurs.
      */
-    public List<SampleSQLite002Row> getList(final int size) throws SQLException {
-        List<SampleSQLite002Row> result = new ArrayList<SampleSQLite002Row>(8192);
+    public List<SampleMySQL005Row> getList(final int size) throws SQLException {
+        List<SampleMySQL005Row> result = new ArrayList<SampleMySQL005Row>(8192);
         for (int count = 1; count <= size; count++) {
             if (next() == false) {
                 break;
@@ -322,7 +348,7 @@ public class SampleSQLite002Iterator {
     protected void finalize() throws Throwable {
         super.finalize();
         if (fStatement != null) {
-            final String message = "SampleSQLite002Iterator : The resource has not been released by the close() method.";
+            final String message = "SampleMySQL005Iterator : The resource has not been released by the close() method.";
             System.out.println(message);
         }
     }

@@ -240,6 +240,8 @@
 						<configuration>
 							<target>
 								<delete dir="tmp" />
+								<delete dir="tmpMysql" />
+								<delete dir="tmpSqlite" />
 								<delete dir="blanco" />
 								<delete dir="sample" />
 								<delete dir="bin" />

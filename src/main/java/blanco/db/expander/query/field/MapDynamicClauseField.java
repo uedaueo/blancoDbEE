@@ -69,7 +69,8 @@ public class MapDynamicClauseField extends BlancoDbAbstractField {
         for (BlancoDbDynamicConditionStructure conditionStructure : conditions) {
             String strCondition = conditionStructure.getCondition();
             String strItem = conditionStructure.getItem();
-            if ("FUNCTION".equals(strCondition)) {
+            Boolean isFunctionTypeCondition = conditionStructure.getFunction() != null;
+            if (isFunctionTypeCondition) {
                 /* Always set true to doTest flag because of making inputParameters */
                 BlancoDbDynamicConditionFunctionStructure functionStructure = conditionStructure.getFunction();
                 functionStructure.setDoTest(true);
@@ -93,7 +94,9 @@ public class MapDynamicClauseField extends BlancoDbAbstractField {
             if ("COMPARE".equals(strCondition)) {
                 sb.append(", \"" + conditionStructure.getComparison() + "\"");
             }
-            if ("FUNCTION".equals(strCondition)) {
+            if ("ORDERBY".equals(strCondition)) {
+                sb.append(", false");
+            } else if ("LITERAL".equals(strCondition) || "FUNCTION".equals(strCondition)) {
                 sb.append(", true");
             }
             sb.append("));");

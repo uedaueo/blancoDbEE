@@ -207,7 +207,7 @@ public class BlancoDbDynamicClauseClassJava {
 
         cgMethod.getParameterList().add(
                 fCgFactory.createParameter("argItem", "java.lang.String", "target Item"));
-        lineList.add("this.items = this.parseItems(argItem);");
+//        lineList.add("this.items = this.parseItems(argItem);");
 
         if ("LITERAL".equals(type)) {
             cgMethod.getParameterList().add(
@@ -220,6 +220,9 @@ public class BlancoDbDynamicClauseClassJava {
             lineList.add("}");
             return cgMethod;
         }
+
+        lineList.add("this.items = new java.util.ArrayList<>();");
+        lineList.add("items.add(argItem);");
 
         if ("ORDERBY".equals(type)) {
             return cgMethod;

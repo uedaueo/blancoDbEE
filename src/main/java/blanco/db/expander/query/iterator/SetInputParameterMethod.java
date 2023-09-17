@@ -88,7 +88,22 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
         Map<String, Boolean> paramDone = new HashMap<>();
         for (BlancoDbDynamicConditionStructure conditionStructure : fSqlInfo.getDynamicConditionList()) {
             if (paramDone.get(conditionStructure.getTag()) == null || !paramDone.get(conditionStructure.getTag())) {
-                this.createDynamicParameter(cgMethod, conditionStructure, dynamicParameterClass);
+                if (("IN".equals(conditionStructure.getCondition()) ||
+                        "NOT IN".equals(conditionStructure.getCondition()) ||
+                        "BETWEEN".equals(conditionStructure.getCondition()) ||
+                        "NOT BETWEEN".equals(conditionStructure.getCondition())) &&
+                        conditionStructure.getFunction() != null) {
+
+                    BlancoDbDynamicConditionStructure functionalCondition = new BlancoDbDynamicConditionStructure();
+                    conditionStructure.copyTo(functionalCondition);
+
+                    functionalCondition.setCondition("FUNCTION");
+                    functionalCondition.setFunction(conditionStructure.getFunction());
+                    functionalCondition.setDbColumn(conditionStructure.getDbColumn());
+
+                    this.createDynamicParameter(cgMethod, functionalCondition, conditionStructure.getTag() + "FunctionInput", dynamicParameterClass);
+                }
+                this.createDynamicParameter(cgMethod, conditionStructure, conditionStructure.getTag(), dynamicParameterClass);
                 paramDone.put(conditionStructure.getTag(), true);
             }
         }
@@ -268,11 +283,12 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
     private void createDynamicParameter(
             final BlancoCgMethod cgMethod,
             final BlancoDbDynamicConditionStructure conditionStructure,
+            final String paramId,
             final String dynamicParameterClass
     ) {
         BlancoDbMetaDataColumnStructure columnStructure = conditionStructure.getDbColumn();
         BlancoCgParameter param = fCgFactory.createParameter(
-                conditionStructure.getTag(),
+                paramId,
                 dynamicParameterClass,
                 "Value in '" + conditionStructure.getTag() + "' column");
         cgMethod.getParameterList().add(param);
@@ -409,31 +425,22 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
             final BlancoDbDynamicConditionStructure conditionStructure
     ) {
         Boolean isFunctionLiteral = "FUNCTION".equals(conditionStructure.getCondition());
+        Boolean withFunction = !isFunctionLiteral && conditionStructure.getFunction() != null;
         String tag = conditionStructure.getTag();
         String type = conditionStructure.getType();
-        listLine.add("if (" + tag + " != null) {");
-        if (!isFunctionLiteral) {
+        if (withFunction) {
+            String paramId = tag + "FunctionInput";
+            listLine.add("if (" + tag + " != null && " + paramId + " != null) {");
+            createFunctionalInput(listLine, conditionStructure, paramId);
+            listLine.add("java.util.List<" + type + "> values = " + tag + ".getValues();");
+            listLine.add("index = BlancoDbUtil.setInputParameter(fStatement, values, index);");
+        } else if (!isFunctionLiteral) {
+            listLine.add("if (" + tag + " != null) {");
             listLine.add("java.util.List<" + type + "> values = " + tag + ".getValues();");
             listLine.add("index = BlancoDbUtil.setInputParameter(fStatement, values, index);");
         } else {
-            BlancoDbDynamicConditionFunctionStructure functionStructure = conditionStructure.getFunction();
-            String inputClass = BlancoNameAdjuster.toClassName(fSqlInfo.getName()) + BlancoNameAdjuster.toClassName(conditionStructure.getTag()) + "Input";
-            listLine.add(inputClass + " input = " + tag + ".getValues().get(0);");
-            Class<? extends BlancoDbDynamicConditionFunctionStructure> clazz = functionStructure.getClass();
-            for (int i = 1; i <= functionStructure.getParamNum(); i++) {
-                String tagParamType = String.format("paramType%02d", i);
-                String strMethod = "get" + BlancoNameAdjuster.toClassName(tagParamType);
-                try {
-                    Method method = clazz.getMethod(strMethod);
-                    type = (String) method.invoke(functionStructure);
-                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                    throw new IllegalArgumentException("Fail to get " + tagParamType, e);
-                }
-                String tagParam = String.format("param%02d", i);
-                listLine.add("java.util.List<" + type + "> " + tagParam + " = new java.util.ArrayList<>();");
-                listLine.add(tagParam + ".add((" + type + ") input.getParam(" + i + "));");
-                listLine.add("index = BlancoDbUtil.setInputParameter(fStatement, " + tagParam + ", index);");
-            }
+            listLine.add("if (" + tag + " != null) {");
+            createFunctionalInput(listLine, conditionStructure, tag);
         }
         listLine.add("}");
 
@@ -448,6 +455,32 @@ public class SetInputParameterMethod extends BlancoDbAbstractMethod {
                         conditionStructure.getTag() + " + \"]\");";
                 listLine.add(strLineInfo);
                 break;
+        }
+    }
+
+    private void createFunctionalInput(
+            final List<String> listLine,
+            final BlancoDbDynamicConditionStructure conditionStructure,
+            final String paramId
+    ) {
+        String type = conditionStructure.getType();
+        BlancoDbDynamicConditionFunctionStructure functionStructure = conditionStructure.getFunction();
+        String inputClass = BlancoNameAdjuster.toClassName(fSqlInfo.getName()) + BlancoNameAdjuster.toClassName(conditionStructure.getTag()) + "Input";
+        listLine.add(inputClass + " input = " + paramId + ".getValues().get(0);");
+        Class<? extends BlancoDbDynamicConditionFunctionStructure> clazz = functionStructure.getClass();
+        for (int i = 1; i <= functionStructure.getParamNum(); i++) {
+            String tagParamType = String.format("paramType%02d", i);
+            String strMethod = "get" + BlancoNameAdjuster.toClassName(tagParamType);
+            try {
+                Method method = clazz.getMethod(strMethod);
+                type = (String) method.invoke(functionStructure);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                throw new IllegalArgumentException("Fail to get " + tagParamType, e);
+            }
+            String tagParam = String.format("param%02d", i);
+            listLine.add("java.util.List<" + type + "> " + tagParam + " = new java.util.ArrayList<>();");
+            listLine.add(tagParam + ".add((" + type + ") input.getParam(" + i + "));");
+            listLine.add("index = BlancoDbUtil.setInputParameter(fStatement, " + tagParam + ", index);");
         }
     }
 }
