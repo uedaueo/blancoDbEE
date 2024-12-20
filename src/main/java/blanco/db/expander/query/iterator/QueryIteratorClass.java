@@ -193,8 +193,10 @@ public class QueryIteratorClass extends BlancoDbAbstractClass {
         new CloseMethod(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile,
                 fCgClass).expand();
 
-        new Finalize(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile, fCgClass)
-                .expand();
+        if (!fDbSetting.getNoFinalize()) {
+            new Finalize(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile, fCgClass)
+                    .expand();
+        }
 
 		if (fDbSetting.getLoggingsql()) {
 			// Outputs to stdout.

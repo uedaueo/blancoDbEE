@@ -202,6 +202,22 @@ public class BlancoDbProcessInput {
     private String fLineSeparator = "LF";
 
     /**
+     * micronaut向けに Row クラスに Introspected アノテーションを付与します
+     *
+     * フィールド: [addIntrospected]。
+     * デフォルト: [false]。
+     */
+    private String fAddIntrospected = "false";
+
+    /**
+     * finalizeメソッドを生成しません。Java9以降は非推奨となっているのでデフォルト値を True とします。
+     *
+     * フィールド: [noFinalize]。
+     * デフォルト: [true]。
+     */
+    private String fNoFinalize = "true";
+
+    /**
      * フィールド [verbose] の値を設定します。
      *
      * フィールドの説明: [Whether to run in verbose mode.]。
@@ -789,6 +805,52 @@ public class BlancoDbProcessInput {
     }
 
     /**
+     * フィールド [addIntrospected] の値を設定します。
+     *
+     * フィールドの説明: [micronaut向けに Row クラスに Introspected アノテーションを付与します]。
+     *
+     * @param argAddIntrospected フィールド[addIntrospected]に設定する値。
+     */
+    public void setAddIntrospected(final String argAddIntrospected) {
+        fAddIntrospected = argAddIntrospected;
+    }
+
+    /**
+     * フィールド [addIntrospected] の値を取得します。
+     *
+     * フィールドの説明: [micronaut向けに Row クラスに Introspected アノテーションを付与します]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[addIntrospected]から取得した値。
+     */
+    public String getAddIntrospected() {
+        return fAddIntrospected;
+    }
+
+    /**
+     * フィールド [noFinalize] の値を設定します。
+     *
+     * フィールドの説明: [finalizeメソッドを生成しません。Java9以降は非推奨となっているのでデフォルト値を True とします。]。
+     *
+     * @param argNoFinalize フィールド[noFinalize]に設定する値。
+     */
+    public void setNoFinalize(final String argNoFinalize) {
+        fNoFinalize = argNoFinalize;
+    }
+
+    /**
+     * フィールド [noFinalize] の値を取得します。
+     *
+     * フィールドの説明: [finalizeメソッドを生成しません。Java9以降は非推奨となっているのでデフォルト値を True とします。]。
+     * デフォルト: [true]。
+     *
+     * @return フィールド[noFinalize]から取得した値。
+     */
+    public String getNoFinalize() {
+        return fNoFinalize;
+    }
+
+    /**
      * Gets the string representation of this value object.
      *
      * <P>Precautions for use</P>
@@ -829,6 +891,8 @@ public class BlancoDbProcessInput {
         buf.append(",useruntime=" + fUseruntime);
         buf.append(",targetStyle=" + fTargetStyle);
         buf.append(",lineSeparator=" + fLineSeparator);
+        buf.append(",addIntrospected=" + fAddIntrospected);
+        buf.append(",noFinalize=" + fNoFinalize);
         buf.append("]");
         return buf.toString();
     }
@@ -929,5 +993,11 @@ public class BlancoDbProcessInput {
         // Name: fLineSeparator
         // Type: java.lang.String
         target.fLineSeparator = this.fLineSeparator;
+        // Name: fAddIntrospected
+        // Type: java.lang.String
+        target.fAddIntrospected = this.fAddIntrospected;
+        // Name: fNoFinalize
+        // Type: java.lang.String
+        target.fNoFinalize = this.fNoFinalize;
     }
 }

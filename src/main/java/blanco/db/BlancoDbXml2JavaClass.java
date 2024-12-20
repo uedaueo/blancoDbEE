@@ -217,7 +217,7 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
         final BlancoCgTransformer transformer = BlancoCgTransformerFactory
                 .getJavaSourceTransformer();
 
-        // about exception 
+        // about exception
         transformer.transform(adjust(new DeadlockExceptionClass(cgFactory,
                 packageNameException).expand()), fileBlancoMain);
         transformer.transform(adjust(new IntegrityConstraintExceptionClass(
@@ -366,6 +366,10 @@ public abstract class BlancoDbXml2JavaClass implements IBlancoDbProgress {
             voField.setType(columnType);
             voField.setDescription("Field [" + columnName + "].");
             voClass.getFieldList().add(voField);
+        }
+
+        if (dbSetting.getAddIntrospected()) {
+            voClass.getAnnotationList().add("io.micronaut.core.annotation.Introspected");
         }
 
         final BlancoValueObjectXml2JavaClass xml2javaclass = new BlancoValueObjectXml2JavaClass();

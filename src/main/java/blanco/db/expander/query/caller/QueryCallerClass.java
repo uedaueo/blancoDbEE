@@ -1,7 +1,7 @@
 /*
  * blancoDb
  * Copyright (C) 2004-2006 Yasuo Nakanishi
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -31,7 +31,7 @@ import blanco.dbmetadata.valueobject.BlancoDbMetaDataColumnStructure;
 
 /**
  * A class for expanding individual classes.
- * 
+ *
  * @author Yasuo Nakanishi
  */
 public class QueryCallerClass extends BlancoDbAbstractClass {
@@ -112,8 +112,10 @@ public class QueryCallerClass extends BlancoDbAbstractClass {
         new CloseMethod(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile,
                 fCgClass).expand();
 
-        new Finalize(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile, fCgClass)
-                .expand();
+        if (!fDbSetting.getNoFinalize()) {
+            new Finalize(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile, fCgClass)
+                    .expand();
+        }
 
 		if (fDbSetting.getLoggingsql()) {
 			// Outputs to stdout.

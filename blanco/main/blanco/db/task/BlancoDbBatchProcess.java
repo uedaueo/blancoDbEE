@@ -113,6 +113,10 @@ public class BlancoDbBatchProcess {
                 input.setTargetStyle(arg.substring(13));
             } else if (arg.startsWith("-lineSeparator=")) {
                 input.setLineSeparator(arg.substring(15));
+            } else if (arg.startsWith("-addIntrospected=")) {
+                input.setAddIntrospected(arg.substring(17));
+            } else if (arg.startsWith("-noFinalize=")) {
+                input.setNoFinalize(arg.substring(12));
             } else if (arg.equals("-?") || arg.equals("-help")) {
                 usage();
                 System.exit(END_SUCCESS);
@@ -226,7 +230,7 @@ public class BlancoDbBatchProcess {
      */
     public static final void usage() {
         System.out.println("BlancoDbBatchProcess: Usage:");
-        System.out.println("  java blanco.db.task.BlancoDbBatchProcess -verbose=value1 -jdbcdriver=value2 -jdbcurl=value3 -jdbcuser=value4 -jdbcpassword=value5 -jdbcdriverfile=value6 -metadir=value7 -tmpdir=value8 -targetdir=value9 -basepackage=value10 -runtimepackage=value11 -schema=value12 -table=value13 -sql=value14 -failonerror=value15 -log=value16 -logmode=value17 -logsql=value18 -statementtimeout=value19 -executesql=value20 -encoding=value21 -convertStringToMsWindows31jUnicode=value22 -cache=value23 -useruntime=value24 -targetStyle=value25 -lineSeparator=value26");
+        System.out.println("  java blanco.db.task.BlancoDbBatchProcess -verbose=value1 -jdbcdriver=value2 -jdbcurl=value3 -jdbcuser=value4 -jdbcpassword=value5 -jdbcdriverfile=value6 -metadir=value7 -tmpdir=value8 -targetdir=value9 -basepackage=value10 -runtimepackage=value11 -schema=value12 -table=value13 -sql=value14 -failonerror=value15 -log=value16 -logmode=value17 -logsql=value18 -statementtimeout=value19 -executesql=value20 -encoding=value21 -convertStringToMsWindows31jUnicode=value22 -cache=value23 -useruntime=value24 -targetStyle=value25 -lineSeparator=value26 -addIntrospected=value27 -noFinalize=value28");
         System.out.println("    -verbose");
         System.out.println("      explanation[Whether to run in verbose mode.]");
         System.out.println("      type[boolean]");
@@ -326,6 +330,14 @@ public class BlancoDbBatchProcess {
         System.out.println("      explanation[行末記号をしていします。LF=0x0a, CR=0x0d, CFLF=0x0d0x0a とします。LFがデフォルトです。]");
         System.out.println("      type[string]");
         System.out.println("      default value[LF]");
+        System.out.println("    -addIntrospected");
+        System.out.println("      explanation[micronaut向けに Row クラスに Introspected アノテーションを付与します]");
+        System.out.println("      type[string]");
+        System.out.println("      default value[false]");
+        System.out.println("    -noFinalize");
+        System.out.println("      explanation[finalizeメソッドを生成しません。Java9以降は非推奨となっているのでデフォルト値を True とします。]");
+        System.out.println("      type[string]");
+        System.out.println("      default value[true]");
         System.out.println("    -? , -help");
         System.out.println("      explanation[show the usage.]");
     }

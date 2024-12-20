@@ -154,6 +154,16 @@ public class BlancoDbTask extends Task {
     protected boolean fIsFieldLineSeparatorProcessed = false;
 
     /**
+     * フィールド [addIntrospected] に値がセットされたかどうか。
+     */
+    protected boolean fIsFieldAddIntrospectedProcessed = false;
+
+    /**
+     * フィールド [noFinalize] に値がセットされたかどうか。
+     */
+    protected boolean fIsFieldNoFinalizeProcessed = false;
+
+    /**
      * verboseモードで動作させるかどうか。
      *
      * @param arg verboseモードで動作させるかどうか。
@@ -817,6 +827,58 @@ public class BlancoDbTask extends Task {
     }
 
     /**
+     * Antタスクの[addIntrospected]アトリビュートのセッターメソッド。
+     *
+     * 項目番号: 27<br>
+     * micronaut向けに Row クラスに Introspected アノテーションを付与します<br>
+     *
+     * @param arg セットしたい値
+     */
+    public void setAddIntrospected(final String arg) {
+        fInput.setAddIntrospected(arg);
+        fIsFieldAddIntrospectedProcessed = true;
+    }
+
+    /**
+     * Antタスクの[addIntrospected]アトリビュートのゲッターメソッド。
+     *
+     * 項目番号: 27<br>
+     * micronaut向けに Row クラスに Introspected アノテーションを付与します<br>
+     * デフォルト値[false]が設定されています。Apache Antタスク上でアトリビュートの指定が無い場合には、デフォルト値が設定されます。<br>
+     *
+     * @return このフィールドの値
+     */
+    public String getAddIntrospected() {
+        return fInput.getAddIntrospected();
+    }
+
+    /**
+     * Antタスクの[noFinalize]アトリビュートのセッターメソッド。
+     *
+     * 項目番号: 28<br>
+     * finalizeメソッドを生成しません。Java9以降は非推奨となっているのでデフォルト値を True とします。<br>
+     *
+     * @param arg セットしたい値
+     */
+    public void setNoFinalize(final String arg) {
+        fInput.setNoFinalize(arg);
+        fIsFieldNoFinalizeProcessed = true;
+    }
+
+    /**
+     * Antタスクの[noFinalize]アトリビュートのゲッターメソッド。
+     *
+     * 項目番号: 28<br>
+     * finalizeメソッドを生成しません。Java9以降は非推奨となっているのでデフォルト値を True とします。<br>
+     * デフォルト値[true]が設定されています。Apache Antタスク上でアトリビュートの指定が無い場合には、デフォルト値が設定されます。<br>
+     *
+     * @return このフィールドの値
+     */
+    public String getNoFinalize() {
+        return fInput.getNoFinalize();
+    }
+
+    /**
      * Antタスクのメイン処理。Apache Antから このメソッドが呼び出されます。
      *
      * @throws BuildException タスクとしての例外が発生した場合。
@@ -877,6 +939,8 @@ public class BlancoDbTask extends Task {
             System.out.println("- useruntime:[" + getUseruntime() + "]");
             System.out.println("- targetStyle:[" + getTargetStyle() + "]");
             System.out.println("- lineSeparator:[" + getLineSeparator() + "]");
+            System.out.println("- addIntrospected:[" + getAddIntrospected() + "]");
+            System.out.println("- noFinalize:[" + getNoFinalize() + "]");
         }
 
         try {

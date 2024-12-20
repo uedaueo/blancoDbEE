@@ -68,6 +68,9 @@ public class BlancoDbProcessImpl implements BlancoDbProcess {
                 dbSetting.setUseRuntime(true);
             }
 
+            dbSetting.setAddIntrospected("true".equals(input.getAddIntrospected()));
+            dbSetting.setNoFinalize("true".equals(input.getNoFinalize()));
+
             // Whether or not to abort the process when an exception occurs in the SQL definition during processing.
             dbSetting.setFailonerror("true".equals(input.getFailonerror()));
 

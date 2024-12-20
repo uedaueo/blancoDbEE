@@ -44,6 +44,7 @@ public class BlancoDbTest {
         input.setLineSeparator("LF");
 //        input.setTargetStyle("maven");
 //        input.setExecutesql("none"); // TODO: Ensures that dynamic SQL replacement is correctly performed in the case of interator.
+//        input.setAddIntrospected("true");
 
         BlancoDbProcessImpl imple = new BlancoDbProcessImpl();
         try {

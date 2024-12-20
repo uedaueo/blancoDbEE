@@ -314,19 +314,4 @@ public class SampleMySQL003Iterator {
             }
         }
     }
-
-    /**
-     * finalize method.
-     *
-     * Checks if there is a close() call forgetting bug in the object generated internally by this class.<br>
-     *
-     * @throws Throwable Exception raised in the finalize process.
-     */
-    protected void finalize() throws Throwable {
-        super.finalize();
-        if (fStatement != null) {
-            final String message = "SampleMySQL003Iterator : The resource has not been released by the close() method.";
-            System.out.println(message);
-        }
-    }
 }
