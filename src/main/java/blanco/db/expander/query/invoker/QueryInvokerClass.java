@@ -128,7 +128,7 @@ public class QueryInvokerClass extends BlancoDbAbstractClass {
         new CloseMethod(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile,
                 fCgClass).expand();
 
-        if (!fDbSetting.getUseRuntime()) {
+        if (!fDbSetting.getNoFinalize()) {
             new Finalize(fDbSetting, fSqlInfo, fCgFactory, fCgSourceFile, fCgClass)
                     .expand();
         }
